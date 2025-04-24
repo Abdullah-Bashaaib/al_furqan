@@ -43,17 +43,13 @@ dependencies:
   path:
   intl:
   shared_preferences:
-    # مكتبة للتحقق من اتصال الإنترنت الفعلي وليس فقط اتصال الشبكة
-  internet_connection_checker: ^1.0.0
-  # اضفت ذي المكتبة علشان نتحقق من اتصال الشبكة وهل المستخدم متصل بالنت ولا لا
+    # اضفت ذي المكتبة علشان نتحقق من اتصال الشبكة وهل المستخدم متصل بالنت ولا لا
   connectivity_plus:
   file_picker:
   flutter_excel:
   permission_handler:
   path_provider: ^2.1.5
   url_launcher:
-  pdf: ^3.10.8
-  printing: ^5.12.0
   internet_connection_checker:
 
 
@@ -84,7 +80,6 @@ flutter:
   assets:
     - assets/pictures/
     - assets/database/
-    - assets/fonts/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -99,9 +94,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: HacenTunisia
+    - family: RB
       fonts:
-        - asset: assets/fonts/HacenTunisia.ttf
+        - asset: assets/fonts/RB_Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

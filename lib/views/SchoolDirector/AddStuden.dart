@@ -3,7 +3,7 @@ import 'package:al_furqan/controllers/fathers_controller.dart';
 import 'package:al_furqan/models/users_model.dart';
 
 // import 'package:al_furqan/views/SchoolDirector/handling_excel_file.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:flutter/services.dart';
@@ -34,99 +34,75 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
 
   final studentModel = StudentModel();
   final fatherModel = UserModel();
-  bool _isLoading = false;
-  bool _isStudentFormExpanded = true;
-  bool _isFatherFormExpanded = true;
+  final _connectivity = Connectivity().checkConnectivity();
 
   void _submitForm() async {
-    if (!_formKey.currentState!.validate()) {
-      // إظهار رسالة للمستخدم بوجود حقول مطلوبة
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('الرجاء ملء جميع الحقول المطلوبة'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    setState(() {
-      _isLoading = true; // بدء التحميل
-    });
-
     int? SchoolID = widget.user!.schoolID;
     print("معرف المدرسة للطالب الجديد: $SchoolID");
 
-    // بيانات الطالب
-    studentModel.firstName = firstNameController.text;
-    studentModel.middleName = middleNameController.text;
-    studentModel.grandfatherName = grandfatherNameController.text;
-    studentModel.lastName = lastNameController.text;
-    studentModel.schoolId = SchoolID; // تأكد من تعيين معرف المدرسة للطالب
+    if (_formKey.currentState!.validate()) {
+      // بيانات الطالب
+      studentModel.firstName = firstNameController.text;
+      studentModel.middleName = middleNameController.text;
+      studentModel.grandfatherName = grandfatherNameController.text;
+      studentModel.lastName = lastNameController.text;
+      studentModel.schoolId = SchoolID; // تأكد من تعيين معرف المدرسة للطالب
 
-    // بيانات ولي الامر
-    fatherModel.schoolID = widget.user!.schoolID;
-    fatherModel.first_name = middleNameController.text;
-    fatherModel.middle_name = grandfatherNameController.text;
-    fatherModel.grandfather_name = grandFatherNameForFatherStudent.text;
-    fatherModel.last_name = lastNameController.text;
-    fatherModel.email = gmailOfFatherStudent.text;
-    fatherModel.phone_number = int.tryParse(phoneFatherStudent.text);
-    fatherModel.date = _dateFatherStudent.text;
-    fatherModel.telephone_number = int.tryParse(telephoneFatherStudent.text);
-    fatherModel.password = 12345678; //defualt Just for fathers
-    fatherModel.roleID = 3; // 3 means fathers in display later
-    fatherModel.schoolID = widget.user!.schoolID;
-    print("معرف المدرسة لولي الأمر: ${fatherModel.schoolID}");
-    fatherModel.isActivate = 0; // not actinates
+      // بيانات ولي الامر
+      fatherModel.schoolID = widget.user!.schoolID;
+      fatherModel.first_name = middleNameController.text;
+      fatherModel.middle_name = grandfatherNameController.text;
+      fatherModel.grandfather_name = grandFatherNameForFatherStudent.text;
+      fatherModel.last_name = lastNameController.text;
+      fatherModel.email = gmailOfFatherStudent.text;
+      fatherModel.phone_number = int.tryParse(phoneFatherStudent.text);
+      fatherModel.date = _dateFatherStudent.text;
+      fatherModel.telephone_number = int.tryParse(telephoneFatherStudent.text);
+      fatherModel.password = 12345678; //defualt Just for fathers
+      fatherModel.roleID = 3; // 3 means fathers in display later
+      fatherModel.schoolID = widget.user!.schoolID;
+      print("معرف المدرسة لولي الأمر: ${fatherModel.schoolID}");
+      fatherModel.isActivate = 0; // not actinates
 
-    try {
-      // أولاً: إضافة ولي الأمر
-      fatherModel.user_id = await fathersController.addFather(fatherModel);
-      print("تم إضافة ولي الأمر بمعرف: ${fatherModel.user_id}");
+      try {
+        // أولاً: إضافة ولي الأمر
+        fatherModel.user_id = await fathersController.addFather(fatherModel);
+        print("تم إضافة ولي الأمر بمعرف: ${fatherModel.user_id}");
 
-      // ثانيًا: ربط الطالب بولي الأمر
-      studentModel.userID = fatherModel.user_id;
+        // ثانيًا: ربط الطالب بولي الأمر
+        studentModel.userID = fatherModel.user_id;
 
-      // ثالثًا: إضافة الطالب إلى قاعدة البيانات المحلية
-      int studentID = await studentController.addStudent(studentModel);
-      print("تم إضافة الطالب محليًا بمعرف: $studentID");
+        // ثالثًا: إضافة الطالب إلى قاعدة البيانات المحلية
+        int studentID = await studentController.addStudent(studentModel);
+        print("تم إضافة الطالب محليًا بمعرف: $studentID");
 
-      // رابعًا: تحديث معرف الطالب في النموذج
-      studentModel.studentID = studentID;
+        // رابعًا: تحديث معرف الطالب في النموذج
+        studentModel.studentID = studentID;
 
-      // خامسًا: إضافة الطالب إلى Firebase
-      // التحقق من وجود اتصال بالإنترنت باستخدام المكتبة الجديدة
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
-      print("حالة الاتصال بالإنترنت: $hasConnection");
+        // خامسًا: إضافة الطالب إلى Firebase
+        // التحقق من وجود اتصال بالإنترنت
+        var connect = await InternetConnectionChecker.createInstance().hasConnection;
+        print("Connection Status : $connect");
 
-      if (!hasConnection) {
-        if (mounted) {
+        if (connect == false) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                   'تم إضافة الطالب محلياً، لكن لا يمكن مزامنته مع Firebase بسبب عدم وجود اتصال بالإنترنت'),
               backgroundColor: Colors.orange,
               duration: Duration(seconds: 5),
-              action: SnackBarAction(
-                label: 'فهمت',
-                textColor: Colors.white,
-                onPressed: () {},
-              ),
             ),
           );
-        }
-        // نتابع مع إظهار رسالة النجاح دون توقف عند هذه النقطة
-      } else {
-        // لدينا اتصال بالإنترنت، نحاول إضافة الطالب إلى Firebase
-        if (SchoolID != null) {
-          try {
-            await studentController.addStudentToFirebase(
-                studentModel, SchoolID);
-            print("تم إضافة الطالب إلى Firebase");
-          } catch (firebaseError) {
-            print("خطأ في إضافة الطالب إلى Firebase: $firebaseError");
-            if (mounted) {
+          // نتابع مع إظهار رسالة النجاح دون توقف عند هذه النقطة
+        } else {
+          // لدينا اتصال بالإنترنت، نحاول إضافة الطالب إلى Firebase
+          if (SchoolID != null) {
+            try {
+              await studentController.addStudentToFirebase(
+                  studentModel, SchoolID);
+              print("تم إضافة الطالب إلى Firebase");
+            } catch (firebaseError) {
+              print("خطأ في إضافة الطالب إلى Firebase: $firebaseError");
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -136,295 +112,126 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 ),
               );
             }
+          } else {
+            print("تحذير: معرف المدرسة غير متوفر، لم يتم الإضافة إلى Firebase");
           }
-        } else {
-          print("تحذير: معرف المدرسة غير متوفر، لم يتم الإضافة إلى Firebase");
         }
-      }
 
-      // إظهار رسالة النجاح النهائية
-      if (mounted) {
+        // إظهار رسالة النجاح النهائية
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 10),
-                Text('تمت إضافة الطالب بنجاح'),
-              ],
-            ),
+            content: Text('تمت إضافة الطالب بنجاح'),
             backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
           ),
         );
-      }
 
-      if (mounted) {
         Navigator.pop(context);
-      }
-    } catch (e) {
-      print("حدث خطأ أثناء إضافة الطالب: $e");
-      if (mounted) {
+      } catch (e) {
+        print("حدث خطأ أثناء إضافة الطالب: $e");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error, color: Colors.white),
-                SizedBox(width: 10),
-                Expanded(child: Text('فشل في إضافة الطالب: $e')),
-              ],
-            ),
+            content: Text('فشل في إضافة الطالب: $e'),
             backgroundColor: Colors.red,
-            duration: Duration(seconds: 5),
           ),
         );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false; // إنهاء التحميل بغض النظر عن النتيجة
-        });
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // final _schoolId = widget.user?.schoolID;
     return Scaffold(
-      appBar: AppBar(
-        title:
-            Text('إضافة طالب', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        centerTitle: true,
+      appBar: AppBar(title: Text('إضافة طالب')),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTextField(firstNameController, 'الاسم الأول'),
+                _buildTextField(middleNameController, 'الاسم الأوسط'),
+                _buildTextField(grandfatherNameController, 'اسم الجد'),
+                _buildTextField(lastNameController, 'اسم العائلة'),
+                dataOfFatherStudent(),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // await _submit2(_schoolId, context);
+                          _submitForm();
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue),
+                        child: Text(
+                          'إضافة',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          /// export excel file
+                          await ExcelTesting(schoolID: widget.user?.schoolID)
+                              .readExcelFile(context)
+                              .then((_) {
+                            Navigator.pop(context);
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
+                        child: Text(
+                          'جلب ملف إكسل',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-      body: _isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text('جاري إضافة الطالب...',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            )
-          : SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // قسم بيانات الطالب
-                      Card(
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side:
-                              BorderSide(color: Colors.blue.shade100, width: 1),
-                        ),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                "بيانات الطالب",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  _isStudentFormExpanded
-                                      ? Icons.keyboard_arrow_up
-                                      : Icons.keyboard_arrow_down,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isStudentFormExpanded =
-                                        !_isStudentFormExpanded;
-                                  });
-                                },
-                              ),
-                            ),
-                            if (_isStudentFormExpanded)
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildTextField(firstNameController,
-                                        'الاسم الأول', Icons.person),
-                                    _buildTextField(middleNameController,
-                                        'الاسم الأوسط', Icons.person),
-                                    _buildTextField(grandfatherNameController,
-                                        'اسم الجد', Icons.person),
-                                    _buildTextField(lastNameController,
-                                        'اسم العائلة', Icons.family_restroom),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
+    );
+  }
 
-                      SizedBox(height: 16),
-
-                      // قسم بيانات ولي الأمر
-                      Card(
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side:
-                              BorderSide(color: Colors.teal.shade100, width: 1),
-                        ),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                "بيانات ولي الأمر",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.teal.shade700,
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  _isFatherFormExpanded
-                                      ? Icons.keyboard_arrow_up
-                                      : Icons.keyboard_arrow_down,
-                                  color: Colors.teal.shade700,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isFatherFormExpanded =
-                                        !_isFatherFormExpanded;
-                                  });
-                                },
-                              ),
-                            ),
-                            if (_isFatherFormExpanded)
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildTextField(middleNameController,
-                                        "اسم ولى الأمر", Icons.person),
-                                    _buildTextField(
-                                        grandfatherNameController,
-                                        "الاسم الأوسط لولي الأمر",
-                                        Icons.person),
-                                    _buildTextField(
-                                        grandFatherNameForFatherStudent,
-                                        "اسم جد ولي الأمر",
-                                        Icons.person),
-                                    _buildTextField(lastNameController,
-                                        "القبيلة", Icons.family_restroom),
-                                    _buildTextFieldData(),
-                                    _buildTextField(gmailOfFatherStudent,
-                                        "البريد الالكتروني", Icons.email),
-                                    _builtTextFieldNumber("رقم الجوال",
-                                        phoneFatherStudent, 9, Icons.phone),
-                                    _builtTextFieldNumber(
-                                        "رقم البيت",
-                                        telephoneFatherStudent,
-                                        6,
-                                        Icons.phone_in_talk),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 24),
-
-                      // أزرار العمليات
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _isLoading ? null : _submitForm,
-                              icon: Icon(Icons.add_circle, color: Colors.white),
-                              label: Text(
-                                'إضافة الطالب',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                elevation: 3,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _isLoading
-                                  ? null
-                                  : () async {
-                                      try {
-                                        await ExcelTesting(
-                                                schoolID: widget.user?.schoolID)
-                                            .readExcelFile(context)
-                                            .then((_) {
-                                          Navigator.pop(context);
-                                        });
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                'خطأ في قراءة ملف الإكسل: $e'),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                      }
-                                    },
-                              icon:
-                                  Icon(Icons.file_upload, color: Colors.white),
-                              label: Text(
-                                'جلب ملف إكسل',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.teal.shade700,
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                elevation: 3,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+  Container dataOfFatherStudent() {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: const Text(
+                  "بيانات ولي الامر",
+                  style: TextStyle(fontSize: 18),
                 ),
               ),
-            ),
-    );
+              _buildTextField(middleNameController, "اسم ولى الامر"),
+              _buildTextField(
+                  grandfatherNameController, "الاسم الاوسط لولي الامر"),
+              _buildTextField(
+                  grandFatherNameForFatherStudent, "اسم جد ولي الامر"),
+              _buildTextField(lastNameController, "القبيلة"),
+              _buildTextFieldData(),
+              _buildTextField(gmailOfFatherStudent, "البريد الالكتروني"),
+              _builtTextFieldNumber("رقم الجوال", phoneFatherStudent, 9),
+              _builtTextFieldNumber("رقم البيت", telephoneFatherStudent, 6),
+            ],
+          ),
+        ));
   }
 
   Padding _buildTextFieldData() {
@@ -436,31 +243,14 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         readOnly: true,
         decoration: InputDecoration(
           labelText: 'تاريخ الميلاد',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          prefixIcon: Icon(Icons.calendar_today),
-          filled: true,
-          fillColor: Colors.grey.shade50,
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          hintText: 'اختر تاريخ الميلاد',
+          border: OutlineInputBorder(),
         ),
         onTap: () async {
           DateTime? pickedDate = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(1900),
-            lastDate: DateTime.now(),
-            builder: (context, child) {
-              return Theme(
-                data: Theme.of(context).copyWith(
-                  colorScheme: ColorScheme.light(
-                    primary: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                child: child!,
-              );
-            },
+            firstDate: DateTime(1700),
+            lastDate: DateTime(2300),
           );
           if (pickedDate != null) {
             String formattedDate = DateFormat.yMMMd().format(pickedDate);
@@ -479,8 +269,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     );
   }
 
-  Widget _buildTextField(
-      TextEditingController controller, String label, IconData? icon) {
+  Widget _buildTextField(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
@@ -498,21 +287,14 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         },
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          prefixIcon: icon != null ? Icon(icon) : null,
-          filled: true,
-          fillColor: Colors.grey.shade50,
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          hintText: 'أدخل $label',
+          border: OutlineInputBorder(),
         ),
       ),
     );
   }
 
-  Widget _builtTextFieldNumber(String label, TextEditingController controller,
-      int maxLength, IconData? icon) {
+  Widget _builtTextFieldNumber(
+      String label, TextEditingController controller, int maxLength) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
@@ -527,18 +309,8 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
           return null;
         },
         controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          prefixIcon: icon != null ? Icon(icon) : null,
-          filled: true,
-          fillColor: Colors.grey.shade50,
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          counterText: "",
-          hintText: 'أدخل $label',
-        ),
+        decoration:
+            InputDecoration(labelText: label, border: OutlineInputBorder()),
       ),
     );
   }

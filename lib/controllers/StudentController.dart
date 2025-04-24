@@ -2,7 +2,6 @@ import 'package:al_furqan/controllers/some_controller.dart';
 import 'package:al_furqan/helper/sqldb.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class StudentController {
   List<StudentModel> students = [];
@@ -86,20 +85,15 @@ class StudentController {
   addStudentToFirebase(StudentModel student, int schoolID) async {
     print("جاري إضافة الطالب إلى Firebase - معرف المدرسة: ${schoolID}");
 
-    // التحقق أولاً من وجود اتصال بالإنترنت
-    bool hasConnection = await InternetConnectionChecker().hasConnection;
-    if (!hasConnection) {
-      print("لا يوجد اتصال بالإنترنت، لا يمكن إضافة الطالب إلى Firebase");
-      return;
-    }
-
     if (student.studentID == null) {
       print("تحذير: معرف الطالب غير موجود (studentID = null)");
       return; // لا يمكن الإضافة إلى Firebase بدون معرف
     }
 
+    int? schoolIDF = schoolID;
+
     // إرسال البيانات إلى Firebase فقط بدون إضافة محلية مرة أخرى
-    await firebasehelper.addStudent(student.studentID!, student, schoolID);
+    await firebasehelper.addStudent(student.studentID!, student, schoolIDF);
     print("تم إرسال بيانات الطالب إلى Firebase");
   }
 
@@ -235,18 +229,11 @@ class StudentController {
   // addStudentToFirebase2(StudentModel student, int schoolID) async {
   //   print("جاري إضافة الطالب إلى Firebase - معرف المدرسة: ${schoolID}");
 
-    // التحقق أولاً من وجود اتصال بالإنترنت
-    bool hasConnection = await InternetConnectionChecker().hasConnection;
-    if (!hasConnection) {
-      print("لا يوجد اتصال بالإنترنت، لا يمكن إضافة الطالب إلى Firebase");
-      return;
-    }
-
-    int idStudent = await _sqldb.insertData(
-        "INSERT INTO Students (ElhalagatID, SchoolID, FirstName, MiddleName, grandfatherName, LastName, AttendanceDays, AbsenceDays, Excuse, ReasonAbsence) "
-        "VALUES ('${student.elhalaqaID}', ${schoolID}, '${student.firstName}', '${student.middleName}', "
-        "'${student.grandfatherName}', '${student.lastName}', ${student.attendanceDays ?? 'NULL'}, "
-        "${student.absenceDays ?? 'NULL'}, '${student.excuse ?? ''}', '${student.reasonAbsence ?? ''}')");
+  //   int idStudent = await _sqldb.insertData(
+  //       "INSERT INTO Students (ElhalagatID, SchoolID, FirstName, MiddleName, grandfatherName, LastName, AttendanceDays, AbsenceDays, Excuse, ReasonAbsence) "
+  //       "VALUES ('${student.elhalaqaID}', ${schoolID}, '${student.firstName}', '${student.middleName}', "
+  //       "'${student.grandfatherName}', '${student.lastName}', ${student.attendanceDays ?? 'NULL'}, "
+  //       "${student.absenceDays ?? 'NULL'}, '${student.excuse ?? ''}', '${student.reasonAbsence ?? ''}')");
 
   //   await firebasehelper.addStudent(idStudent, student, schoolID);
   //   print("تم إرسال بيانات الطالب إلى Firebase");

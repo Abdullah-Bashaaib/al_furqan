@@ -40,50 +40,35 @@ mixin UserDataMixin<T extends StatefulWidget> on State<T> {
   bool get isLoading => _isLoading;
 
   Future<void> fetchUserData() async {
-    print("UserDataMixin: fetchUserData started");
-    setState(() => _isLoading = true);
-    user = await UserHelper.getDataByPref();
-
-    if (user != null && user!.schoolID != null) {
-      schoolID = user!.schoolID!;
-      print("UserDataMixin: schoolID set to: $schoolID");
-      await _refreshData(); // ← await هنا مهمة
-    } else {
-      print(
-          "UserDataMixin: User or schoolID is null - user: $user, schoolID: ${user?.schoolID}");
-    }
-
-    setState(() => _isLoading = false);
-    print("UserDataMixin: fetchUserData completed, isLoading set to false");
+  setState(() => _isLoading = true);
+  user = await UserHelper.getDataByPref();
+  if (user != null && user!.schoolID != null) {
+    schoolID = user!.schoolID!;
+    print("schoolID set to: $schoolID");
+    await _refreshData(); // ← await هنا مهمة
+  } else {
+    print("User or schoolID is null");
   }
+  setState(() => _isLoading = false);
+}
 
   Future<void> _refreshData() async {
-    print("UserDataMixin: _refreshData started");
-    if (user == null || user!.schoolID == null) {
-      print("UserDataMixin: User or schoolID is null, cannot refresh data");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('خطأ: بيانات المستخدم أو المدرسة غير متوفرة')),
-      );
-      return;
-    }
-
-    try {
-      print("UserDataMixin: Fetching teachers for schoolID: ${user!.schoolID}");
-      await teacherController.getTeachersBySchoolID(user!.schoolID!);
-      print(
-          "UserDataMixin: Teacher count after refresh: ${teacherController.teachers.length}");
-
-      print("UserDataMixin: Fetching students for schoolID: ${user!.schoolID}");
-      await studentController.getSchoolStudents(user!.schoolID!);
-      print(
-          "UserDataMixin: Student count after refresh: ${studentController.students.length}");
-
-      setState(() {});
-      print("UserDataMixin: State updated after data refresh");
-    } catch (e) {
-      print("UserDataMixin: Error refreshing data: $e");
-    }
+  if (user == null || user!.schoolID == null) {
+    print("User or schoolID is null, cannot refresh data");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('خطأ: بيانات المستخدم أو المدرسة غير متوفرة')),
+    );
+    return;
   }
+
+  try {
+    await teacherController.getTeachersBySchoolID(user!.schoolID!);
+    await studentController.getSchoolStudents(user!.schoolID!);
+    setState(() {});
+  } catch (e) {
+    print("Error refreshing data: $e");
+  }
+}
 
   @override
   void initState() {

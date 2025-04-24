@@ -2,7 +2,6 @@ import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/views/SchoolDirector/EditHalaga.dart';
-import 'package:al_furqan/views/SchoolDirector/HalqaReportScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/views/SchoolDirector/add_students_to_halqa_screen.dart';
@@ -96,19 +95,6 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
         actions: [
-          // زر تقرير PDF
-          IconButton(
-            icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
-            tooltip: 'تقرير PDF',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HalqaReportScreen(halqa: widget.halqa),
-                ),
-              );
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white),
             onPressed: () async {

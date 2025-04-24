@@ -4,7 +4,6 @@ import 'package:al_furqan/models/password_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class UserController {
   final List<UserModel> _users = [];
@@ -12,6 +11,7 @@ class UserController {
   final SqlDb _sqlDb = SqlDb();
   final FirebaseHelper _service = FirebaseHelper();
   final PasswordResetModel _model = PasswordResetModel();
+
 
   List<UserModel> get users => _users;
   List<UserModel> get requests => _requests;
@@ -36,15 +36,15 @@ class UserController {
   }
 
   Future<void> addRequest(UserModel userModel) async {
-    userModel.user_id = await someController.newId("USERS", "user_id");
-    int response = await _sqlDb.insertData('''
+      userModel.user_id = await someController.newId("USERS", "user_id");
+      int response = await _sqlDb.insertData('''
     INSERT INTO USERS (user_id, first_name, middle_name, grandfather_name, last_name, phone_number, telephone_number, email, password, roleID, schoolID, date, isActivate)
     VALUES (${userModel.user_id}, '${userModel.first_name}', '${userModel.middle_name}', '${userModel.grandfather_name}', '${userModel.last_name}', '${userModel.phone_number}', '${userModel.telephone_number}', '${userModel.email}', '${userModel.password}', ${userModel.roleID}, ${userModel.schoolID}, '${userModel.date}', 0);
     ''');
-    print("request school id : ${userModel.schoolID}");
-    print("response = $response, isActivate = ${userModel.isActivate}");
-    await firebasehelper.addRequest(response, userModel);
-  }
+      print("request school id : ${userModel.schoolID}");
+      print("response = $response, isActivate = ${userModel.isActivate}");
+      await firebasehelper.addRequest(response, userModel);
+    }
 
   // Method to get all data
   Future<void> getData() async {
@@ -79,15 +79,7 @@ class UserController {
     VALUES (${userModel.user_id}, '${userModel.first_name}', '${userModel.middle_name}', '${userModel.grandfather_name}', '${userModel.last_name}', '${userModel.password}', '${userModel.email}', '${userModel.phone_number}', '${userModel.telephone_number}', ${userModel.roleID}, ${userModel.schoolID}, '${userModel.date}', '${userModel.isActivate}');
     ''');
     print("response = $response, isActivate = ${userModel.isActivate}");
-
-    // Check for internet connectivity before using Firebase
-    bool hasInternet = await InternetConnectionChecker().hasConnection;
-    if (hasInternet) {
-      await firebasehelper.addUser(userModel.user_id, userModel);
-    } else {
-      print("No internet connection - Firebase sync skipped");
-    }
-
+    await firebasehelper.addUser(response, userModel);
     
   } else {
     userModel.user_id = await someController.newId("USERS", "user_id");
@@ -147,11 +139,7 @@ class UserController {
     ''');
       print("response = $response");
 
-      if (await InternetConnectionChecker().hasConnection) {
-        await firebasehelper.updateUser(userModel.user_id!, userModel);
-      } else {
-        print("لا يوجد اتصال بالانترنت");
-      }
+      await firebasehelper.updateUser(userModel.user_id!, userModel);
       // await getData();
     } else {
       int response = await _sqlDb.updateData('''
@@ -174,39 +162,7 @@ class UserController {
     ''');
       print("response = $response");
     }
-<<<<<<< AOSB
-
-    // Method to add a new request
-
-    // Helper method to map response to UserModel
-
-    Future<void> addToLocalOfFirebase() async {
-      var connectivityResult = await Connectivity().checkConnectivity();
-
-      if (connectivityResult != ConnectivityResult.none) {
-        List<Map<String, dynamic>> responseFirebase =
-            await firebasehelper.getUsers();
-        print("responseFirebase = $responseFirebase");
-
-        for (var user in responseFirebase) {
-          UserModel userModel = UserModel.fromJson(user);
-          bool exists = await _sqlDb.checkIfitemExists(
-              "Users", userModel.user_id!, "user_id");
-          if (exists) {
-            await updateUser(userModel, 1);
-          } else {
-            await addUser(userModel);
-          }
-        }
-      } else {
-        print("لا يوجد اتصال بالانترنت");
-        await getDataUsers();
-      }
-    }
-=======
->>>>>>> main
   }
-
   // إرسال رمز التحقق
   Future<void> sendVerificationCode(int phoneNumber) async {
     _model.phoneNumber = phoneNumber;
@@ -232,11 +188,12 @@ class UserController {
 
   // Getters للوصول إلى بيانات النموذج
   bool get codeSent => _model.codeSent;
-  int? get phoneNumber => _model.phoneNumber;
-
+    int? get phoneNumber => _model.phoneNumber;
+  
   // Setters لتحديث بيانات النموذج
   set verificationCode(String code) => _model.verificationCode = code;
   set newPassword(String password) => _model.newPassword = password;
 }
+
 
 UserController userController = UserController();

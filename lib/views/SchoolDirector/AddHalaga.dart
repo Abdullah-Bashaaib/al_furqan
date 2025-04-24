@@ -31,7 +31,7 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
   // تواريخ خطة التلاوة
   DateTime? recitationStartDate;
   DateTime? recitationEndDate;
-
+  
   List<UserModel> teachers = [];
   UserModel? selectedTeacher; // المتغير الذي يخزن المعلم المختار
 
@@ -47,36 +47,11 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
   }
 
   void _loadTeachers() async {
+    // جلب المعلمين حسب SchoolID
+    await teacherController.getTeachersBySchoolID(widget.user.schoolID!);
     setState(() {
-      _isLoading = true;
+      teachers = teacherController.teachers; // تعيين المعلمين في القائمة
     });
-    try {
-      // جلب المعلمين حسب SchoolID
-      await teacherController.getTeachersBySchoolID(widget.user.schoolID!);
-
-      // ترتيب المعلمين: المتاحين أولاً ثم المرتبطين بحلقات
-      List<UserModel> availableTeachers = [];
-      List<UserModel> assignedTeachers = [];
-
-      for (var teacher in teacherController.teachers) {
-        if (teacher.elhalagatID == null) {
-          availableTeachers.add(teacher);
-        } else {
-          assignedTeachers.add(teacher);
-        }
-      }
-
-      // دمج القائمتين مع وضع المتاحين أولاً
-      setState(() {
-        teachers = [...availableTeachers, ...assignedTeachers];
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = "حدث خطأ أثناء جلب المعلمين: $e";
-        _isLoading = false;
-      });
-    }
   }
 
   // جلب الطلاب الذين ليس لديهم حلقة
@@ -168,154 +143,41 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTextFormField(
-                  controller: halqaNameController,
-                  label: 'اسم الحلقة',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'الرجاء إدخال اسم الحلقة';
-                    }
-                    return null;
-                  },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTextFormField(
+                controller: halqaNameController,
+                label: 'اسم الحلقة',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'الرجاء إدخال اسم الحلقة';
+                  }
+                  return null;
+                },
+              ),
+              
+              SizedBox(height: 20),
+
+              // القائمة المنسدلة لاختيار المعلم
+              DropdownButtonFormField<UserModel>(
+                value: selectedTeacher,
+                items: teachers.map((teacher) {
+                  return DropdownMenuItem<UserModel>(
+                    value: teacher,
+                    child: Text('${teacher.first_name} ${teacher.last_name}'),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedTeacher = value; // تعيين المعلم المختار
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'اختر المعلم',
+                  border: OutlineInputBorder(),
                 ),
-
-                SizedBox(height: 20),
-
-                // القائمة المنسدلة لاختيار المعلم
-                _isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DropdownButtonFormField<UserModel>(
-                            value: selectedTeacher,
-                            items: teachers.isEmpty
-                                ? [
-                                    DropdownMenuItem<UserModel>(
-                                      enabled: false,
-                                      value: null,
-                                      child: Text(
-                                        'لا يوجد معلمين متاحين',
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                    )
-                                  ]
-                                : teachers.map((teacher) {
-                                    // التحقق مما إذا كان المعلم لديه حلقة بالفعل
-                                    bool hasHalaga =
-                                        teacher.elhalagatID != null;
-
-                                    return DropdownMenuItem<UserModel>(
-                                      value: teacher,
-                                      // تعطيل المعلمين الذين لديهم حلقات
-                                      enabled: !hasHalaga,
-                                      child: Row(
-                                        children: [
-                                          // عرض أيقونة تشير إلى حالة المعلم
-                                          Icon(
-                                            hasHalaga
-                                                ? Icons.person_off
-                                                : Icons.person_outlined,
-                                            color: hasHalaga
-                                                ? Colors.grey
-                                                : Colors.green,
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: 8),
-                                          // عرض اسم المعلم
-                                          Text(
-                                            '${teacher.first_name} ${teacher.last_name}',
-                                            style: TextStyle(
-                                              color: hasHalaga
-                                                  ? Colors.grey
-                                                  : Colors.black,
-                                              fontWeight: hasHalaga
-                                                  ? FontWeight.normal
-                                                  : FontWeight.bold,
-                                            ),
-                                          ),
-                                          // إضافة وصف للمعلمين الذين لديهم حلقات
-                                          if (hasHalaga)
-                                            Expanded(
-                                              child: Text(
-                                                ' (مرتبط بحلقة)',
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontSize: 12,
-                                                  fontStyle: FontStyle.italic,
-                                                ),
-                                                textAlign: TextAlign.end,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedTeacher = value; // تعيين المعلم المختار
-                              });
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'اختر المعلم',
-                              border: OutlineInputBorder(),
-                              hintText: 'اختر معلم غير مرتبط بحلقة',
-                            ),
-                            isExpanded:
-                                true, // للتأكد من أن النص يظهر بشكل كامل
-                          ),
-
-                          // إضافة ملاحظة توضيحية حول المعلمين
-                          if (teachers
-                              .any((teacher) => teacher.elhalagatID == null))
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.info_outline,
-                                      size: 16, color: Colors.green),
-                                  SizedBox(width: 8),
-                                  Flexible(
-                                    child: Text(
-                                      'فقط المعلمون الغير مرتبطين بحلقات متاحون للاختيار',
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                          // إضافة رسالة عندما لا يوجد معلمين متاحين
-                          if (!teachers.any(
-                                  (teacher) => teacher.elhalagatID == null) &&
-                              teachers.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.warning_amber,
-                                      size: 16, color: Colors.orange),
-                                  SizedBox(width: 8),
-                                  Flexible(
-                                    child: Text(
-                                      'جميع المعلمين مرتبطين بحلقات حالياً. يمكنك تحرير حلقة لإلغاء ارتباط معلم.',
-                                      style: TextStyle(
-                                        color: Colors.orange,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
+                ),
 
                 SizedBox(height: 20),
 
@@ -390,17 +252,17 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
                         );
                       },
                     ),
-                  ),
+              ),
 
-                SizedBox(height: 20),
+              SizedBox(height: 20),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
                         onPressed: () async {
                           // التحقق من صحة النموذج وعدد الطلاب المحددين
-                          if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                             if (selectedStudentCount < 5) {
                               setState(() {
                                 _errorMessage = "يجب اختيار 5 طلاب على الأقل";
@@ -408,9 +270,9 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
                               return;
                             }
 
-                            // إضافة الحلقة مع البيانات
-                            _halaqaModel.SchoolID = widget.user.schoolID;
-                            _halaqaModel.Name = halqaNameController.text;
+                          // إضافة الحلقة مع البيانات
+                          _halaqaModel.SchoolID = widget.user.schoolID;
+                          _halaqaModel.Name = halqaNameController.text;
 
                             // إضافة خطة الحفظ
                             if (conservationStartDate != null &&
@@ -457,58 +319,50 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
 
                               // إضافة المعلم للحلقة (إذا تم اختياره)
                               if (selectedTeacher != null) {
-                                // التحقق من أن المعلم غير مرتبط بحلقة أخرى
-                                if (selectedTeacher!.elhalagatID != null) {
-                                  setState(() {
-                                    _errorMessage =
-                                        "المعلم المختار مرتبط بحلقة أخرى بالفعل";
-                                  });
-                                  return;
-                                }
                                 await halagaController.updateHalaga(
                                     _halaqaModel, selectedTeacher!.user_id);
                               }
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('تم إضافة الحلقة بنجاح'),
-                                ),
-                              );
-                              Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('تم إضافة الحلقة بنجاح'),
+                            ),
+                          );
+                          Navigator.pop(context);
                             } catch (e) {
                               setState(() {
                                 _errorMessage =
                                     "حدث خطأ أثناء إضافة الحلقة: $e";
                               });
                             }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Theme.of(context).primaryColor,
                           side:
                               BorderSide(color: Theme.of(context).primaryColor),
                         ),
-                        child: Text('إضافة'),
-                      ),
+                      child: Text('إضافة'),
                     ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
                           Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
+                      },
+                      style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.red,
                           side: BorderSide(color: Colors.red),
                         ),
                         child: Text('الغاء'),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
+            ],
             ),
           ),
         ),

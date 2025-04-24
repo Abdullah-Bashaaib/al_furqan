@@ -1,8 +1,8 @@
+
 import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/SchoolDirector/AddHalaga.dart';
-import 'package:al_furqan/views/SchoolDirector/HalqaReportScreen.dart';
 import 'package:al_furqan/views/SchoolDirector/halagaDetails.dart';
 import 'package:flutter/material.dart';
 
@@ -239,17 +239,6 @@ class _HalqatListPageState extends State<HalqatListPage> {
                                         ),
                                         Row(
                                           children: [
-                                            // زر تقرير PDF
-                                            IconButton(
-                                              icon: Icon(Icons.picture_as_pdf,
-                                                  color: Colors.orange,
-                                                  size: 20),
-                                              tooltip: 'تقرير PDF',
-                                              onPressed: () {
-                                                _showPdfFeatureDialog(
-                                                    context, halqa);
-                                              },
-                                            ),
                                             // زر حذف الحلقة
                                             IconButton(
                                               icon: Icon(Icons.delete,
@@ -381,82 +370,5 @@ class _HalqatListPageState extends State<HalqatListPage> {
         ),
       );
     }
-  }
-
-  // Show PDF feature explanation dialog
-  void _showPdfFeatureDialog(BuildContext context, HalagaModel halqa) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Icon(Icons.picture_as_pdf, color: Colors.orange),
-              SizedBox(width: 10),
-              Text('تقارير PDF للحلقات'),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'يمكنك الآن إنشاء تقارير PDF لكل حلقة تعرض:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              _buildFeaturePoint('خطط الحفظ والتلاوة المخططة والمنفذة'),
-              _buildFeaturePoint(
-                  'محتويات العلوم الشرعية وأسباب التأخر إن وجدت'),
-              _buildFeaturePoint('نسب الإنجاز في مختلف جوانب الحلقة'),
-              SizedBox(height: 10),
-              Text(
-                'يمكنك طباعة التقرير أو حفظه كملف PDF.',
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('إلغاء'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HalqaReportScreen(halqa: halqa),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-              ),
-              child: Text('فتح التقرير'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Helper method to build feature points
-  Widget _buildFeaturePoint(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('• ',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-          Expanded(child: Text(text)),
-        ],
-      ),
-    );
   }
 }
