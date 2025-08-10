@@ -4,7 +4,6 @@ import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/halaqa_provider.dart';
-import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
 import 'package:al_furqan/views/SchoolDirector/AddHalaga.dart';
 import 'package:al_furqan/views/Teacher/HalqaReportScreen.dart';
@@ -212,7 +211,7 @@ class _HalqatListPageState extends State<HalqatListPage> {
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
           onTap: () async {
-            final result = await Navigator.push(
+            final result = await Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => HalqaDetailsPage(

@@ -11,8 +11,6 @@ import 'package:al_furqan/views/SchoolDirector/EditHalaga.dart';
 import 'package:al_furqan/views/Teacher/HalqaReportScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:al_furqan/models/halaga_model.dart';
-import 'package:al_furqan/views/SchoolDirector/add_students_to_halqa_screen.dart';
-import 'package:al_furqan/views/Teacher/HalagaPlansScreen.dart';
 
 class HalqaDetailsPage extends StatefulWidget {
   final HalagaModel halqa;
@@ -188,7 +186,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
             icon: const Icon(Icons.edit, color: Colors.white),
             onPressed: () async {
               // انتقال لصفحة التعديل واستقبال النتيجة
-              final result = await Navigator.push(
+              final result = await Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditHalagaScreen(
