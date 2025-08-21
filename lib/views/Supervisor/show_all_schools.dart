@@ -3,6 +3,7 @@ import 'package:al_furqan/controllers/TeacherController.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/schools_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowAllSchools extends StatefulWidget {
   const ShowAllSchools({super.key});
@@ -18,7 +19,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
   List<SchoolModel> _filterSchools() {
     if (_searchQuery.isEmpty) return schoolController.schools;
     return schoolController.schools.where((school) {
-      final fullName = (school.school_name ?? '').toLowerCase();
+      final fullName = '${school.school_name ?? ''}'.toLowerCase();
       return fullName.contains(_searchQuery.toLowerCase());
     }).toList();
   }
@@ -264,10 +265,10 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
 
   // Show school details in a dialog
   void _showSchoolDetails(BuildContext context, SchoolModel school) async {
-    List numberStudentOfSchool =
+    List _numberStudentOfSchool =
         await studentController.getSchoolStudents(school.schoolID!);
     await teacherController.getTeachersBySchoolID(school.schoolID!);
-    List teacher = await teacherController.teachers;
+    List _teacher = await teacherController.teachers;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -295,11 +296,11 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                     Icons.location_on),
                 if (school.schoolID != null) ...[
                   const Divider(),
-                  _buildDetailItem('عدد المعلمين', teacher.length.toString(),
+                  _buildDetailItem('عدد المعلمين', _teacher.length.toString(),
                       Icons.numbers_rounded),
                   const Divider(),
                   _buildDetailItem('عدد الطلاب',
-                      numberStudentOfSchool.length.toString(), Icons.numbers),
+                      _numberStudentOfSchool.length.toString(), Icons.numbers),
                 ],
               ],
             ),
@@ -308,15 +309,17 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
             borderRadius: BorderRadius.circular(16),
           ),
           actions: [
-            TextButton(
-              child: const Text('تعديل'),
+            TextButton.icon(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              label: const Text('تعديل'),
               onPressed: () {
                 Navigator.of(context).pop();
                 _showAddEditSchoolDialog(context, school: school);
               },
             ),
-            FilledButton(
-              child: const Text('إغلاق'),
+            TextButton.icon(
+              icon: const Icon(Icons.close),
+              label: const Text('إغلاق'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/TeacherController.dart';
@@ -7,9 +5,7 @@ import 'package:al_furqan/helper/sqldb.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
-import 'package:al_furqan/views/SchoolDirector/ElhalagatList.dart';
 import 'package:al_furqan/views/SchoolDirector/add_students_to_halqa_screen.dart';
-import 'package:al_furqan/views/SchoolDirector/halagaDetails.dart';
 import 'package:flutter/material.dart';
 
 class EditHalagaScreen extends StatefulWidget {
@@ -215,7 +211,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
         debugPrint(
             "الحلقة المحدثة - الاسم: ${updatedHalaga.Name}, ID: ${updatedHalaga.halagaID}");
 
-        // استدعاء دالة تحديث الحلقة مع تسجيل مرير معرف المعلم المحدد
+        // استدعاء دالة تحديث الحلقة مع تسجيلمرير معرف المعلم المحدد
         await halagaController.updateHalaga(updatedHalaga, 1);
         await halagaController.updateTeacherAssignment(
             updatedHalaga.halagaID!, idTeacher);
@@ -230,12 +226,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
               backgroundColor: Colors.green,
             ),
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HalqatListPage(),
-            ),
-          );
+          Navigator.pop(context, true); // إرجاع true للإشارة إلى أنه تم التحديث
         }
       } catch (e) {
         setState(() => _isLoading = false);
@@ -655,42 +646,19 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
   }
 
   Widget _buildTeacherDropdown() {
-    // القائمة: المعلمين المتاحين (ليس لديهم حلقات أو في نفس الحلقة الحالية)
-    final currentHalagaId = widget.halga.halagaID?.trim();
-    final List<UserModel> availableTeachers = teachers.where((teacher) {
-      final id = teacher.elhalagatID?.trim();
-      return id == null ||
-          id.isEmpty ||
-          id.toLowerCase() == 'null' ||
-          id == currentHalagaId;
-    }).toList();
-
-    log(availableTeachers
-        .map((teacher) => {
-              'id': teacher.user_id,
-              'name': '${teacher.first_name} ${teacher.last_name}',
-              'halagaID': teacher.elhalagatID
-            })
-        .toList()
-        .toString());
+    // تعيين قائمة للمعلمين الذين ليس لديهم حلقات
+    final List<UserModel> availableTeachers = teachers
+        .where((teacher) =>
+            teacher.elhalagatID == null ||
+            teacher.elhalagatID == widget.halga.halagaID)
+        .toList();
 
     // تعيين قائمة للمعلمين الذين لديهم حلقات
-    final List<UserModel> assignedTeachers = teachers.where((teacher) {
-      final id = teacher.elhalagatID?.trim();
-      return id != null &&
-          id.isNotEmpty &&
-          id.toLowerCase() != 'null' &&
-          id != widget.halga.halagaID;
-    }).toList();
-
-    log(assignedTeachers
-        .map((teacher) => {
-              'id': teacher.user_id,
-              'name': '${teacher.first_name} ${teacher.last_name}',
-              'halagaID': teacher.elhalagatID
-            })
-        .toList()
-        .toString());
+    final List<UserModel> assignedTeachers = teachers
+        .where((teacher) =>
+            teacher.elhalagatID != null &&
+            teacher.elhalagatID != widget.halga.halagaID)
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

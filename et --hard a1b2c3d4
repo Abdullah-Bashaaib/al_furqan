@@ -1,0 +1,147 @@
+[33mcommit 1144f9dd94bcd5f61e3f1ecd44118495d33ec237[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mAM[m[33m, [m[1;31mupstream/main[m[33m)[m
+Merge: 7194701 6f5af6d
+Author: Abdullah Bashaaib <154816162+Abdullah-Bashaaib@users.noreply.github.com>
+Date:   Thu Apr 24 10:58:18 2025 +0300
+
+    Merge pull request #9 from Abdullah-Bashaaib/AOSB
+    
+     تمت إضافة حزمة internet_connection_checker للتحقق من اتصال الإنترنت قبل إضافة الطلاب إلى Firebase.
+
+[33mcommit 6f5af6d59dbeb38bef40cac042135c7ee358ae93[m
+Merge: 2a4263a 7194701
+Author: Abdullah Bashaaib <154816162+Abdullah-Bashaaib@users.noreply.github.com>
+Date:   Thu Apr 24 10:56:17 2025 +0300
+
+    Merge branch 'main' into AOSB
+
+[33mcommit 71947015d5011329a0047466b1b02c1808b0c60e[m
+Merge: 7b9cdb3 0a3c74a
+Author: Abdullah Bashaaib <154816162+Abdullah-Bashaaib@users.noreply.github.com>
+Date:   Thu Apr 24 01:45:37 2025 +0300
+
+    Merge pull request #8 from abdullahmusllam/AM
+    
+    feat: integrate internet connection checker and enhance user management
+
+[33mcommit 2a4263a92d46dc779290b7037dc1594d7a1b886c[m
+Author: Abdullah Bashaaib <aosb.10.2023@gmail.com>
+Date:   Thu Apr 24 01:39:53 2025 +0300
+
+    feat: enhance School Director dashboard with new features and UI improvements
+    
+    - Added PDF report generation functionality for Halqa details.
+    - Integrated a new HalqaReportScreen for displaying and managing PDF reports.
+    - Updated the SchoolDirectorHome screen to include recent activities and statistics.
+    - Improved loading indicators and error handling for better user experience.
+    - Enhanced the UI for better visual appeal and accessibility, including a welcome message and distribution charts.
+    - Refactored code for improved maintainability and readability.
+
+[33mcommit f24060f41eb09512d792a93b0d938fdbf54f159c[m
+Author: Abdullah Bashaaib <aosb.10.2023@gmail.com>
+Date:   Thu Apr 24 01:23:19 2025 +0300
+
+    feat: enhance teacher management with new functionalities and UI improvements
+    
+    - Added a new screen for adding teachers with comprehensive input validation.
+    - Implemented a method in TeacherController to facilitate the addition of new teachers.
+    - Introduced a new screen for editing teacher details, allowing updates to existing teacher information.
+    - Enhanced the teacher list view to include options for editing and deleting teachers.
+    - Improved the drawer navigation for better user experience and accessibility.
+    - Integrated internet connectivity checks before performing operations that require network access.
+    - Updated the UI for better visual appeal and user interaction, including loading indicators and success/error messages.
+
+[33mcommit 0a3c74a241239cd465130e44ed1a72f7d9fb3cf0[m[33m ([m[1;31morigin/AM[m[33m)[m
+Author: Abdullah Musllam <mslmbdallh436@gmail.com>
+Date:   Thu Apr 24 00:13:53 2025 +0300
+
+    feat: integrate internet connection checker and enhance user management
+    
+    - Added internet_connection_checker package to monitor connectivity status.
+    - Updated StudentController and UserController to include additional parameters for user and student updates.
+    - Modified login functionality to handle phone number instead of email.
+    - Improved data synchronization with Firebase by checking internet connectivity before fetching data.
+    - Refactored login screen to streamline user experience and ensure proper handling of login states.
+    
+    اضافه كود فاير بيس الطلاب واليوزر وايضا كود في صفحة login_auth جاهز من اجل عدم عرض صفحة تسجيل الدخول اذا كان المستخدم موجود ولكن تحتاج الى تاكد منك لانه الشيرد بريفرانس عليك
+
+[33mcommit 54648f76bb76f07ce91eca6de2327150cd2f3673[m
+Author: Abdullah Bashaaib <aosb.10.2023@gmail.com>
+Date:   Wed Apr 23 22:30:58 2025 +0300
+
+    الميزة: دمج أداة فحص اتصال الإنترنت وتحسين عملية إضافة الطلاب
+    
+    - تمت إضافة حزمة internet_connection_checker للتحقق من اتصال الإنترنت قبل إضافة الطلاب إلى Firebase.
+    - تم تحديث شاشة AddStudent لاستخدام الحزمة الجديدة للتحقق من الاتصال.
+    - تم تحسين ملاحظات المستخدم من خلال رسائل SnackBar المُحسّنة لحالات النجاح والأخطاء.
+    - تمت إعادة تصميم منطق إضافة الطلاب لضمان تجربة مستخدم أكثر سلاسة.
+    - تم تحسين عناصر واجهة المستخدم لتحسين سهولة الاستخدام والجاذبية البصرية.
+
+[33mcommit 7b9cdb38f2387b27b2f49faca773d181ec8de65e[m
+Merge: dd516e6 502afc8
+Author: Abdullah Bashaaib <154816162+Abdullah-Bashaaib@users.noreply.github.com>
+Date:   Tue Apr 22 22:41:38 2025 +0300
+
+    Merge pull request #6 from Abdullah-Bashaaib/AOSB
+    
+    الميزة: تحسين إدارة Halaga والطلاب بوظائف جديدة
+
+[33mcommit 502afc8b93d1dbb8d2f23da2b12acd8eaa9e72b3[m
+Merge: 5c435da dd516e6
+Author: Abdullah Bashaaib <154816162+Abdullah-Bashaaib@users.noreply.github.com>
+Date:   Tue Apr 22 22:41:24 2025 +0300
+
+    Merge branch 'main' into AOSB
+
+[33mcommit dd516e621e039fd8fc1b9093dcc1227643f8b199[m
+Merge: 89fb093 ab182d1
+Author: Abdullah Bashaaib <154816162+Abdullah-Bashaaib@users.noreply.github.com>
+Date:   Tue Apr 22 22:36:24 2025 +0300
+
+    Merge pull request #7 from abdullahmusllam/AM
+    
+    feat: implement password reset functionality with WhatsApp verification
+
+[33mcommit ab182d1ed0d54ec14eb6cdd2122ccd28747acae4[m
+Author: Abdullah Musllam <mslmbdallh436@gmail.com>
+Date:   Tue Apr 22 22:30:31 2025 +0300
+
+    feat: implement password reset functionality with WhatsApp verification
+    
+    اضافة التحقق من كلمة المرور في حال نسيانها لكن لا يزال تحت التجربة
+
+[33mcommit 5c435dad7cfe96df9f99ab1f993b5cbe1e9321ce[m
+Author: Abdullah Bashaaib <aosb.10.2023@gmail.com>
+Date:   Tue Apr 22 22:04:19 2025 +0300
+
+    الميزة: تحسين إدارة Halaga والطلاب بوظائف جديدة
+    
+    - إضافة طريقة جديدة في HalagaController لجلب بيانات Halaga حسب المعرف.
+    - تحديث StudentController لتسهيل معالجة بيانات الطلاب وتحسين إدارة الأخطاء.
+    - تحسين شاشة AddStudent لتشمل فحص الاتصال قبل المزامنة مع Firebase.
+    - تحسين واجهة المستخدم في صفحة قائمة الطلاب لعرض مؤشرات التحميل والتعامل مع الحالات الفارغة بسلاسة أكبر.
+    - إضافة كلمات جديدة إلى إعدادات cSpell لدعم أفضل للتدقيق الإملائي.
+
+[33mcommit 364d54863c0deba7cb0ca53bd73c08d2d56dbcde[m
+Author: Abdullah Bashaaib <aosb.10.2023@gmail.com>
+Date:   Tue Apr 22 18:35:31 2025 +0300
+
+    feat: enhance Halaga and Student management with new features and improvements
+    
+    - Updated HalagaController to include detailed logging and improved data handling for conservation and recitation plans.
+    - Enhanced StudentController to ensure proper handling of ElhalagatID and added functionality to fetch students without a Halaga.
+    - Improved UI in AddHalaga and EditHalaga screens for better user experience, including validation for student selection.
+    - Added new fields in HalagaModel and StudentModel to support additional data requirements.
+    - Refactored code for better readability and maintainability across various controllers and views.
+
+[33mcommit 89fb093dc7c396c63d7324b5d23dcceff6c4fc71[m
+Merge: 12d7744 28a8159
+Author: Abdullah Bashaaib <154816162+Abdullah-Bashaaib@users.noreply.github.com>
+Date:   Tue Apr 22 15:47:34 2025 +0300
+
+    Merge pull request #5 from Abdullah-Bashaaib/AOSB
+    
+    feat: add Excel data validation controller
+
+[33mcommit 28a81590b591e7719639107a1ea8de461ae0598d[m
+Author: Abdullah Bashaaib <aosb.10.2023@gmail.com>
+Date:   Mon Apr 21 10:35:00 2025 +03

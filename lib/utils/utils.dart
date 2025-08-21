@@ -41,7 +41,10 @@ class Utils {
       context: context,
       builder: (_) => const AlertDialog(
         title: Text('يتم تحميل البيانات'),
-        content: CircularProgressIndicator(),
+        content: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }

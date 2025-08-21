@@ -1,5 +1,11 @@
+import 'package:al_furqan/controllers/report_controller.dart';
+import 'package:al_furqan/models/report_model.dart';
 import 'package:al_furqan/models/schools_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+
+import '../../widgets/build_pdf.dart';
 
 class SchoolReportPage extends StatefulWidget {
   final SchoolModel schoolModel;
@@ -27,7 +33,7 @@ class SchoolReportPage extends StatefulWidget {
   //   },
   // ];
 
-  const SchoolReportPage(
+  SchoolReportPage(
       {super.key,
       required this.schoolModel,
       required this.numberT,
@@ -44,7 +50,14 @@ void initState() {
 }
 
 class _SchoolReportPageState extends State<SchoolReportPage> {
-  Future<void> schoolReport(int schoolId) async {}
+  final ReportController reportController = ReportController();
+  List<ReportModel> schoolReportList = [];
+
+  Future<void> schoolReport(int schoolId) async {
+    Utils.showDialogLoading(context: context);
+    schoolReportList = await reportController.loadReportHalaga(schoolId);
+    Navigator.of(context, rootNavigator: true).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +100,12 @@ class _SchoolReportPageState extends State<SchoolReportPage> {
         onPressed: () async {
           await schoolReport(widget.schoolModel.schoolID!);
 
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (_) => PdfPreview(
-          //             build: (format) => BuildPdf(records: halqatReportSample)
-          //                 .buildReportPdf())));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => PdfPreview(
+                      build: (format) => BuildPdf(records: schoolReportList)
+                          .buildReportPdf())));
         },
         label: const Text("طباعة"),
         icon: const Icon(Icons.print),

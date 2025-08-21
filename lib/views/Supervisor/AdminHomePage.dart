@@ -281,10 +281,6 @@ class _DashboardScreenState extends State<DashboardScreen>
           _refreshData();
         },
         tooltip: 'تحديث البيانات',
-        child: Icon(
-          Icons.refresh,
-          color: Colors.white,
-        ),
       ),
       body: RefreshIndicator(
         onRefresh: _refreshData,

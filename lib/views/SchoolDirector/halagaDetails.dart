@@ -204,7 +204,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
             icon: const Icon(Icons.edit, color: Colors.white),
             onPressed: () async {
               // انتقال لصفحة التعديل واستقبال النتيجة
-              final result = await Navigator.pushReplacement(
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditHalagaScreen(

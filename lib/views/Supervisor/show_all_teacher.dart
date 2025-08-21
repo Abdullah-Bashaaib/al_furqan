@@ -1,6 +1,7 @@
 import 'package:al_furqan/controllers/TeacherController.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/schools_model.dart';
@@ -48,10 +49,21 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
     }).toList();
   }
 
+  // Find school name by schoolID
+  // String _getSchoolName(int? schoolID) {
+  //   print(schoolID);
+  //   if (schoolID == null) return 'غير معروف';
+  //   final school = schoolController.schools.firstWhere(
+  //     (school) => school.schoolID == schoolID,
+  //     orElse: () => SchoolModel(schoolID: -1, school_name: 'غير معروف'),
+  //   );
+  //   return school.school_name ?? 'غير معروف';
+  // }
+
   @override
   Widget build(BuildContext context) {
     final filteredTeachers = _filterTeachers();
-    List<SchoolModel> schools = schoolController.schools;
+      List<SchoolModel> schools = schoolController.schools;
 
     return Scaffold(
       appBar: AppBar(
@@ -210,11 +222,8 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
       floatingActionButton: FloatingActionButton(
         onPressed: _refreshData,
         tooltip: 'تحديث البيانات',
+        child: Icon(Icons.refresh),
         backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
-          Icons.refresh,
-          color: Colors.white,
-        ),
       ),
     );
   }

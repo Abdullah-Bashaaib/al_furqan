@@ -1,6 +1,5 @@
-import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'package:al_furqan/controllers/users_controller.dart';
 import '../../controllers/school_controller.dart';
 import '../../models/schools_model.dart';
 
@@ -41,37 +40,37 @@ class _RequestsListState extends State<RequestsList> {
     final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     'طلبات التفعيل',
-      //     style:
-      //         const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-      //   ),
-      //   backgroundColor: primaryColor,
-      //   elevation: 2,
-      //   centerTitle: true,
-      //   shape: const RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       icon: const Icon(Icons.refresh, color: Colors.white),
-      //       tooltip: 'تحديث',
-      //       onPressed: () {
-      //         _refreshData();
-      //         ScaffoldMessenger.of(context).showSnackBar(
-      //           SnackBar(
-      //             content: const Text('تم تحديث البيانات'),
-      //             duration: const Duration(seconds: 1),
-      //             behavior: SnackBarBehavior.floating,
-      //             shape: RoundedRectangleBorder(
-      //                 borderRadius: BorderRadius.circular(10)),
-      //           ),
-      //         );
-      //       },
-      //     ),
-      //   ],
-      // ),
+      appBar: AppBar(
+        title: Text(
+          'طلبات التفعيل',
+          style:
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: primaryColor,
+        elevation: 2,
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
+            tooltip: 'تحديث',
+            onPressed: () {
+              _refreshData();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('تم تحديث البيانات'),
+                  duration: const Duration(seconds: 1),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: userController.requests.isEmpty
           ? _buildEmptyState(context)
           : RefreshIndicator(

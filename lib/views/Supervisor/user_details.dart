@@ -1,13 +1,15 @@
 import 'package:al_furqan/controllers/users_controller.dart';
+import 'package:al_furqan/helper/sqldb.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../controllers/school_controller.dart';
+import 'add_school.dart';
+import '../../widgets/build_text_field.dart';
+import '../../widgets/build_password_field.dart';
 import '../../widgets/build_date_field.dart';
 import '../../widgets/build_dropdown_field.dart';
-import '../../widgets/build_password_field.dart';
-import '../../widgets/build_text_field.dart';
-import 'add_school.dart';
 
 class UserDetails extends StatefulWidget {
   final UserModel user;
@@ -127,6 +129,10 @@ class _UserDetailsState extends State<UserDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // User Profile Header
+                // _buildUserProfileHeader(),
+                // SizedBox(height: 24),
+
                 // Section Title
                 _buildSectionTitle('المعلومات الشخصية', Icons.person),
                 SizedBox(height: 16),
@@ -340,8 +346,8 @@ class _UserDetailsState extends State<UserDetails> {
               border: OutlineInputBorder(),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: 4, vertical: 16), // 여기가 변경되었습니다.
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
             items: _schoolItems,
             onChanged: _isEditable

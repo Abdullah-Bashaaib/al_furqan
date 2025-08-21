@@ -1,15 +1,39 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:al_furqan/models/report_model.dart';
 
 class BuildPdf {
-  final List<Map<String, dynamic>> records;
+  final List<ReportModel> records;
 
   BuildPdf({required this.records});
 
   Future<Uint8List> buildReportPdf() async {
     final doc = pw.Document();
+    int studentCount = 0;
+    double totalRate = 0.0;
+    double totalRateC = 0.0;
+    double totalRateE = 0.0;
+    double totalRateI = 0.0;
+    for (var r in records) {
+      totalRate += r.attendanceRate;
+    }
+
+    for (var r in records) {
+      totalRateC += r.conservationRate;
+    }
+
+    for (var r in records) {
+      totalRateE += r.eltlawahRate;
+    }
+
+    for (var r in records) {
+      totalRateI += r.islamicRate;
+    }
+
+    for (var r in records) {
+      studentCount += r.numberStudent;
+    }
 
     // تحميل الخط العربي
     final regularFont =
@@ -24,61 +48,30 @@ class BuildPdf {
       logo = pw.MemoryImage(logoBytes.buffer.asUint8List());
     } catch (_) {}
 
-    // تجهيز صفوف الجدول حتى 21 صفًا
-    final int maxRows = 21;
-    final List<Map<String, dynamic>> rows = List.generate(maxRows, (i) {
-      if (i < records.length) return records[i];
-      return {
-        "school_name": "",
-        "teacher_name": "",
-        "halqa_name": "",
-        "student_count": "",
-        "attendance_percentage": "",
-        "memorization_progress": "",
-        "tajweed_progress": "",
-        "fiqh_progress": "",
-        "activities_count": "",
-        "notes": "",
-      };
-    });
-
-    // حساب الإجماليات
-    int totalStudents = 0;
-    int totalActivities = 0;
-    double avgAttendance = 0;
-    int countWithAttendance = 0;
-
-    for (final r in records) {
-      final sc = r["student_count"];
-      final ac = r["activities_count"];
-      final at = r["attendance_percentage"];
-      if (sc is num) totalStudents += sc.toInt();
-      if (ac is num) totalActivities += ac.toInt();
-      if (at is num) {
-        avgAttendance += at.toDouble();
-        countWithAttendance++;
-      }
-    }
-    if (countWithAttendance > 0) {
-      avgAttendance = avgAttendance / countWithAttendance;
-    }
-
     // أنماط النصوص
     final baseStyle = pw.TextStyle(font: regularFont, fontSize: 10);
     final bold = pw.TextStyle(font: boldFont, fontSize: 11);
     final headerStyle = pw.TextStyle(font: boldFont, fontSize: 12);
+    final titleStyle = pw.TextStyle(font: boldFont, fontSize: 14);
+    final greenText =
+        pw.TextStyle(font: boldFont, fontSize: 11, color: PdfColors.green800);
+
+    // ألوان التقرير
+    final headerGreen = PdfColors.green100;
+    final borderColor = PdfColors.grey600;
+    final stripeColor = PdfColors.green100;
 
     pw.Widget cell(String text,
         {pw.TextAlign align = pw.TextAlign.center,
         pw.EdgeInsets padding =
-            const pw.EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+            const pw.EdgeInsets.symmetric(vertical: 4, horizontal: 4),
         bool header = false}) {
       return pw.Container(
         padding: padding,
         alignment: pw.Alignment.center,
         decoration: pw.BoxDecoration(
-          border: pw.Border.all(color: PdfColors.grey600, width: 0.6),
-          color: header ? PdfColors.grey300 : null,
+          border: pw.Border.all(color: borderColor, width: 0.5),
+          color: header ? headerGreen : null,
         ),
         child: pw.Directionality(
           textDirection: pw.TextDirection.rtl,
@@ -90,48 +83,60 @@ class BuildPdf {
       );
     }
 
-    // ترويسة الجدول
+    // ترويسة الجدول - الترتيب من اليمين إلى اليسار
     final tableHeader = [
-      cell('م', header: true),
-      cell('اسم الحلقة', header: true),
-      cell('اسم المعلم', header: true),
-      cell('عدد الطلاب', header: true),
-      cell('نسبة الحضور %', header: true),
-      cell('الحفظ %', header: true),
-      cell('العلوم الشرعية %', header: true),
-      cell('التلاوة %', header: true),
       cell('عدد الأنشطة المنفذة', header: true),
+      cell('التلاوة %', header: true),
+      cell('العلوم الشرعية %', header: true),
+      cell('الحفظ %', header: true),
+      cell('نسبة الحضور %', header: true),
+      cell('عدد الطلاب', header: true),
+      cell('اسم المعلم', header: true),
+      cell('اسم الحلقة', header: true),
+      cell('م', header: true),
     ];
 
-    // صفوف الجدول
+    // عرض الأعمدة - الترتيب من اليمين إلى اليسار
+    final colWidths = <int, pw.TableColumnWidth>{
+      0: const pw.FixedColumnWidth(85), // الأنشطة
+      1: const pw.FixedColumnWidth(55), // التلاوة
+      2: const pw.FixedColumnWidth(70), // العلوم الشرعية
+      3: const pw.FixedColumnWidth(55), // الحفظ
+      4: const pw.FixedColumnWidth(70), // الحضور
+      5: const pw.FixedColumnWidth(60), // عدد الطلاب
+      6: const pw.FlexColumnWidth(2.2), // اسم المعلم
+      7: const pw.FlexColumnWidth(2.2), // اسم الحلقة
+      8: const pw.FixedColumnWidth(22), // م
+    };
+
+    // صفوف الجدول - 21 صف فارغ كما هو في الصورة
     final tableRows = <List<pw.Widget>>[];
-    for (var i = 0; i < rows.length; i++) {
-      final r = rows[i];
-      tableRows.add([
-        cell('${i + 1}'),
-        cell('${r["halqa_name"] ?? ""}'),
-        cell('${r["teacher_name"] ?? ""}'),
-        cell('${r["student_count"] ?? ""}'),
-        cell('${r["attendance_percentage"] ?? ""}'),
-        cell('${r["memorization_progress"] ?? ""}'),
-        cell('${r["fiqh_progress"] ?? ""}'),
-        cell('${r["tajweed_progress"] ?? ""}'),
-        cell('${r["activities_count"] ?? ""}'),
-      ]);
+    for (var i = 0; i < 21; i++) {
+      if (i < records.length) {
+        final r = records[i];
+        tableRows.add([
+          cell(''), // الأنشطة
+          cell(r.eltlawahRate.toStringAsFixed(1)), // التلاوة
+          cell(r.islamicRate.toStringAsFixed(1)), // العلوم الشرعية
+          cell(r.conservationRate.toStringAsFixed(1)), // الحفظ
+          cell(r.attendanceRate.toStringAsFixed(1)), // الحضور
+          cell(r.numberStudent.toString()), // عدد الطلاب
+          cell(r.teacherName), // اسم المعلم
+          cell(r.halagaName), // اسم الحلقة
+          cell('${i + 1}'), // م
+        ]);
+      } else {
+        tableRows.add(List.generate(9, (_) => cell('')));
+      }
     }
 
-    // عرض الأعمدة
-    final colWidths = <int, pw.TableColumnWidth>{
-      0: const pw.FixedColumnWidth(22), // م
-      1: const pw.FlexColumnWidth(2.2), // اسم الحلقة
-      2: const pw.FlexColumnWidth(2.2), // اسم المعلم
-      3: const pw.FixedColumnWidth(60), // عدد الطلاب
-      4: const pw.FixedColumnWidth(70), // الحضور
-      5: const pw.FixedColumnWidth(55), // الحفظ
-      6: const pw.FixedColumnWidth(70), // العلوم الشرعية
-      7: const pw.FixedColumnWidth(55), // التلاوة
-      8: const pw.FixedColumnWidth(85), // الأنشطة
-    };
+    // إضافة أشرطة خضراء للتزيين
+    pw.Widget greenStripe(double height) {
+      return pw.Container(
+        height: height,
+        color: stripeColor,
+      );
+    }
 
     // صفحة التقرير
     doc.addPage(
@@ -144,85 +149,99 @@ class BuildPdf {
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.stretch,
               children: [
-                // الرأس
-                pw.Container(
-                  padding: const pw.EdgeInsets.only(bottom: 8),
-                  decoration: const pw.BoxDecoration(
-                    border: pw.Border(
-                        bottom:
-                            pw.BorderSide(color: PdfColors.green, width: 1.2)),
-                  ),
-                  child: pw.Row(
-                    crossAxisAlignment: pw.CrossAxisAlignment.center,
-                    children: [
-                      if (logo != null)
-                        pw.Container(
-                          height: 48,
-                          width: 48,
-                          margin: const pw.EdgeInsets.only(left: 8),
-                          child: pw.Image(logo!, fit: pw.BoxFit.contain),
-                        ),
-                      pw.Expanded(
+                // أشرطة خضراء علوية
+                greenStripe(6),
+                pw.SizedBox(height: 3),
+                greenStripe(6),
+                pw.SizedBox(height: 3),
+                greenStripe(6),
+
+                pw.SizedBox(height: 20),
+
+                // الترويسة مع الشعار
+                pw.Row(
+                  children: [
+                    pw.Container(
+                      width: 50,
+                      height: 50,
+                      child: logo != null ? pw.Image(logo) : pw.Container(),
+                    ),
+                    pw.Expanded(
+                      child: pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.center,
+                        children: [
+                          pw.Text('جمعية الفرقان للخدمة القرآنية',
+                              style: titleStyle),
+                          pw.SizedBox(height: 2),
+                          pw.Text('Al-Furqan Association for Qur\'an Service',
+                              style: baseStyle.copyWith(fontSize: 8)),
+                        ],
+                      ),
+                    ),
+                    pw.Expanded(
+                      child: pw.Container(
+                        padding: const pw.EdgeInsets.only(left: 10),
                         child: pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
-                            pw.Text('جمعية الفرقان للخدمة القرآنية',
-                                style: bold.copyWith(fontSize: 14)),
-                            pw.SizedBox(height: 2),
-                            pw.Text('Al-Furqan Association for Qur\'an Service',
-                                style: baseStyle),
-                            pw.SizedBox(height: 4),
-                            pw.Text('تقرير الحلقات وسير المناهج',
-                                style: bold.copyWith(fontSize: 16)),
+                            // ترك هذا المكان فارغًا للعنوان الجانبي كما في الصورة
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+
+                pw.SizedBox(height: 20),
+
+                // عنوان التقرير
+                pw.Container(
+                  alignment: pw.Alignment.center,
+                  padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                  child: pw.Text('تقرير الحلقات وسير المناهج',
+                      style: bold.copyWith(fontSize: 16)),
+                ),
+
+                pw.SizedBox(height: 10),
+
+                // جدول التقرير
+                pw.Table(
+                  border: pw.TableBorder.all(color: borderColor, width: 0.5),
+                  columnWidths: colWidths,
+                  children: [
+                    pw.TableRow(children: tableHeader),
+                    ...tableRows.map((row) => pw.TableRow(children: row)),
+                    // صف الإجمالي
+                    pw.TableRow(children: [
+                      cell(''),
+                      cell('${totalRateE / records.length}'),
+                      cell('${totalRateI / records.length}'),
+                      cell('${totalRateC / records.length}'),
+                      cell('${totalRate / records.length}'),
+                      cell('$studentCount'),
+                      cell(''),
+                      cell('الإجمالي', header: true),
+                      cell(''),
+                    ]),
+                  ],
+                ),
+
+                pw.SizedBox(height: 20),
+
+                // التذييل
+                pw.Container(
+                  alignment: pw.Alignment.center,
+                  child: pw.Text('خدمة قرآنية متكاملة', style: greenText),
                 ),
 
                 pw.SizedBox(height: 8),
 
-                // الجدول
-                pw.Expanded(
-                  child: pw.Table(
-                    border: pw.TableBorder.all(
-                        color: PdfColors.grey600, width: 0.6),
-                    columnWidths: colWidths,
-                    children: [
-                      pw.TableRow(children: tableHeader),
-                      ...tableRows.map((row) => pw.TableRow(children: row)),
-                      // صف الإجمالي
-                      pw.TableRow(children: [
-                        cell(''),
-                        cell('الإجمالي', header: true),
-                        cell(''),
-                        cell('$totalStudents'),
-                        cell(countWithAttendance > 0
-                            ? avgAttendance.toStringAsFixed(1)
-                            : ''),
-                        cell(''),
-                        cell(''),
-                        cell(''),
-                        cell('$totalActivities'),
-                      ]),
-                    ],
-                  ),
-                ),
-
-                pw.SizedBox(height: 12),
-
-                // التذييل
-                pw.Container(
-                  padding: const pw.EdgeInsets.only(top: 8),
-                  decoration: const pw.BoxDecoration(
-                    border: pw.Border(
-                        top: pw.BorderSide(color: PdfColors.green, width: 1.2)),
-                  ),
-                  child: pw.Center(
-                    child: pw.Text('خدمة قرآنية متكاملة',
-                        style: bold.copyWith(color: PdfColors.green)),
-                  ),
-                ),
+                // أشرطة خضراء سفلية
+                greenStripe(6),
+                pw.SizedBox(height: 3),
+                greenStripe(6),
+                pw.SizedBox(height: 3),
+                greenStripe(6),
               ],
             ),
           );
