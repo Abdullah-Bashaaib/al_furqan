@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "373944200372",
+    "project_id": "alforqan-36e33",
+    "storage_bucket": "alforqan-36e33.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373944200372:android:4c23ff4c0bf5680a63fbe1",
+        "android_client_info": {
+          "package_name": "com.example.al_furqan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3btSmACPC00fs_JqUwfDnn6x5_koAWmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373944200372:android:9baba38d7ceed82563fbe1",
+        "android_client_info": {
+          "package_name": "com.example.father"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3btSmACPC00fs_JqUwfDnn6x5_koAWmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

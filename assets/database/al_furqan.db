@@ -1,0 +1,181 @@
+
+-- إنشاء جدول المستخدمين مع الربط بالجداول المطلوبة
+CREATE TABLE "Users" (
+    "user_id" TEXT NOT NULL PRIMARY KEY ,
+    "ActivityID" INTEGER NULL,
+    "ElhalagatID" TEXT NULL,
+    "first_name" TEXT NOT NULL,
+    "middle_name" TEXT NOT NULL,
+    "grandfather_name" TEXT NOT NULL,
+    "last_name" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+	"email" TEXT,
+    "phone_number" INTEGER,
+    "telephone_number" INTEGER,
+	"roleID" INTEGER,
+	"schoolID" INTEGER NULL,
+	"date" DATE,
+	"isActivate" INTEGER,
+    "isSync" BOOLEAN,
+    CONSTRAINT "schoolID_fk" FOREIGN KEY("schoolID") REFERENCES "Schools"("SchoolID"),
+    CONSTRAINT "roleID_fk" FOREIGN KEY("roleID") REFERENCES "Roles"("RoleID"),
+    CONSTRAINT "activityID_fk" FOREIGN KEY("ActivityID") REFERENCES "Activities"("ActivityID"),
+    CONSTRAINT "elhalagatID_fk" FOREIGN KEY("ElhalagatID") REFERENCES "Elhalagat"("halagaID")
+);
+
+-- إنشاء جدول المدارس
+CREATE TABLE "Schools" (
+    "SchoolID" INTEGER NOT NULL PRIMARY KEY ,
+    "school_name" TEXT NOT NULL,
+    "school_location" TEXT NOT NULL,
+    "isSync" BOOLEAN
+);
+
+-- إنشاء جدول الأدوار
+CREATE TABLE "Roles" (
+    "RoleID" INTEGER NOT NULL PRIMARY KEY ,
+    "Name" TEXT NOT NULL,
+    "Description" TEXT
+);
+
+-- إنشاء جدول الأنشطة
+CREATE TABLE "Activities" (
+    "ActivityID" INTEGER NOT NULL PRIMARY KEY ,
+    "ActivityTypeID" INTEGER NOT NULL,
+    "Name" TEXT NOT NULL,
+    "isSync" BOOLEAN,
+    CONSTRAINT "ActivityTypeIDfk" FOREIGN KEY("ActivityTypeID") REFERENCES "ActivityTypes"("ActivityTypeID")
+);
+
+-- إنشاء جدول الحلقات
+CREATE TABLE "Elhalagat" (
+    "halagaID" TEXT NOT NULL PRIMARY KEY ,
+    "SchoolID" INTEGER NOT NULL,
+    "Name" TEXT NOT NULL,
+    "NumberStudent" INTEGER NOT NULL,
+    "AttendanceRate" REAL NULL,
+    "isSync" BOOLEAN,
+    CONSTRAINT "schoolIDfk" FOREIGN KEY("SchoolID") REFERENCES "School"("SchoolID")
+);
+
+-- إنشاء جدول الطلاب
+CREATE TABLE "Students" (
+    "StudentID" TEXT NOT NULL PRIMARY KEY ,
+    "ElhalagatID" INTEGER NULL,
+    "SchoolID" INTEGER NULL,
+    "userID" INTEGER NULL,
+    "FirstName" TEXT NOT NULL,
+    "MiddleName" TEXT NOT NULL,
+    "grandfatherName" TEXT NOT NULL,
+    "LastName" TEXT NOT NULL,
+    "AttendanceDays" INTEGER,
+    "AbsenceDays" INTEGER,
+    "Excuse" TEXT,
+    "ReasonAbsence" TEXT,
+    "isSync" BOOLEAN,
+    CONSTRAINT "elhalagatIDfk" FOREIGN KEY("ElhalagatID") REFERENCES "Elhalagat"("halagaID"),
+    CONSTRAINT "school_id_fk" FOREIGN KEY("SchoolID") REFERENCES "Schools"("SchoolID")
+);
+
+-- إنشاء جدول الأنشطة المدرسية
+CREATE TABLE "School_Activites" (
+    "School_ActiviesID" INTEGER NOT NULL PRIMARY KEY ,
+    "SchoolID" INTEGER NOT NULL,
+    "ActivityID" INTEGER NOT NULL,
+    "PlannedCount" INTEGER,
+    "ExecutedCount" INTEGER,
+    "isSync" BOOLEAN,
+    CONSTRAINT "Activityfk" FOREIGN KEY("ActivityID") REFERENCES "Activities"("ActivityID"),
+    CONSTRAINT "schoolIDfk" FOREIGN KEY("SchoolID") REFERENCES "School"("SchoolID")
+);
+
+-- إنشاء جدول أنواع الأنشطة
+CREATE TABLE "ActivityTypes" (
+    "ActivityTypeID" INTEGER NOT NULL PRIMARY KEY ,
+    "Name" TEXT NOT NULL,
+    "isSync" BOOLEAN
+);
+
+-- إنشاء جدول التقارير الشهرية
+CREATE TABLE "MonthlyReports" (
+    "MonthlyReportID" INTEGER NOT NULL PRIMARY KEY ,
+    "SchoolID" INTEGER NOT NULL,
+    "Date" TEXT,
+    "PlannedMeetings" TEXT,
+    "ConductedMeetings" TEXT,
+    "PlannedVisits" TEXT,
+    "ConductedVisits" TEXT,
+    "AchievementRate" REAL,
+    "isSync" BOOLEAN,
+    CONSTRAINT "schoolid3fk" FOREIGN KEY("SchoolID") REFERENCES "School"("SchoolID")
+);
+
+-- إنشاء جدول الدراسات الإسلامية
+CREATE TABLE "IslamicStudies" (
+    "IslamicStudiesID" TEXT NOT NULL PRIMARY KEY ,
+    "ElhalagatID" INTEGER NOT NULL,
+    "Subject" TEXT NOT NULL,
+    "PlannedContent" TEXT,
+    "ExecutedContent" TEXT,
+    "PlanMonth" TEXT,
+    "isSync" BOOLEAN,
+    CONSTRAINT "elhalagatidfk" FOREIGN KEY("ElhalagatID") REFERENCES "Elhalagat"("halagaID")
+);
+
+-- إنشاء جدول خطط الحفظ
+CREATE TABLE "ConservationPlans" (
+    "ConservationPlanID" TEXT NOT NULL PRIMARY KEY ,
+    "ElhalagatID" INTEGER NOT NULL,
+    "StudentID" INTEGER NOT NULL,
+    "PlannedStartSurah" TEXT,
+    "PlannedStartAya" INTEGER,
+    "PlannedEndSurah" TEXT,
+    "PlannedEndAya" INTEGER,
+    "ExecutedStartSurah" TEXT,
+    "ExecutedStartAya" INTEGER,
+    "ExecutedEndSurah" TEXT,
+    "ExecutedEndAya" INTEGER,
+    "ExecutedRate" REAL,
+    "PlanMonth" TEXT,
+    "isSync" BOOLEAN,
+    CONSTRAINT "elahalagatID4fk" FOREIGN KEY("ElhalagatID") REFERENCES "Elhalagat"("halagaID")
+);
+
+-- إنشاء جدول خطط التلاوة
+CREATE TABLE "EltlawahPlans" (
+    "EltlawahPlanID" TEXT NOT NULL PRIMARY KEY ,
+    "ElhalagatID" INTEGER NOT NULL,
+    "PlannedStartSurah" TEXT,
+    "PlannedStartAya" INTEGER,
+    "PlannedEndSurah" TEXT,
+    "PlannedEndAya" INTEGER,
+    "ExecutedStartSurah" TEXT,
+    "ExecutedStartAya" INTEGER,
+    "ExecutedEndSurah" TEXT,
+    "ExecutedEndAya" INTEGER,
+    "ExecutedRate" REAL,
+    "PlanMonth" TEXT,
+    "isSync" BOOLEAN,
+    CONSTRAINT "elhalagatid3fk" FOREIGN KEY("ElhalagatID") REFERENCES "Elhalagat"("halagaID")
+);
+
+-- إنشاء جدول التوصيات
+CREATE TABLE "Recommendations" (
+    "RecommendationsID" INTEGER NOT NULL PRIMARY KEY ,
+    "ElhalagatID" INTEGER NOT NULL,
+    "ReasonDelay" TEXT NOT NULL,
+    "Recommendation" TEXT NOT NULL,
+    "isSync" BOOLEAN,
+    CONSTRAINT "elhalagatid2fk" FOREIGN KEY("ElhalagatID") REFERENCES "Elhalagat"("halagaID")
+);
+
+CREATE TABLE "messages" (
+      "id" INTEGER PRIMARY KEY,
+      "senderId" INTEGER NOT NULL,
+      "receiverId" INTEGER NOT NULL,
+      "content" TEXT NOT NULL,
+      "timestamp" TEXT NOT NULL,
+      "sync" INTEGER NOT NULL,
+      "senderType" TEXT NOT NULL,
+      "isRead" INTEGER DEFAULT 0
+);
