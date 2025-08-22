@@ -165,10 +165,10 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.update,
                     title: 'مزامنة البيانات ',
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (context) => MainScreenD(),
                         ),
                       );
@@ -180,7 +180,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     title: "إدارة المعلمين",
                     onTap: () {
                       (context).read<UserProvider>().loadUsersFromFirebase();
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.of(context).push(CupertinoPageRoute(
                           builder: (context) => TeacherManagement()));
                     },
@@ -192,7 +192,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (context) => AttendanceQRScreen(),
                         ),
                       );
@@ -202,7 +202,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.manage_accounts,
                     title: "عرض الحضور",
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.of(context).push(
                         CupertinoPageRoute(
                             builder: (context) => TeachersAttendanceListScreen(
@@ -214,7 +214,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.message,
                     title: "الرسائل",
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.of(context).push(
                         CupertinoPageRoute(
                           builder: (context) => ConversationsScreen(
@@ -230,7 +230,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.school,
                     title: 'إدارة الطلاب',
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
@@ -244,16 +244,16 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.groups,
                     title: 'إدارة الحلقات',
                     onTap: () async {
-                      int? schoolID = perf.getInt('schoolId');
-                      await halagaController.getHalagatFromFirebaseByID(
-                          schoolID!, 'SchoolID');
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
                           builder: (context) => HalqatListPage(),
                         ),
                       );
+                      int? schoolID = perf.getInt('schoolId');
+                      await halagaController.getHalagatFromFirebaseByID(
+                          schoolID!, 'SchoolID');
                     },
                   ),
 
@@ -295,27 +295,8 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
             //   title: 'تسجيل الخروج',
             //   color: Colors.red.shade300,
             //   onTap: () {
-            //     // Show confirmation dialog
-            //     showDialog(
-            //       context: context,
-            //       builder: (context) => AlertDialog(
-            //         title: Text('تسجيل الخروج'),
-            //         content: Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
-            //         actions: [
-            //           TextButton(
-            //             onPressed: () => Navigator.pop(context),
-            //             child: Text('إلغاء'),
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //               // Implement logout logic here
-            //               Navigator.pop(context);
-            //             },
-            //             child: Text('تسجيل الخروج'),
-            //           ),
-            //         ],
-            //       ),
-            //     );
+            // Show confirmation dialog
+
             //   },
             // ),
             SizedBox(height: 10),
