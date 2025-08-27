@@ -11,6 +11,7 @@ import 'package:al_furqan/views/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../controllers/plan_controller.dart';
 
 class TeacherDashboard extends StatefulWidget {
@@ -838,7 +839,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                         child: _buildPlanField(
                                           label: 'من',
                                           value: eltlawahPlan != null
-                                              ? '${eltlawahPlan!.plannedStartSurah!}الاية${eltlawahPlan!.plannedStartAya}'
+                                              ? ' ${eltlawahPlan!.plannedStartSurah!} - الآية ${eltlawahPlan!.plannedStartAya}'
                                               : 'لا توجد خطه',
                                           icon: Icons.arrow_right,
                                           color: Colors.blue,

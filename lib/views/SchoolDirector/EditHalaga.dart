@@ -6,7 +6,10 @@ import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/SchoolDirector/add_students_to_halqa_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'ElhalagatList.dart';
 
 class EditHalagaScreen extends StatefulWidget {
   final HalagaModel halga;
@@ -226,7 +229,10 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
               backgroundColor: Colors.green,
             ),
           );
-          Navigator.pop(context, true); // إرجاع true للإشارة إلى أنه تم التحديث
+          Navigator.pushReplacement(
+              // Here you didn't complete edition!!
+              context,
+              CupertinoPageRoute(builder: (_) => HalqatListPage()));
         }
       } catch (e) {
         setState(() => _isLoading = false);
@@ -340,7 +346,6 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
                                       ),
                                     ),
                                     const SizedBox(height: 16),
-
                                     // حقل اسم الحلقة
                                     TextFormField(
                                       controller: nameController,
@@ -650,14 +655,17 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
     final List<UserModel> availableTeachers = teachers
         .where((teacher) =>
             teacher.elhalagatID == null ||
-            teacher.elhalagatID == widget.halga.halagaID)
+            teacher.elhalagatID == widget.halga.halagaID ||
+            teacher.elhalagatID?.toLowerCase() == 'null')
         .toList();
 
     // تعيين قائمة للمعلمين الذين لديهم حلقات
     final List<UserModel> assignedTeachers = teachers
         .where((teacher) =>
-            teacher.elhalagatID != null &&
-            teacher.elhalagatID != widget.halga.halagaID)
+            teacher.elhalagatID != null && // التأكد أنها ليست null
+            teacher.elhalagatID!.isNotEmpty && // التأكد أنها ليست فارغة
+            teacher.elhalagatID != widget.halga.halagaID &&
+            teacher.elhalagatID?.toLowerCase() != 'null') // ليست الحلقة الحالية
         .toList();
 
     return Column(
@@ -698,7 +706,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
             // إذا كان هناك معلمون متاحون، نضع عنوان لهم
             if (availableTeachers.isNotEmpty)
               DropdownMenuItem<String>(
-                enabled: false,
+                enabled: true,
                 value: "999", // قيمة غير صالحة للاختيار
                 child: Text(
                   '-- المعلمون المتاحون --',

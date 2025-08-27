@@ -1,6 +1,4 @@
-import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
-import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/SchoolDirector/ElhalagatList.dart';
@@ -251,54 +249,15 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                           builder: (context) => HalqatListPage(),
                         ),
                       );
-                      int? schoolID = perf.getInt('schoolId');
-                      await halagaController.getHalagatFromFirebaseByID(
-                          schoolID!, 'SchoolID');
+                      // int? schoolID = perf.getInt('schoolId');
+                      // await halagaController.getHalagatFromFirebaseByID(
+                      //     schoolID!, 'SchoolID');
                     },
                   ),
-
-                  // Academic Section
-                  //     _buildSectionTitle('الشؤون الأكاديمية'),
-                  //     _buildMenuItem(
-                  //       icon: Icons.book,
-                  //       title: 'المناهج',
-                  //       onTap: () {
-                  //         Navigator.pop(context);
-                  //      Navigator.of(context).pop();
-                  // Navigator.push(
-                  //   context,
-                  //   CupertinoPageRoute(
-                  //       builder: (context) => DatabaseViewerEntry()),
-                  // );
-                  //         // الانتقال إلى شاشة المناهج
-                  //       },
-                  //     ),
-
-                  // System Section
-                  // _buildSectionTitle('النظام'),
-                  // _buildMenuItem(
-                  //   icon: Icons.settings,
-                  //   title: 'الإعدادات',
-                  //   onTap: () {
-                  //     Navigator.pop(context);
-                  //     // الانتقال إلى شاشة الإعدادات
-                  //   },
-                  // ),
                 ],
               ),
             ),
 
-            // Logout at the bottom
-            // Divider(thickness: 1),
-            // _buildMenuItem(
-            //   icon: Icons.logout,
-            //   title: 'تسجيل الخروج',
-            //   color: Colors.red.shade300,
-            //   onTap: () {
-            // Show confirmation dialog
-
-            //   },
-            // ),
             SizedBox(height: 10),
           ],
         ),
