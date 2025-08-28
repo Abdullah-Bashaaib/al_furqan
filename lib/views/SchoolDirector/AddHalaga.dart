@@ -4,12 +4,11 @@ import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/main.dart';
+import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:flutter/material.dart';
-import 'package:al_furqan/models/halaga_model.dart';
-import 'package:intl/intl.dart';
-import 'package:path/path.dart';
+
 import '../../../controllers/TeacherController.dart';
 
 class AddHalaqaScreen extends StatefulWidget {
@@ -249,8 +248,8 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
                           // إضافة ملاحظة توضيحية حول المعلمين
                           if (teachers.any((teacher) =>
                               (teacher.elhalagatID == 'null' &&
-                                  teacher.elhalagatID != 'NULL' &&
-                                  teacher.elhalagatID != null)))
+                                  teacher.elhalagatID == 'NULL' &&
+                                  teacher.elhalagatID == null)))
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Row(

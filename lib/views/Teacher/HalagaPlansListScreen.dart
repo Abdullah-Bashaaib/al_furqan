@@ -6,8 +6,9 @@ import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
 import 'package:flutter/material.dart';
-import 'HalagaPlansScreen.dart';
+
 import 'EditHalagaPlanScreen.dart';
+import 'HalagaPlansScreen.dart';
 
 // ignore: must_be_immutable
 class HalagaPlansListScreen extends StatefulWidget {
@@ -248,7 +249,7 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                         _buildInfoRow('إلى',
                             '${plan.executedEndSurah} ، ${plan.executedEndAya}'),
                         _buildInfoRow('معدل التنفيذ',
-                            '${(plan.executedRate ?? 0) * 100}%'),
+                            '${(plan.executedRate ?? 0).toStringAsFixed(1)}%'),
 
                         // يمكن إضافة معلومات منفذة أخرى هنا إذا كانت متوفرة
                       ],
@@ -287,8 +288,7 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                       '${plan.plannedStartSurah}، آية: ${plan.plannedStartAya ?? 0}'),
                   _buildInfoRow('إلى',
                       '${plan.plannedEndSurah}، آية: ${plan.plannedEndAya ?? 0}'),
-                  _buildInfoRow(
-                      'معدل التنفيذ', '${(plan.executedRate ?? 0) * 100}%'),
+                  _buildInfoRow('معدل التنفيذ', '${(plan.executedRate ?? 0)}%'),
                   _buildSyncStatus(plan.isSync),
                 ],
                 onEdit: () => _editPlan(context, plan),

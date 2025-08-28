@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Utils {
@@ -43,7 +44,9 @@ class Utils {
         title: Text('يتم تحميل البيانات'),
         content: Padding(
           padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator(),
+          child: CupertinoActivityIndicator(
+            radius: 25.5,
+          ),
         ),
       ),
     );

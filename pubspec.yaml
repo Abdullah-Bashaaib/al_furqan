@@ -31,20 +31,22 @@ dependencies:
   firebase_auth:
   sqflite:
   path:
-  intl: ^0.20.2
+  intl:
   shared_preferences:
-  internet_connection_checker: 
+  internet_connection_checker:
   file_picker:
   flutter_excel:
   permission_handler:
   path_provider:
   url_launcher:
-  pdf: 
-  printing: 
+  pdf:
+  printing:
   qr_flutter:
   mobile_scanner:
   uuid:
   provider:
+
+
 
 
 dev_dependencies:
@@ -52,11 +54,10 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^5.0.0
-  flutter_launcher_icons: ^0.13.1
 
-flutter_launcher_icons:
-  android: true
-  image_path: "assets/pictures/al_furqan_icon.png"
+flutter_launcher_icons: ^0.14.4
+android: true
+image_path: "assets/pictures/al_furqan_icon.png"
 
 
 

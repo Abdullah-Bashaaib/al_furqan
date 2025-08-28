@@ -1,14 +1,9 @@
 // ignore_for_file: file_names
-import 'dart:developer';
-
-import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/HalagaController.dart';
-import 'package:al_furqan/controllers/fathers_controller.dart';
+import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/helper/sqldb.dart';
-import 'package:al_furqan/main.dart';
-import 'package:al_furqan/models/provider/student_provider.dart';
-import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/halaga_model.dart';
+import 'package:al_furqan/models/provider/student_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
 import 'package:al_furqan/views/SchoolDirector/AddStudent.dart';
@@ -53,7 +48,8 @@ class _StudentsListPageState extends State<StudentsListPage> {
 
   /// تتحقق من اتصال بالانترنت
   Future<bool> checkInternet() async {
-    bool hasInternet = await InternetConnectionChecker().hasConnection;
+    bool hasInternet =
+        await InternetConnectionChecker.createInstance().hasConnection;
     return hasInternet;
   }
 

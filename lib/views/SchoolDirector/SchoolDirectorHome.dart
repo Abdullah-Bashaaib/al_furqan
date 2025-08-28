@@ -1,33 +1,26 @@
 import 'dart:developer';
 
-import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/TeacherController.dart';
-import 'package:al_furqan/controllers/HalagaController.dart';
-import 'package:al_furqan/controllers/message_controller.dart';
 import 'package:al_furqan/helper/current_user.dart';
-import 'package:al_furqan/helper/user_helper.dart';
 import 'package:al_furqan/main.dart';
+import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/halaqa_provider.dart';
 import 'package:al_furqan/models/provider/message_provider.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
-import 'package:al_furqan/models/student_model.dart';
-import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/SchoolDirector/AddHalaga.dart';
 import 'package:al_furqan/views/SchoolDirector/DrawerSchoolDirector.dart';
 import 'package:al_furqan/views/SchoolDirector/ElhalagatList.dart';
 import 'package:al_furqan/views/SchoolDirector/add_teacher.dart';
-import 'package:al_furqan/views/SchoolDirector/teacher_list.dart';
 import 'package:al_furqan/views/SchoolDirector/teacher_management.dart';
 import 'package:al_furqan/views/login/login.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class SchoolManagerScreen extends StatefulWidget {
   const SchoolManagerScreen({super.key});
@@ -187,12 +180,36 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen>
           ),
           IconButton(
             onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
-              await perf.clear();
-              (context).read<MessageProvider>().clear();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()));
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('تسجيل الخروج'),
+                  content: Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('إلغاء'),
+                    ),
+                    FilledButton(
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Colors.redAccent),
+                      onPressed: () async {
+                        // Implement logout logic here
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.clear();
+                        await perf.clear();
+                        (context).read<MessageProvider>().clear();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                        Navigator.pop(context);
+                      },
+                      child: Text('تسجيل الخروج'),
+                    ),
+                  ],
+                ),
+              );
             },
             icon: Icon(Icons.logout, color: Colors.white),
             tooltip: 'تسجيل الخروج',

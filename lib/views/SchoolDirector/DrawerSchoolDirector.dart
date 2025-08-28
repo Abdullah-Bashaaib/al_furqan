@@ -1,6 +1,4 @@
-import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
-import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/SchoolDirector/ElhalagatList.dart';
@@ -165,10 +163,10 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.update,
                     title: 'مزامنة البيانات ',
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (context) => MainScreenD(),
                         ),
                       );
@@ -180,7 +178,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     title: "إدارة المعلمين",
                     onTap: () {
                       (context).read<UserProvider>().loadUsersFromFirebase();
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.of(context).push(CupertinoPageRoute(
                           builder: (context) => TeacherManagement()));
                     },
@@ -192,7 +190,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (context) => AttendanceQRScreen(),
                         ),
                       );
@@ -202,7 +200,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.manage_accounts,
                     title: "عرض الحضور",
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.of(context).push(
                         CupertinoPageRoute(
                             builder: (context) => TeachersAttendanceListScreen(
@@ -214,7 +212,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.message,
                     title: "الرسائل",
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.of(context).push(
                         CupertinoPageRoute(
                           builder: (context) => ConversationsScreen(
@@ -230,7 +228,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.school,
                     title: 'إدارة الطلاب',
                     onTap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
@@ -244,80 +242,22 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     icon: Icons.groups,
                     title: 'إدارة الحلقات',
                     onTap: () async {
-                      int? schoolID = perf.getInt('schoolId');
-                      await halagaController.getHalagatFromFirebaseByID(
-                          schoolID!, 'SchoolID');
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
                           builder: (context) => HalqatListPage(),
                         ),
                       );
+                      // int? schoolID = perf.getInt('schoolId');
+                      // await halagaController.getHalagatFromFirebaseByID(
+                      //     schoolID!, 'SchoolID');
                     },
                   ),
-
-                  // Academic Section
-                  //     _buildSectionTitle('الشؤون الأكاديمية'),
-                  //     _buildMenuItem(
-                  //       icon: Icons.book,
-                  //       title: 'المناهج',
-                  //       onTap: () {
-                  //         Navigator.pop(context);
-                  //      Navigator.of(context).pop();
-                  // Navigator.push(
-                  //   context,
-                  //   CupertinoPageRoute(
-                  //       builder: (context) => DatabaseViewerEntry()),
-                  // );
-                  //         // الانتقال إلى شاشة المناهج
-                  //       },
-                  //     ),
-
-                  // System Section
-                  // _buildSectionTitle('النظام'),
-                  // _buildMenuItem(
-                  //   icon: Icons.settings,
-                  //   title: 'الإعدادات',
-                  //   onTap: () {
-                  //     Navigator.pop(context);
-                  //     // الانتقال إلى شاشة الإعدادات
-                  //   },
-                  // ),
                 ],
               ),
             ),
 
-            // Logout at the bottom
-            // Divider(thickness: 1),
-            // _buildMenuItem(
-            //   icon: Icons.logout,
-            //   title: 'تسجيل الخروج',
-            //   color: Colors.red.shade300,
-            //   onTap: () {
-            //     // Show confirmation dialog
-            //     showDialog(
-            //       context: context,
-            //       builder: (context) => AlertDialog(
-            //         title: Text('تسجيل الخروج'),
-            //         content: Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
-            //         actions: [
-            //           TextButton(
-            //             onPressed: () => Navigator.pop(context),
-            //             child: Text('إلغاء'),
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //               // Implement logout logic here
-            //               Navigator.pop(context);
-            //             },
-            //             child: Text('تسجيل الخروج'),
-            //           ),
-            //         ],
-            //       ),
-            //     );
-            //   },
-            // ),
             SizedBox(height: 10),
           ],
         ),

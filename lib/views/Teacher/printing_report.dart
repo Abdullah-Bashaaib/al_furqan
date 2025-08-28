@@ -1,14 +1,14 @@
 import 'dart:io';
+
+import 'package:al_furqan/models/eltlawah_plan_model.dart';
+import 'package:al_furqan/models/islamic_studies_model.dart';
+import 'package:al_furqan/models/student_model.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:al_furqan/models/student_model.dart';
-import 'package:al_furqan/models/conservation_plan_model.dart';
-import 'package:al_furqan/models/eltlawah_plan_model.dart';
-import 'package:al_furqan/models/islamic_studies_model.dart';
 
 class MonthlyReportPDF {
   final List<StudentModel> students;
@@ -95,6 +95,10 @@ class MonthlyReportPDF {
                                 ),
                                 children: [
                                   _buildTableHeader('اسم الطالب', arabicFont),
+                                  _buildTableHeader(
+                                      'عدد أيام الحضور', arabicFont),
+                                  _buildTableHeader(
+                                      'عدد أيام الغياب', arabicFont),
                                   _buildTableHeader('نسبة الحضور', arabicFont),
                                 ],
                               ),
@@ -103,8 +107,26 @@ class MonthlyReportPDF {
                                 final data = reportData[student.studentID];
                                 return pw.TableRow(
                                   children: [
+                                    pw.Row(
+                                        mainAxisAlignment:
+                                            pw.MainAxisAlignment.center,
+                                        children: [
+                                          _buildTableCell(
+                                              student.firstName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.middleName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.lastName ?? '',
+                                              arabicFont),
+                                        ]),
                                     _buildTableCell(
-                                        student.firstName ?? '', arabicFont),
+                                        "${data?['absenceDays'] ?? '0'}",
+                                        arabicFont),
+                                    _buildTableCell(
+                                        "${data?['attendanceDays'] ?? '0'}",
+                                        arabicFont),
                                     _buildTableCell(
                                         '${data?['attendanceRate'] ?? '0'}%',
                                         arabicFont),
@@ -159,8 +181,20 @@ class MonthlyReportPDF {
                                 final data = reportData[student.studentID];
                                 return pw.TableRow(
                                   children: [
-                                    _buildTableCell(
-                                        student.firstName ?? '', arabicFont),
+                                    pw.Row(
+                                        mainAxisAlignment:
+                                            pw.MainAxisAlignment.center,
+                                        children: [
+                                          _buildTableCell(
+                                              student.firstName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.middleName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.lastName ?? '',
+                                              arabicFont),
+                                        ]),
                                     _buildTableCell(
                                         data?['executedEndSurah'] ?? '',
                                         arabicFont),
@@ -396,7 +430,7 @@ class MonthlyReportPDFScreen extends StatelessWidget {
       // تكوين اسم الملف باستخدام التاريخ
       final String month = selectedMonth.month.toString().padLeft(2, '0');
       final String year = selectedMonth.year.toString();
-      final String fileName = 'تقرير_شهري_${year}_${month}.pdf';
+      final String fileName = 'تقرير _ شهري _${year}_${month}.pdf';
       final String filePath = '${directory.path}/$fileName';
 
       // حفظ الملف

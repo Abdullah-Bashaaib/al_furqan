@@ -44,7 +44,7 @@ class SomeController {
 
         // 2. تحقق من وجود المعرف في SQLite وFirebase
         bool hasInternet = checkFirebase
-            ? await InternetConnectionChecker().hasConnection
+            ? await InternetConnectionChecker.createInstance().hasConnection
             : false;
 
         while (true) {

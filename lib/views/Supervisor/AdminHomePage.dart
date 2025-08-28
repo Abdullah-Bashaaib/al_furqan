@@ -1,7 +1,5 @@
-import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/TeacherController.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
-import 'package:al_furqan/helper/user_helper.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
 import 'package:al_furqan/services/sync.dart';
 import 'package:al_furqan/views/login/login.dart';
@@ -9,9 +7,9 @@ import 'package:al_furqan/widgets/chart_card.dart';
 import 'package:al_furqan/widgets/drawer_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 
 import '../../helper/current_user.dart';
 import '../../models/users_model.dart';
@@ -283,7 +281,10 @@ class _DashboardScreenState extends State<DashboardScreen>
           _refreshData();
         },
         tooltip: 'تحديث البيانات',
-        child: Icon(Icons.refresh),
+        child: Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: _refreshData,

@@ -3,26 +3,16 @@ import 'package:al_furqan/models/provider/message_provider.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/views/splashScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 late SharedPreferences perf;
 
 void main() async {
-  // ErrorWidget.builder = (FlutterErrorDetails details) {
-  //   return Material(
-  //     child: Center(
-  //       child: Text(
-  //         'حدث خطا ما الرجاء اعادة تشغيل التطبيق',
-  //         style: TextStyle(color: Colors.red, fontSize: 20),
-  //         textDirection: TextDirection.rtl,
-  //       ),
-  //     ),
-  //   );
-  // };
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   perf = await SharedPreferences.getInstance();

@@ -26,7 +26,8 @@ class PlanController {
       debugPrint(
           "----------> studentId for ConservationPlans is :${plan.studentId}, newConservationPlanID: $newConservationPlanID");
 
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
+      bool hasConnection =
+          await InternetConnectionChecker.createInstance().hasConnection;
       final Map<String, dynamic> planMap = plan.toMap();
       debugPrint("-------------------> Plan Map: $planMap");
       debugPrint(
@@ -75,7 +76,8 @@ class PlanController {
       //       "----------> studentId for EltlawahPlans is :${plan.studentId}");
       // }
 
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
+      bool hasConnection =
+          await InternetConnectionChecker.createInstance().hasConnection;
       final Map<String, dynamic> planMap = plan.toMap();
       int result = await sqlDb.insertData2('EltlawahPlans', planMap);
       debugPrint(
@@ -121,7 +123,8 @@ class PlanController {
       // debugPrint(
       //     "----------> studentId for IslamicStudy is :${plan.studentID}");
 
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
+      bool hasConnection =
+          await InternetConnectionChecker.createInstance().hasConnection;
       final Map<String, dynamic> planMap = plan.toMap();
       int result = await sqlDb.insertData2('IslamicStudies', planMap);
       debugPrint(
@@ -221,7 +224,8 @@ class PlanController {
   Future<void> getPlansFirebaseToLocal(String halagaId) async {
     try {
       debugPrint("-------------------> التحقق من اتصال الإنترنت");
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
+      bool hasConnection =
+          await InternetConnectionChecker.createInstance().hasConnection;
       if (!hasConnection) {
         debugPrint("-------------------> لا يوجد اتصال بالإنترنت");
         return;
@@ -300,7 +304,8 @@ class PlanController {
               .removeWhere((plan) => plan.islamicStudiesID == planId);
         }
         // حذف من Firebase إذا كان متزامن
-        bool hasConnection = await InternetConnectionChecker().hasConnection;
+        bool hasConnection =
+            await InternetConnectionChecker.createInstance().hasConnection;
         if (hasConnection) {
           // await firebasehelper.deletePlan(planId.toString(), table);
         }
@@ -332,7 +337,8 @@ class PlanController {
           "------------------> Update ConservationPlan ${plan.conservationPlanId} is: ${result > 0 ? 'Done' : 'Failed'}");
 
       // مزامنة مع Firebase إذا كان متصلاً
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
+      bool hasConnection =
+          await InternetConnectionChecker.createInstance().hasConnection;
       if (result > 0 && hasConnection) {
         plan.isSync = 1;
         // ملاحظة: تم تعطيل المزامنة المباشرة مع Firebase حاليًا لأن الدالة غير معرفة
@@ -401,7 +407,8 @@ class PlanController {
           "------------------> Update EltlawahPlan ${plan.eltlawahPlanId} is: ${result > 0 ? 'Done' : 'Failed'}");
 
       // مزامنة مع Firebase إذا كان متصلاً
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
+      bool hasConnection =
+          await InternetConnectionChecker.createInstance().hasConnection;
       if (result > 0 && hasConnection) {
         plan.isSync = 1;
         // ملاحظة: تم تعطيل المزامنة المباشرة مع Firebase حاليًا لأن الدالة غير معرفة
@@ -459,7 +466,8 @@ class PlanController {
           "------------------> Update IslamicStudies ${plan.islamicStudiesID} is: ${result > 0 ? 'Done' : 'Failed'}");
 
       // مزامنة مع Firebase إذا كان متصلاً
-      bool hasConnection = await InternetConnectionChecker().hasConnection;
+      bool hasConnection =
+          await InternetConnectionChecker.createInstance().hasConnection;
       if (result > 0 && hasConnection) {
         plan.isSync = 1;
         // ملاحظة: تم تعطيل المزامنة المباشرة مع Firebase حاليًا لأن الدالة غير معرفة
