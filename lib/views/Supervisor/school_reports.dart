@@ -1,11 +1,14 @@
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/schools_model.dart';
 import 'package:al_furqan/utils/utils.dart';
-import 'package:al_furqan/views/Supervisor/report.dart';
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
 
 import '../../controllers/StudentController.dart';
 import '../../controllers/TeacherController.dart';
+import '../../controllers/report_controller.dart';
+import '../../models/report_model.dart';
+import '../../widgets/build_pdf.dart';
 
 class SchoolReports extends StatefulWidget {
   const SchoolReports({super.key});
@@ -65,6 +68,14 @@ class _SchoolReports extends State<SchoolReports> {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
     final filteredSchools = _filterSchools();
+    List<ReportModel> schoolReportList = [];
+    final reportController = ReportController();
+
+    Future<void> schoolReport(int schoolId) async {
+      Utils.showDialogLoading(context: context);
+      schoolReportList = await reportController.loadReportHalaga(schoolId);
+      Navigator.of(context, rootNavigator: true).pop();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -169,13 +180,14 @@ class _SchoolReports extends State<SchoolReports> {
                               child: ListTile(
                                   onTap: () async {
                                     await schoolData(school.schoolID!);
+                                    await schoolReport(school.schoolID!);
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SchoolReportPage(
-                                          schoolModel: school,
-                                          numberS: numberStudent,
-                                          numberT: numberTeacher,
+                                        builder: (_) => PdfPreview(
+                                          build: (format) => BuildPdf(
+                                                  records: schoolReportList)
+                                              .buildReportPdf(),
                                         ),
                                       ),
                                     );
@@ -223,14 +235,14 @@ class _SchoolReports extends State<SchoolReports> {
                                   trailing: IconButton(
                                       onPressed: () async {
                                         await schoolData(school.schoolID!);
+                                        await schoolReport(school.schoolID!);
                                         await Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                SchoolReportPage(
-                                              schoolModel: school,
-                                              numberS: numberStudent,
-                                              numberT: numberTeacher,
+                                            builder: (_) => PdfPreview(
+                                              build: (format) => BuildPdf(
+                                                      records: schoolReportList)
+                                                  .buildReportPdf(),
                                             ),
                                           ),
                                         );

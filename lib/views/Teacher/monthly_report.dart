@@ -1,19 +1,18 @@
+import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/helper/current_user.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
+import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/Teacher/printing_report.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:al_furqan/models/student_model.dart';
-import 'package:al_furqan/controllers/StudentController.dart';
-// import 'package:al_furqan/helper/user_helper.dart';
+import 'package:intl/intl.dart';
 
 class MonthlyReportScreen extends StatefulWidget {
-  const MonthlyReportScreen({Key? key}) : super(key: key);
+  const MonthlyReportScreen({super.key});
 
   @override
   State<MonthlyReportScreen> createState() => _MonthlyReportScreenState();
@@ -34,7 +33,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
   UserModel? user = CurrentUser.user;
 
   // بيانات التقرير
-  Map<String?, Map<String, dynamic>> _reportData = {};
+  final Map<String?, Map<String, dynamic>> _reportData = {};
 
   @override
   void initState() {
@@ -378,8 +377,8 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                                           ? SizedBox()
                                           : _buildPlanItem(
                                               eltlawahPlan!.executedEndSurah!,
-                                              'الآيات 1-${eltlawahPlan!.executedEndAya!}',
-                                              '${eltlawahPlan!.executedRate!}%'),
+                                              'الآيات ${eltlawahPlan?.executedStartAya} - ${eltlawahPlan!.executedEndAya!}',
+                                              '${eltlawahPlan!.executedRate!.toStringAsFixed(1)}%'),
                                     ],
                                   ),
                                   SizedBox(height: 16),
@@ -583,7 +582,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                                                   child: Column(
                                                     children: [
                                                       Text(
-                                                        "${reportData['executedRate']}",
+                                                        "${(reportData['executedRate'] as double).toStringAsFixed(1)}%",
                                                         style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -703,7 +702,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                                                 1,
                                               ),
                                               _buildTableCell(
-                                                '${reportData?['attendanceRate'] ?? '0'}%',
+                                                '${double.tryParse(reportData?['attendanceRate'])?.toStringAsFixed(1) ?? '0'}%',
                                                 1,
                                                 color: _getAttendanceColor(
                                                   double.tryParse(reportData?[

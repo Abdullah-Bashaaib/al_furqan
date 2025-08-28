@@ -6,6 +6,7 @@ import 'package:al_furqan/models/islamic_studies_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../utils/utils.dart';
 
 class EditHalagaPlanScreen extends StatefulWidget {
@@ -199,7 +200,8 @@ class _EditHalagaPlanScreenState extends State<EditHalagaPlanScreen> {
             if (plan.plannedEndAya! >= plan.executedEndAya!) {
               double executedRate =
                   (plan.executedEndAya! / plan.plannedEndAya!) * 100;
-              plan.executedRate = executedRate;
+              plan.executedRate =
+                  double.tryParse(executedRate.toStringAsFixed(1));
               debugPrint("DEBUG: تم حساب المعدل = ${plan.executedRate}%");
             } else {
               plan.executedRate =
@@ -254,7 +256,8 @@ class _EditHalagaPlanScreenState extends State<EditHalagaPlanScreen> {
             if (plan.plannedEndAya! >= plan.executedEndAya!) {
               double executedRate =
                   (plan.executedEndAya! / plan.plannedEndAya!) * 100;
-              plan.executedRate = executedRate.roundToDouble();
+              plan.executedRate = double.tryParse(
+                  executedRate.roundToDouble().toStringAsFixed(1));
               debugPrint("DEBUG: تم حساب المعدل = ${plan.executedRate}%");
             } else {
               plan.executedRate =

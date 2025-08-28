@@ -4,6 +4,7 @@ import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:flutter/material.dart';
+
 import 'EditHalagaPlanScreen.dart';
 
 class IslamicStudiesPlansListScreen extends StatefulWidget {
@@ -27,14 +28,13 @@ class _IslamicStudiesPlansListScreenState
 
   // قائمة بالمواد الشرعية للتصفية
   final List<String> _subjects = [
-    'القرآن الكريم',
-    'التوحيد',
     'الفقه',
     'الحديث',
     'السيرة النبوية',
     'الآداب الإسلامية',
     'التجويد',
     'العقيدة',
+    'التفسير',
   ];
 
   // قائمة بالأشهر للتصفية
