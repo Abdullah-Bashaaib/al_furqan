@@ -1,8 +1,10 @@
-import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
+import 'package:al_furqan/controllers/users_controller.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/Supervisor/filter_dialog.dart';
-import 'package:flutter/material.dart';
 import 'package:al_furqan/views/Supervisor/user_details.dart';
+import 'package:flutter/material.dart';
+
 import '../../models/schools_model.dart';
 
 class UserList extends StatefulWidget {
@@ -169,12 +171,8 @@ class _UserListState extends State<UserList> {
                         icon: Icon(Icons.delete),
                         onPressed: () {
                           if (filteredUsers[index].roleID == 0) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("لا تملك صلاحية حذف مشرف !!"),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
+                            Utils.showToast("لا تملك صلاحية حذف مشرف !!",
+                                backgroundColor: Colors.red);
                           } else {
                             userController
                                 .deleteUser(filteredUsers[index].user_id!);
@@ -194,14 +192,17 @@ class _UserListState extends State<UserList> {
   Widget build(BuildContext context) {
     List filteredUsers = _filterUsers();
 
-    return Scaffold(
-      body: Column(
-        children: [
-          _buildSearchBar(),
-          Expanded(
-            child: _buildUserList(filteredUsers),
-          ),
-        ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: Column(
+          children: [
+            _buildSearchBar(),
+            Expanded(
+              child: _buildUserList(filteredUsers),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/users_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -65,9 +65,8 @@ mixin UserDataMixin<T extends StatefulWidget> on State<T> {
     if (user == null || user!.schoolID == null) {
       debugPrint(
           "UserDataMixin: User or schoolID is null, cannot refresh data");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('خطأ: بيانات المستخدم أو المدرسة غير متوفرة')),
-      );
+      Utils.showToast('خطأ: بيانات المستخدم أو المدرسة غير متوفرة');
+
       return;
     }
 

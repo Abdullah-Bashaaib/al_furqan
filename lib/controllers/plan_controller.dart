@@ -9,8 +9,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 
 class PlanController {
-  final SqlDb sqlDb = SqlDb();
-  final FirebaseHelper firebasehelper = FirebaseHelper();
+  late final SqlDb sqlDb = SqlDb();
+  late final FirebaseHelper firebasehelper = FirebaseHelper();
 
   // قوائم لتخزين الخطط
   List<ConservationPlanModel> conservationPlans = [];

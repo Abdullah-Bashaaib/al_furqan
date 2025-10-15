@@ -1,19 +1,15 @@
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/fathers_controller.dart';
-import 'package:al_furqan/helper/new_id2.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
-import 'package:al_furqan/models/users_model.dart';
-import 'package:al_furqan/views/SchoolDirector/studentListPage.dart';
-// import 'package:al_furqan/views/SchoolDirector/handling_excel_file.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:flutter/material.dart';
 import 'package:al_furqan/models/student_model.dart';
+import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/excel_testing.dart';
-import '../../controllers/users_controller.dart';
 
 class AddStudentScreen extends StatefulWidget {
   final UserModel? user;
@@ -45,12 +41,8 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {
       // إظهار رسالة للمستخدم بوجود حقول مطلوبة
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('الرجاء ملء جميع الحقول المطلوبة'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('الرجاء ملء جميع الحقول المطلوبة');
+
       return;
     }
 
@@ -161,45 +153,14 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
       // }
 
       // إظهار رسالة النجاح النهائية
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 10),
-                Text('تمت إضافة الطالب بنجاح'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
+      Utils.showToast('تمت إضافة الطالب بنجاح', backgroundColor: Colors.green);
 
       if (mounted) {
         Navigator.pop(context);
       }
     } catch (e) {
       debugPrint("حدث خطأ أثناء إضافة الطالب: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error, color: Colors.white),
-                SizedBox(width: 10),
-                Expanded(child: Text('فشل في إضافة الطالب: $e')),
-              ],
-            ),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 5),
-          ),
-        );
-      }
+      Utils.showToast('فشل في إضافة الطالب: $e', backgroundColor: Colors.red);
     } finally {
       if (mounted) {
         setState(() {
@@ -228,264 +189,270 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:
-            Text('إضافة طالب', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        centerTitle: true,
-      ),
-      body: _isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text('جاري إضافة الطالب...',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            )
-          : SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // قسم بيانات الطالب
-                      Card(
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side:
-                              BorderSide(color: Colors.blue.shade100, width: 1),
-                        ),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                "بيانات الطالب",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  _isStudentFormExpanded
-                                      ? Icons.keyboard_arrow_up
-                                      : Icons.keyboard_arrow_down,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isStudentFormExpanded =
-                                        !_isStudentFormExpanded;
-                                  });
-                                },
-                              ),
-                            ),
-                            if (_isStudentFormExpanded)
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildTextField(firstNameController,
-                                        'الاسم الأول', Icons.person),
-                                    _buildTextField(middleNameController,
-                                        'الاسم الأوسط', Icons.person),
-                                    _buildTextField(grandfatherNameController,
-                                        'اسم الجد', Icons.person),
-                                    _buildTextField(lastNameController,
-                                        'اسم العائلة', Icons.family_restroom),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: 16),
-
-                      // قسم بيانات ولي الأمر
-                      Card(
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side:
-                              BorderSide(color: Colors.teal.shade100, width: 1),
-                        ),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                "بيانات ولي الأمر",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.teal.shade700,
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  _isFatherFormExpanded
-                                      ? Icons.keyboard_arrow_up
-                                      : Icons.keyboard_arrow_down,
-                                  color: Colors.teal.shade700,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isFatherFormExpanded =
-                                        !_isFatherFormExpanded;
-                                  });
-                                },
-                              ),
-                            ),
-                            if (_isFatherFormExpanded)
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildTextField(middleNameController,
-                                        "اسم ولى الأمر", Icons.person),
-                                    _buildTextField(
-                                        grandfatherNameController,
-                                        "الاسم الأوسط لولي الأمر",
-                                        Icons.person),
-                                    _buildTextField(
-                                        grandFatherNameForFatherStudent,
-                                        "اسم جد ولي الأمر",
-                                        Icons.person),
-                                    _buildTextField(lastNameController,
-                                        "القبيلة", Icons.family_restroom),
-                                    _buildTextFieldData(),
-                                    _buildTextField(gmailOfFatherStudent,
-                                        "البريد الالكتروني", Icons.email),
-                                    _builtTextFieldNumber("رقم الجوال",
-                                        phoneFatherStudent, 9, Icons.phone),
-                                    _builtTextFieldNumber(
-                                        "رقم البيت",
-                                        telephoneFatherStudent,
-                                        6,
-                                        Icons.phone_in_talk),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 24),
-                      // أزرار العمليات
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _isLoading ? null : _submitForm,
-                              icon: Icon(Icons.add_circle, color: Colors.white),
-                              label: Text(
-                                'إضافة الطالب',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                elevation: 3,
-                              ),
-                            ),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title:
+              Text('إضافة طالب', style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          centerTitle: true,
+        ),
+        body: _isLoading
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 20),
+                    Text('جاري إضافة الطالب...',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // قسم بيانات الطالب
+                        Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                                color: Colors.blue.shade100, width: 1),
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _isLoading
-                                  ? null
-                                  : () async {
-                                      late BuildContext dialogContext;
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext ctx) {
-                                          dialogContext = ctx;
-                                          return PopScope<void>(
-                                            canPop: false,
-                                            child: AlertDialog(
-                                              content: Row(
-                                                children: [
-                                                  CircularProgressIndicator(),
-                                                  SizedBox(width: 16),
-                                                  Expanded(
-                                                    child: Text(
-                                                        'جاري إضافة البيانات...\nيرجى الانتظار'),
-                                                  ),
-                                                ],
+                          child: Column(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  "بيانات الطالب",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    _isStudentFormExpanded
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isStudentFormExpanded =
+                                          !_isStudentFormExpanded;
+                                    });
+                                  },
+                                ),
+                              ),
+                              if (_isStudentFormExpanded)
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildTextField(firstNameController,
+                                          'الاسم الأول', Icons.person),
+                                      _buildTextField(middleNameController,
+                                          'الاسم الأوسط', Icons.person),
+                                      _buildTextField(grandfatherNameController,
+                                          'اسم الجد', Icons.person),
+                                      _buildTextField(lastNameController,
+                                          'اسم العائلة', Icons.family_restroom),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 16),
+
+                        // قسم بيانات ولي الأمر
+                        Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                                color: Colors.teal.shade100, width: 1),
+                          ),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  "بيانات ولي الأمر",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.teal.shade700,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    _isFatherFormExpanded
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color: Colors.teal.shade700,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isFatherFormExpanded =
+                                          !_isFatherFormExpanded;
+                                    });
+                                  },
+                                ),
+                              ),
+                              if (_isFatherFormExpanded)
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildTextField(middleNameController,
+                                          "اسم ولى الأمر", Icons.person),
+                                      _buildTextField(
+                                          grandfatherNameController,
+                                          "الاسم الأوسط لولي الأمر",
+                                          Icons.person),
+                                      _buildTextField(
+                                          grandFatherNameForFatherStudent,
+                                          "اسم جد ولي الأمر",
+                                          Icons.person),
+                                      _buildTextField(lastNameController,
+                                          "القبيلة", Icons.family_restroom),
+                                      _buildTextFieldData(),
+                                      _buildTextField(gmailOfFatherStudent,
+                                          "البريد الالكتروني", Icons.email),
+                                      _builtTextFieldNumber("رقم الجوال",
+                                          phoneFatherStudent, 9, Icons.phone),
+                                      _builtTextFieldNumber(
+                                          "رقم البيت",
+                                          telephoneFatherStudent,
+                                          6,
+                                          Icons.phone_in_talk),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                        // أزرار العمليات
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: _isLoading ? null : _submitForm,
+                                icon:
+                                    Icon(Icons.add_circle, color: Colors.white),
+                                label: Text(
+                                  'إضافة الطالب',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  foregroundColor: Colors.white,
+                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  elevation: 3,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: _isLoading
+                                    ? null
+                                    : () async {
+                                        late BuildContext dialogContext;
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext ctx) {
+                                            dialogContext = ctx;
+                                            return PopScope<void>(
+                                              canPop: false,
+                                              child: AlertDialog(
+                                                content: Row(
+                                                  children: [
+                                                    CircularProgressIndicator(),
+                                                    SizedBox(width: 16),
+                                                    Expanded(
+                                                      child: Text(
+                                                          'جاري إضافة البيانات...\nيرجى الانتظار'),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      );
-
-                                      try {
-                                        // 2. استدعي القراءة والإضافة
-                                        await ExcelTesting(
-                                                schoolID: widget.user?.schoolID)
-                                            .readExcelFile(context)
-                                            .then((_) =>
-                                                Navigator.of(dialogContext)
-                                                    .pop());
-                                      } catch (e) {
-                                        // 4. إعلام بالخطأ
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                'خطأ في قراءة ملف الإكسل: $e'),
-                                            backgroundColor: Colors.red,
-                                          ),
+                                            );
+                                          },
                                         );
-                                      } finally {
-                                        // 5. أغلق الديالوج باستخدام نفس الـ dialogContext
-                                        Navigator.of(dialogContext).pop();
-                                      }
-                                    },
-                              icon:
-                                  Icon(Icons.file_upload, color: Colors.white),
-                              label: Text(
-                                'جلب ملف إكسل',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.teal.shade700,
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+
+                                        try {
+                                          // 2. استدعي القراءة والإضافة
+                                          await ExcelTesting(
+                                                  schoolID:
+                                                      widget.user?.schoolID)
+                                              .readExcelFile(context)
+                                              .then((_) =>
+                                                  Navigator.of(dialogContext)
+                                                      .pop());
+                                        } catch (e) {
+                                          // 4. إعلام بالخطأ
+                                          Utils.showToast(
+                                              'خطأ في قراءة ملف الإكسل: $e',
+                                              backgroundColor: Colors.red);
+                                        } finally {
+                                          // 5. أغلق الديالوج باستخدام نفس الـ dialogContext
+                                          Navigator.of(dialogContext).pop();
+                                        }
+                                      },
+                                icon: Icon(Icons.file_upload,
+                                    color: Colors.white),
+                                label: Text(
+                                  'جلب ملف إكسل',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                elevation: 3,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.teal.shade700,
+                                  foregroundColor: Colors.white,
+                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  elevation: 3,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'EditHalagaPlanScreen.dart';
@@ -38,12 +39,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
       await planController.getPlans(halagaModel.halagaID!);
       await studentController.getStudents(halagaModel.halagaID!);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ في تحميل الخطط: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('حدث خطأ في تحميل الخطط: $e',
+          backgroundColor: Colors.redAccent);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -54,12 +51,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     try {
       await planController.getPlans(halagaModel.halagaID!);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ في تحديث الخطط: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('حدث خطأ في تحديث الخطط: $e',
+          backgroundColor: Colors.redAccent);
     } finally {
       setState(() => _isRefreshing = false);
     }
@@ -150,7 +143,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     return _isRefreshing
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
-            itemCount: planC.length,
+            itemCount:
+                planC.length < student0.length ? planC.length : student0.length,
             padding: const EdgeInsets.all(12.0),
             itemBuilder: (context, index) {
               final plan = planC[index];
@@ -503,12 +497,9 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                 }
                 Navigator.of(context).pop(true);
               } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('حدث خطأ أثناء الحذف: $e'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+                Utils.showToast('حدث خطأ أثناء الحذف: $e',
+                    backgroundColor: Colors.redAccent);
+
                 Navigator.of(context).pop(false);
               }
             },
@@ -523,12 +514,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     );
 
     if (result == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('تم حذف الخطة بنجاح'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      Utils.showToast('تم حذف الخطة بنجاح', backgroundColor: Colors.green);
+
       await _loadPlans(); // تحديث القوائم بعد الحذف
     }
   }
@@ -562,13 +549,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     }
 
     if (!foundStudent && planType == 'conservation') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('لم يتم العثور على الطالب، سيتم استخدام بيانات افتراضية'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      Utils.showToast('لم يتم العثور على الطالب، سيتم استخدام بيانات افتراضية',
+          backgroundColor: Colors.amber);
     }
 
     // الانتقال إلى شاشة تعديل الخطة الجديدة

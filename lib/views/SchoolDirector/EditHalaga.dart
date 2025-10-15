@@ -5,8 +5,8 @@ import 'package:al_furqan/helper/sqldb.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/SchoolDirector/add_students_to_halqa_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'ElhalagatList.dart';
@@ -42,11 +42,9 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
   Future<void> _loadTeachers() async {
     if (widget.halga.SchoolID == null) {
       debugPrint("SchoolID is null");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('خطأ: معرف المدرسة غير متوفر')),
-        );
-      }
+      Utils.showToast('خطأ: معرف المدرسة غير متوفر',
+          backgroundColor: Colors.red);
+
       return;
     }
 
@@ -110,11 +108,9 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
       }
     } catch (e) {
       debugPrint("Error loading teachers: $e");
+      Utils.showToast('فشل في جلب المعلمين: $e', backgroundColor: Colors.red);
       if (mounted) {
         setState(() => _isLoadingTeachers = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('فشل في جلب المعلمين: $e')),
-        );
       }
     }
   }
@@ -122,11 +118,9 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
   Future<void> _loadStudents() async {
     if (widget.halga.halagaID == null) {
       debugPrint("halagaID is null");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('خطأ: معرف الحلقة غير متوفر')),
-        );
-      }
+      Utils.showToast('خطأ: معرف الحلقة غير متوفر',
+          backgroundColor: Colors.red);
+
       return;
     }
     try {
@@ -141,11 +135,9 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
       }
     } catch (e) {
       debugPrint("Error loading students: $e");
+      Utils.showToast('فشل في جلب الطلاب: $e', backgroundColor: Colors.red);
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('فشل في جلب الطلاب: $e')),
-        );
       }
     }
   }
@@ -162,20 +154,13 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
             await halagaController.getStudentCount(widget.halga.halagaID!);
         await _sqlDb.updateData(
             "UPDATE Elhalagat SET NumberStudent = $count WHERE halagaID = ${widget.halga.halagaID}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم إلغاء ارتباط الطالب بنجاح'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        Utils.showToast('تم إلغاء ارتباط الطالب بنجاح',
+            backgroundColor: Colors.green);
       }
     } catch (e) {
       debugPrint("Error removing student: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('فشل في إلغاء ارتباط الطالب: $e')),
-        );
-      }
+      Utils.showToast('فشل في إلغاء ارتباط الطالب: $e',
+          backgroundColor: Colors.red);
     }
   }
 
@@ -183,14 +168,9 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
     if (_formKey.currentState!.validate()) {
       // التحقق من وجود معرف الحلقة قبل المتابعة
       if (widget.halga.halagaID == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('خطأ: معرف الحلقة غير متوفر'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        Utils.showToast('خطأ: معرف الحلقة غير متوفر',
+            backgroundColor: Colors.red);
+
         return;
       }
 
@@ -221,30 +201,19 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
         debugPrint("تم تحديث الحلقة بنجاح");
 
         setState(() => _isLoading = false);
-
+        Utils.showToast('تم تعديل بيانات الحلقة بنجاح',
+            backgroundColor: Colors.red);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم تعديل بيانات الحلقة بنجاح'),
-              backgroundColor: Colors.green,
-            ),
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HalqatListPage()),
+            (route) => route.isFirst,
           );
-          Navigator.pushReplacement(
-              // Here you didn't complete edition!!
-              context,
-              CupertinoPageRoute(builder: (_) => HalqatListPage()));
         }
       } catch (e) {
         setState(() => _isLoading = false);
         debugPrint("خطأ في تحديث الحلقة: $e");
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('فشل في تعديل الحلقة: $e'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        Utils.showToast('فشل في تعديل الحلقة: $e', backgroundColor: Colors.red);
       }
     }
   }
@@ -257,367 +226,369 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('تعديل بيانات الحلقة'),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-      ),
-      body: _isLoading && _isLoadingTeachers
-          ? const Center(child: CircularProgressIndicator())
-          : Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  // عنوان الصفحة مع معلومات الحلقة
-                  Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              child:
-                                  const Icon(Icons.groups, color: Colors.white),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'حلقة: ${widget.halga.Name}',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'عدد الطلاب: ${students.length}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // محتوى الصفحة
-                  Expanded(
-                    child: Padding(
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('تعديل بيانات الحلقة'),
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+        ),
+        body: _isLoading && _isLoadingTeachers
+            ? const Center(child: CircularProgressIndicator())
+            : Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // عنوان الصفحة مع معلومات الحلقة
+                    Container(
                       padding: const EdgeInsets.all(16.0),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // بطاقة معلومات الحلقة
-                            Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                child: const Icon(Icons.groups,
+                                    color: Colors.white),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
+                              const SizedBox(width: 12),
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      'معلومات الحلقة',
+                                    Text(
+                                      'حلقة: ${widget.halga.Name}',
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
-                                    const SizedBox(height: 16),
-                                    // حقل اسم الحلقة
-                                    TextFormField(
-                                      controller: nameController,
-                                      decoration: InputDecoration(
-                                        labelText: 'اسم الحلقة',
-                                        hintText: 'أدخل اسم الحلقة',
-                                        prefixIcon: const Icon(Icons.title),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.grey[50],
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'عدد الطلاب: ${students.length}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
                                       ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'الرجاء إدخال اسم الحلقة';
-                                        }
-                                        return null;
-                                      },
                                     ),
-
-                                    const SizedBox(height: 20),
-
-                                    // قائمة المعلمين
-                                    _isLoadingTeachers
-                                        ? const Center(
-                                            child: CircularProgressIndicator())
-                                        : _buildTeacherDropdown(),
                                   ],
                                 ),
                               ),
-                            ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
 
-                            const SizedBox(height: 20),
-
-                            // قسم الطلاب
-                            Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // عنوان القسم مع زر إضافة
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.groups,
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            const SizedBox(width: 10),
-                                            const Text(
-                                              'الطلاب',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
+                    // محتوى الصفحة
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // بطاقة معلومات الحلقة
+                              Card(
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'معلومات الحلقة',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        TextButton.icon(
-                                          onPressed: () {
-                                            if (widget.halga.halagaID == null ||
-                                                widget.halga.SchoolID == null) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(
-                                                        'خطأ: معرف الحلقة أو المدرسة غير متوفر')),
-                                              );
-                                              return;
-                                            }
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddStudentsToHalqaScreen(
-                                                  halqaID:
-                                                      widget.halga.halagaID,
-                                                  schoolID:
-                                                      widget.halga.SchoolID,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      // حقل اسم الحلقة
+                                      TextFormField(
+                                        controller: nameController,
+                                        decoration: InputDecoration(
+                                          labelText: 'اسم الحلقة',
+                                          hintText: 'أدخل اسم الحلقة',
+                                          prefixIcon: const Icon(Icons.title),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.grey[50],
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'الرجاء إدخال اسم الحلقة';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+
+                                      const SizedBox(height: 20),
+
+                                      // قائمة المعلمين
+                                      _isLoadingTeachers
+                                          ? const Center(
+                                              child:
+                                                  CircularProgressIndicator())
+                                          : _buildTeacherDropdown(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              // قسم الطلاب
+                              Card(
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // عنوان القسم مع زر إضافة
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(Icons.groups,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              const SizedBox(width: 10),
+                                              const Text(
+                                                'الطلاب',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            ).then((_) => _loadStudents());
-                                          },
-                                          icon: Icon(Icons.add,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          label: Text(
-                                            'إضافة طلاب',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              if (widget.halga.halagaID ==
+                                                      null ||
+                                                  widget.halga.SchoolID ==
+                                                      null) {
+                                                Utils.showToast(
+                                                    'خطأ: معرف الحلقة أو المدرسة غير متوفر',
+                                                    backgroundColor:
+                                                        Colors.red);
 
-                                  // قائمة الطلاب
-                                  Container(
-                                    constraints:
-                                        const BoxConstraints(maxHeight: 250),
-                                    child: _isLoading
-                                        ? const Center(
-                                            child: CircularProgressIndicator())
-                                        : students.isEmpty
-                                            ? Center(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Icon(Icons.person_off,
-                                                          size: 48,
-                                                          color:
-                                                              Colors.grey[400]),
-                                                      const SizedBox(
-                                                          height: 16),
-                                                      const Text(
-                                                        'لا يوجد طلاب في هذه الحلقة',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.grey,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                return;
+                                              }
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AddStudentsToHalqaScreen(
+                                                    halqaID:
+                                                        widget.halga.halagaID,
+                                                    schoolID:
+                                                        widget.halga.SchoolID,
                                                   ),
                                                 ),
-                                              )
-                                            : ListView.separated(
-                                                shrinkWrap: true,
-                                                padding: EdgeInsets.zero,
-                                                itemCount: students.length,
-                                                separatorBuilder: (context,
-                                                        index) =>
-                                                    const Divider(height: 1),
-                                                itemBuilder: (context, index) {
-                                                  final student =
-                                                      students[index];
-                                                  return ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundColor:
-                                                          Theme.of(context)
-                                                              .primaryColor
-                                                              .withOpacity(0.2),
-                                                      child: Text(
-                                                        student.firstName
-                                                                ?.substring(
-                                                                    0, 1)
-                                                                .toUpperCase() ??
-                                                            'ط',
-                                                        style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                              ).then((_) => _loadStudents());
+                                            },
+                                            icon: Icon(Icons.add,
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                            label: Text(
+                                              'إضافة طلاب',
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    // قائمة الطلاب
+                                    Container(
+                                      constraints:
+                                          const BoxConstraints(maxHeight: 250),
+                                      child: _isLoading
+                                          ? const Center(
+                                              child:
+                                                  CircularProgressIndicator())
+                                          : students.isEmpty
+                                              ? Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            20.0),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Icon(Icons.person_off,
+                                                            size: 48,
+                                                            color: Colors
+                                                                .grey[400]),
+                                                        const SizedBox(
+                                                            height: 16),
+                                                        const Text(
+                                                          'لا يوجد طلاب في هذه الحلقة',
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              : ListView.separated(
+                                                  shrinkWrap: true,
+                                                  padding: EdgeInsets.zero,
+                                                  itemCount: students.length,
+                                                  separatorBuilder: (context,
+                                                          index) =>
+                                                      const Divider(height: 1),
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    final student =
+                                                        students[index];
+                                                    return ListTile(
+                                                      leading: CircleAvatar(
+                                                        backgroundColor:
+                                                            Theme.of(context)
+                                                                .primaryColor
+                                                                .withOpacity(
+                                                                    0.2),
+                                                        child: Text(
+                                                          student.firstName
+                                                                  ?.substring(
+                                                                      0, 1)
+                                                                  .toUpperCase() ??
+                                                              'ط',
+                                                          style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    title: Text(
-                                                      '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.grandfatherName ?? ''} ${student.lastName ?? ''}'
-                                                          .trim(),
-                                                      style: const TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                    trailing: IconButton(
-                                                      icon: const Icon(
-                                                          Icons.delete_outline,
-                                                          color: Colors.red),
-                                                      tooltip:
-                                                          'إزالة الطالب من الحلقة',
-                                                      onPressed: () =>
-                                                          _confirmRemoveStudent(
-                                                              student),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                  ),
-                                ],
+                                                      title: Text(
+                                                        '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.grandfatherName ?? ''} ${student.lastName ?? ''}'
+                                                            .trim(),
+                                                        style: const TextStyle(
+                                                            fontSize: 16),
+                                                      ),
+                                                      trailing: IconButton(
+                                                        icon: const Icon(
+                                                            Icons
+                                                                .delete_outline,
+                                                            color: Colors.red),
+                                                        tooltip:
+                                                            'إزالة الطالب من الحلقة',
+                                                        onPressed: () =>
+                                                            _confirmRemoveStudent(
+                                                                student),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  // أزرار الإجراءات
-                  Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: const Offset(0, -3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _submitForm,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              foregroundColor: Colors.white,
+                    // أزرار الإجراءات
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _isLoading ? null : _submitForm,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                foregroundColor: Colors.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                elevation: 0,
+                              ),
+                              child: _isLoading
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        const Text('جاري الحفظ...'),
+                                      ],
+                                    )
+                                  : const Text(
+                                      'حفظ التعديلات',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.red,
+                              side: const BorderSide(color: Colors.red),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              elevation: 0,
                             ),
-                            child: _isLoading
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      const Text('جاري الحفظ...'),
-                                    ],
-                                  )
-                                : const Text(
-                                    'حفظ التعديلات',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red,
-                            side: const BorderSide(color: Colors.red),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                            child: const Text(
+                              'إلغاء',
+                              style: TextStyle(fontSize: 16),
                             ),
                           ),
-                          child: const Text(
-                            'إلغاء',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 

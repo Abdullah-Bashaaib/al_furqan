@@ -5,36 +5,39 @@ class AddStudentData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('إضافة بيانات الطالب',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSectionCard(
-                title: 'مخطط الحفظ',
-                fields: ['من', 'إلى'],
-              ),
-              SizedBox(height: 16),
-              _buildSectionCard(
-                title: 'منفذ الحفظ',
-                fields: ['من', 'إلى'],
-              ),
-              SizedBox(height: 16),
-              _buildAttendanceCard(),
-              SizedBox(height: 16),
-              _buildNotesSection('أسباب الغياب'),
-              SizedBox(height: 16),
-              _buildNotesSection('الملاحظات'),
-              SizedBox(height: 16),
-              _buildActionButtons(context),
-            ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text('إضافة بيانات الطالب',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSectionCard(
+                  title: 'مخطط الحفظ',
+                  fields: ['من', 'إلى'],
+                ),
+                SizedBox(height: 16),
+                _buildSectionCard(
+                  title: 'منفذ الحفظ',
+                  fields: ['من', 'إلى'],
+                ),
+                SizedBox(height: 16),
+                _buildAttendanceCard(),
+                SizedBox(height: 16),
+                _buildNotesSection('أسباب الغياب'),
+                SizedBox(height: 16),
+                _buildNotesSection('الملاحظات'),
+                SizedBox(height: 16),
+                _buildActionButtons(context),
+              ],
+            ),
           ),
         ),
       ),

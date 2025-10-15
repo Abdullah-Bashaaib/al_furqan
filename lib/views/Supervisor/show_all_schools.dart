@@ -2,8 +2,8 @@ import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/TeacherController.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/schools_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowAllSchools extends StatefulWidget {
   const ShowAllSchools({super.key});
@@ -32,9 +32,8 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
       setState(() => _isLoading = false);
     } catch (e) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('فشل في جلب البيانات: $e')),
-      );
+      Utils.showToast('فشل في جلب البيانات: $e',
+          backgroundColor: Colors.redAccent);
     }
   }
 
@@ -50,168 +49,165 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
     final primaryColor = Theme.of(context).primaryColor;
     final filteredSchools = _filterSchools();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'المدارس',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: primaryColor,
-        elevation: 2,
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'تحديث',
-            onPressed: () {
-              _refreshData();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('تم تحديث البيانات'),
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              );
-            },
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'المدارس',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              keyboardType: TextInputType.name,
-              textAlign: TextAlign.right,
-              textDirection: TextDirection.rtl,
-              decoration: InputDecoration(
-                labelText: 'بحث عن مدرسة',
-                hintText: 'اكتب اسم المدرسة',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: primaryColor, width: 2),
-                ),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _searchQuery = '';
-                          });
-                        },
-                      )
-                    : null,
-                filled: true,
-                fillColor: Colors.grey.shade50,
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
+          backgroundColor: primaryColor,
+          elevation: 2,
+          centerTitle: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              tooltip: 'تحديث',
+              onPressed: () {
+                _refreshData();
+                Utils.showToast('تم تحديث البيانات',
+                    backgroundColor: Colors.green);
               },
             ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : filteredSchools.isEmpty
-                    ? _buildEmptyState()
-                    : RefreshIndicator(
-                        onRefresh: () async {
-                          await Future.delayed(
-                              const Duration(milliseconds: 300));
-                          _refreshData();
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(12),
-                          itemCount: filteredSchools.length,
-                          itemBuilder: (context, index) {
-                            final school = filteredSchools[index];
-                            return Card(
-                              elevation: 2,
-                              margin: const EdgeInsets.only(bottom: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(color: Colors.grey.shade200),
-                              ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 8),
-                                leading: CircleAvatar(
-                                  backgroundColor:
-                                      primaryColor.withOpacity(0.2),
-                                  child:
-                                      Icon(Icons.school, color: primaryColor),
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                keyboardType: TextInputType.name,
+                textAlign: TextAlign.right,
+                textDirection: TextDirection.rtl,
+                decoration: InputDecoration(
+                  labelText: 'بحث عن مدرسة',
+                  hintText: 'اكتب اسم المدرسة',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: primaryColor, width: 2),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                            });
+                          },
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : filteredSchools.isEmpty
+                      ? _buildEmptyState()
+                      : RefreshIndicator(
+                          onRefresh: () async {
+                            await Future.delayed(
+                                const Duration(milliseconds: 300));
+                            _refreshData();
+                          },
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(12),
+                            itemCount: filteredSchools.length,
+                            itemBuilder: (context, index) {
+                              final school = filteredSchools[index];
+                              return Card(
+                                elevation: 2,
+                                margin: const EdgeInsets.only(bottom: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(color: Colors.grey.shade200),
                                 ),
-                                title: Text(
-                                  school.school_name!,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
+                                  leading: CircleAvatar(
+                                    backgroundColor:
+                                        primaryColor.withOpacity(0.2),
+                                    child:
+                                        Icon(Icons.school, color: primaryColor),
+                                  ),
+                                  title: Text(
+                                    school.school_name!,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.location_on,
+                                              size: 14, color: Colors.grey),
+                                          const SizedBox(width: 4),
+                                          Expanded(
+                                            child: Text(
+                                              school.school_location ??
+                                                  'لا يوجد موقع',
+                                              style: TextStyle(
+                                                color: Colors.grey.shade700,
+                                                fontSize: 14,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.info_outline),
+                                    color: primaryColor,
+                                    onPressed: () {
+                                      // يمكن إضافة عرض تفاصيل المدرسة هنا
+                                      _showSchoolDetails(context, school);
+                                    },
                                   ),
                                 ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.location_on,
-                                            size: 14, color: Colors.grey),
-                                        const SizedBox(width: 4),
-                                        Expanded(
-                                          child: Text(
-                                            school.school_location ??
-                                                'لا يوجد موقع',
-                                            style: TextStyle(
-                                              color: Colors.grey.shade700,
-                                              fontSize: 14,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.info_outline),
-                                  color: primaryColor,
-                                  onPressed: () {
-                                    // يمكن إضافة عرض تفاصيل المدرسة هنا
-                                    _showSchoolDetails(context, school);
-                                  },
-                                ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddEditSchoolDialog(context);
-        },
-        backgroundColor: primaryColor,
-        child: const Icon(Icons.add),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _showAddEditSchoolDialog(context);
+          },
+          backgroundColor: primaryColor,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -499,35 +495,19 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                     _refreshData();
 
                     // عرض رسالة نجاح
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          isEditing
-                              ? 'تم تعديل المدرسة بنجاح'
-                              : 'تم إضافة المدرسة بنجاح',
-                        ),
-                        backgroundColor: Colors.green,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    );
+                    Utils.showToast(
+                        isEditing
+                            ? 'تم تعديل المدرسة بنجاح'
+                            : 'تم إضافة المدرسة بنجاح',
+                        backgroundColor:
+                            isEditing ? Colors.amber : Colors.green);
                   } catch (e) {
                     // إغلاق مؤشر التحميل إذا كان مفتوحًا
                     Navigator.of(context).pop();
 
                     // عرض رسالة خطأ
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('حدث خطأ: $e'),
-                        backgroundColor: Colors.red,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    );
+                    Utils.showToast('حدث خطأ: $e',
+                        backgroundColor: Colors.redAccent);
                   }
                 }
               },

@@ -1,5 +1,6 @@
 // This file contains Firebase service code, remove it entirely if not needed.
 import 'dart:developer';
+
 import 'package:al_furqan/models/conservation_plan_model.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/halaga_model.dart';
@@ -458,7 +459,7 @@ class FirebaseHelper {
     try {
       DocumentSnapshot documentSnapshot =
           await FirebaseFirestore.instance.collection(collection).doc(id).get();
-      debugPrint("Find document");
+      log("---------------------------> Find document");
       return documentSnapshot.exists;
     } catch (e) {
       debugPrint('Not found document');

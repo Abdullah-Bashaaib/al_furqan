@@ -1,10 +1,10 @@
+import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:al_furqan/models/student_model.dart';
-import 'package:al_furqan/controllers/StudentController.dart';
-import 'package:al_furqan/helper/user_helper.dart';
 
 class StudentsAttendance extends StatefulWidget {
   const StudentsAttendance({Key? key}) : super(key: key);
@@ -149,25 +149,15 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
       Navigator.of(context).pop();
 
       // عرض رسالة نجاح
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('تم حفظ بيانات الحضور بنجاح'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 3),
-        ),
-      );
+      Utils.showToast('تم حفظ بيانات الحضور بنجاح',
+          backgroundColor: Colors.green);
     } catch (e) {
       // إغلاق مؤشر التقدم
       Navigator.of(context).pop();
 
       // عرض رسالة خطأ
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ أثناء حفظ بيانات الحضور: $e'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 5),
-        ),
-      );
+      Utils.showToast('حدث خطأ أثناء حفظ بيانات الحضور: $e',
+          backgroundColor: Colors.red);
     }
   }
 
@@ -209,160 +199,164 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('تحضير الطلاب'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.calendar_today),
-            onPressed: _selectDate,
-            tooltip: 'اختر تاريخ',
-          ),
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: _saveAttendance,
-            tooltip: 'حفظ التحضير',
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-              ? Center(
-                  child:
-                      Text(_errorMessage!, style: TextStyle(color: Colors.red)))
-              : Column(
-                  children: [
-                    // عرض التاريخ
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      color: Colors.grey.shade100,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'تاريخ التحضير:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            DateFormat('yyyy-MM-dd').format(_selectedDate),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('تحضير الطلاب'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: _selectDate,
+              tooltip: 'اختر تاريخ',
+            ),
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: _saveAttendance,
+              tooltip: 'حفظ التحضير',
+            ),
+          ],
+        ),
+        body: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : _errorMessage != null
+                ? Center(
+                    child: Text(_errorMessage!,
+                        style: TextStyle(color: Colors.red)))
+                : Column(
+                    children: [
+                      // عرض التاريخ
+                      Container(
+                        padding: EdgeInsets.all(16),
+                        color: Colors.grey.shade100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'تاريخ التحضير:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              DateFormat('yyyy-MM-dd').format(_selectedDate),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    // الإحصائيات
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      color: Colors.grey.shade200,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildStatCard(
-                            'إجمالي الطلاب',
-                            _students.length.toString(),
-                            Colors.blue,
-                          ),
-                          _buildStatCard(
-                            'الحضور',
-                            _attendanceStatus.values
-                                .where((v) => v)
-                                .length
-                                .toString(),
-                            Colors.green,
-                          ),
-                          _buildStatCard(
-                            'الغياب',
-                            _attendanceStatus.values
-                                .where((v) => !v)
-                                .length
-                                .toString(),
-                            Colors.red,
-                          ),
-                        ],
+                      // الإحصائيات
+                      Container(
+                        padding: EdgeInsets.all(16),
+                        color: Colors.grey.shade200,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildStatCard(
+                              'إجمالي الطلاب',
+                              _students.length.toString(),
+                              Colors.blue,
+                            ),
+                            _buildStatCard(
+                              'الحضور',
+                              _attendanceStatus.values
+                                  .where((v) => v)
+                                  .length
+                                  .toString(),
+                              Colors.green,
+                            ),
+                            _buildStatCard(
+                              'الغياب',
+                              _attendanceStatus.values
+                                  .where((v) => !v)
+                                  .length
+                                  .toString(),
+                              Colors.red,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    // قائمة الطلاب
-                    Expanded(
-                      child: _students.isEmpty
-                          ? Center(child: Text('لا يوجد طلاب في هذه الحلقة'))
-                          : ListView.builder(
-                              itemCount: _students.length,
-                              itemBuilder: (context, index) {
-                                final student = _students[index];
-                                final isPresent =
-                                    _attendanceStatus[student.studentID] ??
-                                        true;
+                      // قائمة الطلاب
+                      Expanded(
+                        child: _students.isEmpty
+                            ? Center(child: Text('لا يوجد طلاب في هذه الحلقة'))
+                            : ListView.builder(
+                                itemCount: _students.length,
+                                itemBuilder: (context, index) {
+                                  final student = _students[index];
+                                  final isPresent =
+                                      _attendanceStatus[student.studentID] ??
+                                          true;
 
-                                return Card(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 8),
-                                  elevation: 2,
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor:
-                                          isPresent ? Colors.green : Colors.red,
-                                      child: Icon(
-                                        isPresent ? Icons.check : Icons.close,
-                                        color: Colors.white,
+                                  return Card(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    elevation: 2,
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundColor: isPresent
+                                            ? Colors.green
+                                            : Colors.red,
+                                        child: Icon(
+                                          isPresent ? Icons.check : Icons.close,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.lastName ?? ''}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      subtitle: !isPresent &&
+                                              _absenceReasons[student.studentID]
+                                                      ?.isNotEmpty ==
+                                                  true
+                                          ? Text(
+                                              'سبب الغياب: ${_absenceReasons[student.studentID]}',
+                                              style: TextStyle(
+                                                  color: Colors.red.shade700),
+                                            )
+                                          : null,
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // زر سبب الغياب
+                                          if (!isPresent)
+                                            IconButton(
+                                              icon: Icon(Icons.edit_note,
+                                                  color: Colors.orange),
+                                              onPressed: () =>
+                                                  _showAbsenceReasonDialog(
+                                                      student),
+                                              tooltip: 'سبب الغياب',
+                                            ),
+                                          // مفتاح تبديل الحضور
+                                          Switch(
+                                            value: isPresent,
+                                            activeColor: Colors.green,
+                                            inactiveTrackColor:
+                                                Colors.red.shade200,
+                                            inactiveThumbColor: Colors.red,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _attendanceStatus[
+                                                    student.studentID] = value;
+                                                // إذا تم تحديد الطالب كحاضر، قم بمسح سبب الغياب
+                                                if (value) {
+                                                  _absenceReasons.remove(
+                                                      student.studentID);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    title: Text(
-                                      '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.lastName ?? ''}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: !isPresent &&
-                                            _absenceReasons[student.studentID]
-                                                    ?.isNotEmpty ==
-                                                true
-                                        ? Text(
-                                            'سبب الغياب: ${_absenceReasons[student.studentID]}',
-                                            style: TextStyle(
-                                                color: Colors.red.shade700),
-                                          )
-                                        : null,
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        // زر سبب الغياب
-                                        if (!isPresent)
-                                          IconButton(
-                                            icon: Icon(Icons.edit_note,
-                                                color: Colors.orange),
-                                            onPressed: () =>
-                                                _showAbsenceReasonDialog(
-                                                    student),
-                                            tooltip: 'سبب الغياب',
-                                          ),
-                                        // مفتاح تبديل الحضور
-                                        Switch(
-                                          value: isPresent,
-                                          activeColor: Colors.green,
-                                          inactiveTrackColor:
-                                              Colors.red.shade200,
-                                          inactiveThumbColor: Colors.red,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _attendanceStatus[
-                                                  student.studentID] = value;
-                                              // إذا تم تحديد الطالب كحاضر، قم بمسح سبب الغياب
-                                              if (value) {
-                                                _absenceReasons
-                                                    .remove(student.studentID);
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                    ),
-                  ],
-                ),
+                                  );
+                                },
+                              ),
+                      ),
+                    ],
+                  ),
+      ),
     );
   }
 

@@ -169,233 +169,237 @@ class _UsersScreenState extends State<UsersScreen> {
     //   });
     // }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('اختيار مستخدم',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: widget.currentUser.roleID == 1
-            ? [
-                IconButton(
-                  icon: Icon(Icons.filter_list),
-                  onPressed: showUserTypeDialog,
-                  tooltip: 'تصفية المستخدمين',
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('اختيار مستخدم',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          actions: widget.currentUser.roleID == 1
+              ? [
+                  IconButton(
+                    icon: Icon(Icons.filter_list),
+                    onPressed: showUserTypeDialog,
+                    tooltip: 'تصفية المستخدمين',
+                  ),
+                ]
+              : [],
+        ),
+        body: Column(
+          children: [
+            // شريط البحث
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'البحث عن مستخدم...',
+                  prefixIcon: Icon(Icons.search, color: Colors.grey.shade600),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade100,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                 ),
-              ]
-            : [],
-      ),
-      body: Column(
-        children: [
-          // شريط البحث
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'البحث عن مستخدم...',
-                prefixIcon: Icon(Icons.search, color: Colors.grey.shade600),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey.shade100,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                onChanged: (value) {
+                  setState(() {
+                    displayedUsers = _filterUsers(value);
+                  });
+                },
               ),
-              onChanged: (value) {
-                setState(() {
-                  displayedUsers = _filterUsers(value);
-                });
-              },
             ),
-          ),
 
-          // عنوان القسم
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.currentUser.roleID == 1
-                      ? (displayedUsers.isNotEmpty &&
-                              displayedUsers[0].roleID == 2
-                          ? 'قائمة المعلمين'
-                          : 'قائمة أولياء الأمور')
-                      : 'قائمة المستخدمين',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
+            // عنوان القسم
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.currentUser.roleID == 1
+                        ? (displayedUsers.isNotEmpty &&
+                                displayedUsers[0].roleID == 2
+                            ? 'قائمة المعلمين'
+                            : 'قائمة أولياء الأمور')
+                        : 'قائمة المستخدمين',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade800,
+                    ),
                   ),
-                ),
-                Text(
-                  '${displayedUsers.length} مستخدم',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
+                  Text(
+                    '${displayedUsers.length} مستخدم',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          SizedBox(height: 8),
+            SizedBox(height: 8),
 
-          // قائمة المستخدمين
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                setState(() {}); // إعادة بناء الصفحة
-              },
-              child: displayedUsers.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.person_off,
-                              size: 64, color: Colors.grey.shade400),
-                          SizedBox(height: 16),
-                          Text(
-                            widget.currentUser.roleID == 1
-                                ? 'اختر نوع المستخدم أو أضف مستخدمين'
-                                : 'لا يوجد مستخدمين متاحين',
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.grey.shade700),
-                            textAlign: TextAlign.center,
-                          ),
-                          if (widget.currentUser.roleID == 1)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: ElevatedButton(
-                                onPressed: showUserTypeDialog,
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 10),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Text('اختيار نوع المستخدم'),
-                              ),
+            // قائمة المستخدمين
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {}); // إعادة بناء الصفحة
+                },
+                child: displayedUsers.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.person_off,
+                                size: 64, color: Colors.grey.shade400),
+                            SizedBox(height: 16),
+                            Text(
+                              widget.currentUser.roleID == 1
+                                  ? 'اختر نوع المستخدم أو أضف مستخدمين'
+                                  : 'لا يوجد مستخدمين متاحين',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey.shade700),
+                              textAlign: TextAlign.center,
                             ),
-                        ],
-                      ),
-                    )
-                  : ListView.separated(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      itemCount: displayedUsers.length,
-                      separatorBuilder: (context, index) => Divider(height: 1),
-                      itemBuilder: (context, index) {
-                        final user = displayedUsers[index];
-                        return InkWell(
-                          onTap: () {
-                            log('اختيار مستخدم: ${user.first_name!} ${user.last_name!} , user_id: ${user.user_id}');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                  currentUser: widget.currentUser,
-                                  selectedUser: user,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 4),
-                            child: Row(
-                              children: [
-                                // صورة المستخدم
-                                CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: user.roleID == 2
-                                      ? Colors.blue.shade100
-                                      : Colors.green.shade100,
-                                  child: Text(
-                                    user.first_name?[0] ?? '?',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: user.roleID == 2
-                                          ? Colors.blue.shade700
-                                          : Colors.green.shade700,
+                            if (widget.currentUser.roleID == 1)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: ElevatedButton(
+                                  onPressed: showUserTypeDialog,
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
                                   ),
+                                  child: Text('اختيار نوع المستخدم'),
                                 ),
-                                SizedBox(width: 16),
-                                // معلومات المستخدم
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '${user.first_name} ${user.middle_name} ${user.grandfather_name} ${user.last_name}',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 2),
-                                            decoration: BoxDecoration(
-                                              color: user.roleID == 2
-                                                  ? Colors.blue.shade50
-                                                  : Colors.green.shade50,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Text(
-                                              user.roleID == 2
-                                                  ? 'معلم'
-                                                  : 'ولي أمر',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: user.roleID == 2
-                                                    ? Colors.blue.shade700
-                                                    : Colors.green.shade700,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                              ),
+                          ],
+                        ),
+                      )
+                    : ListView.separated(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        itemCount: displayedUsers.length,
+                        separatorBuilder: (context, index) =>
+                            Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          final user = displayedUsers[index];
+                          return InkWell(
+                            onTap: () {
+                              log('اختيار مستخدم: ${user.first_name!} ${user.last_name!} , user_id: ${user.user_id}');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                    currentUser: widget.currentUser,
+                                    selectedUser: user,
                                   ),
                                 ),
-                                // زر المحادثة
-                                IconButton(
-                                  icon: Icon(Icons.chat_outlined,
-                                      color: Colors.blue.shade700),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatScreen(
-                                          currentUser: widget.currentUser,
-                                          selectedUser: user,
-                                        ),
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 4),
+                              child: Row(
+                                children: [
+                                  // صورة المستخدم
+                                  CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor: user.roleID == 2
+                                        ? Colors.blue.shade100
+                                        : Colors.green.shade100,
+                                    child: Text(
+                                      user.first_name?[0] ?? '?',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: user.roleID == 2
+                                            ? Colors.blue.shade700
+                                            : Colors.green.shade700,
                                       ),
-                                    );
-                                  },
-                                  tooltip: 'بدء محادثة',
-                                ),
-                              ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 16),
+                                  // معلومات المستخدم
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${user.first_name} ${user.middle_name} ${user.grandfather_name} ${user.last_name}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: user.roleID == 2
+                                                    ? Colors.blue.shade50
+                                                    : Colors.green.shade50,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Text(
+                                                user.roleID == 2
+                                                    ? 'معلم'
+                                                    : 'ولي أمر',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: user.roleID == 2
+                                                      ? Colors.blue.shade700
+                                                      : Colors.green.shade700,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // زر المحادثة
+                                  IconButton(
+                                    icon: Icon(Icons.chat_outlined,
+                                        color: Colors.blue.shade700),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatScreen(
+                                            currentUser: widget.currentUser,
+                                            selectedUser: user,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    tooltip: 'بدء محادثة',
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

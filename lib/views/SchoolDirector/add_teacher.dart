@@ -50,107 +50,110 @@ class _AddTeacherState extends State<AddTeacher> with UserDataMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('إضافة معلم جديد'),
-        backgroundColor: const Color.fromARGB(255, 1, 117, 70),
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                _buildTextFormField(
-                  controller: _firstname,
-                  label: 'الاسم الأول',
-                  maxLength: 20,
-                  inputType: TextInputType.name,
-                  validatorMsg: 'الرجاء إدخال الاسم الأول',
-                ),
-                SizedBox(height: 16),
-                _buildTextFormField(
-                  controller: _fathername,
-                  label: 'اسم الأب',
-                  maxLength: 20,
-                  inputType: TextInputType.name,
-                  validatorMsg: 'الرجاء إدخال اسم الأب',
-                ),
-                SizedBox(height: 16),
-                _buildTextFormField(
-                  controller: _grandfathername,
-                  label: 'اسم الجد',
-                  maxLength: 20,
-                  inputType: TextInputType.name,
-                  validatorMsg: 'الرجاء إدخال اسم الجد',
-                ),
-                SizedBox(height: 16),
-                _buildTextFormField(
-                  controller: _lastname,
-                  label: 'القبيلة',
-                  maxLength: 20,
-                  inputType: TextInputType.name,
-                  validatorMsg: 'الرجاء إدخال القبيلة',
-                ),
-                SizedBox(height: 16),
-                _buildNumberFormField(
-                  controller: _phone,
-                  label: 'رقم الجوال',
-                  maxLength: 9,
-                  inputType: TextInputType.phone,
-                  validatorMsg: 'الرجاء إدخال رقم الجوال',
-                  additionalValidator: (value) {
-                    if (value!.length < 9) {
-                      return 'رقم الجوال يجب أن يكون 9 أرقام';
-                    } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                      return 'ادخل ارقاماً';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                _buildNumberFormField(
-                  controller: _telephone,
-                  label: 'رقم البيت',
-                  maxLength: 6,
-                  inputType: TextInputType.phone,
-                  validatorMsg: 'الرجاء إدخال رقم البيت',
-                  additionalValidator: (value) {
-                    if (value!.length < 6) {
-                      return 'رقم البيت يجب أن يكون 6 أرقام';
-                    } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                      return 'ادخل ارقاماً';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                _buildTextFormField(
-                  controller: _email,
-                  label: 'البريد الإلكتروني',
-                  maxLength: 50,
-                  inputType: TextInputType.emailAddress,
-                  validatorMsg: 'الرجاء إدخال بريد إلكتروني',
-                  additionalValidator: (value) {
-                    final emailRegex =
-                        RegExp(r'^[a-zA-Z0-9@._\-]+@[gmail]+\.[com]');
-                    if (!emailRegex.hasMatch(value!)) {
-                      return 'البريد الإلكتروني غير صالح';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                _buildPasswordFormField(),
-                SizedBox(height: 16),
-                _buildDateFormField(),
-                SizedBox(height: 16),
-                _buildActivateSwitch(),
-                SizedBox(height: 24),
-                _buildSubmitButton(),
-              ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('إضافة معلم جديد'),
+          backgroundColor: const Color.fromARGB(255, 1, 117, 70),
+          foregroundColor: Colors.white,
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildTextFormField(
+                    controller: _firstname,
+                    label: 'الاسم الأول',
+                    maxLength: 20,
+                    inputType: TextInputType.name,
+                    validatorMsg: 'الرجاء إدخال الاسم الأول',
+                  ),
+                  SizedBox(height: 16),
+                  _buildTextFormField(
+                    controller: _fathername,
+                    label: 'اسم الأب',
+                    maxLength: 20,
+                    inputType: TextInputType.name,
+                    validatorMsg: 'الرجاء إدخال اسم الأب',
+                  ),
+                  SizedBox(height: 16),
+                  _buildTextFormField(
+                    controller: _grandfathername,
+                    label: 'اسم الجد',
+                    maxLength: 20,
+                    inputType: TextInputType.name,
+                    validatorMsg: 'الرجاء إدخال اسم الجد',
+                  ),
+                  SizedBox(height: 16),
+                  _buildTextFormField(
+                    controller: _lastname,
+                    label: 'القبيلة',
+                    maxLength: 20,
+                    inputType: TextInputType.name,
+                    validatorMsg: 'الرجاء إدخال القبيلة',
+                  ),
+                  SizedBox(height: 16),
+                  _buildNumberFormField(
+                    controller: _phone,
+                    label: 'رقم الجوال',
+                    maxLength: 9,
+                    inputType: TextInputType.phone,
+                    validatorMsg: 'الرجاء إدخال رقم الجوال',
+                    additionalValidator: (value) {
+                      if (value!.length < 9) {
+                        return 'رقم الجوال يجب أن يكون 9 أرقام';
+                      } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return 'ادخل ارقاماً';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  _buildNumberFormField(
+                    controller: _telephone,
+                    label: 'رقم البيت',
+                    maxLength: 6,
+                    inputType: TextInputType.phone,
+                    validatorMsg: 'الرجاء إدخال رقم البيت',
+                    additionalValidator: (value) {
+                      if (value!.length < 6) {
+                        return 'رقم البيت يجب أن يكون 6 أرقام';
+                      } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return 'ادخل ارقاماً';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  _buildTextFormField(
+                    controller: _email,
+                    label: 'البريد الإلكتروني',
+                    maxLength: 50,
+                    inputType: TextInputType.emailAddress,
+                    validatorMsg: 'الرجاء إدخال بريد إلكتروني',
+                    additionalValidator: (value) {
+                      final emailRegex =
+                          RegExp(r'^[a-zA-Z0-9@._\-]+@[gmail]+\.[com]');
+                      if (!emailRegex.hasMatch(value!)) {
+                        return 'البريد الإلكتروني غير صالح';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  _buildPasswordFormField(),
+                  SizedBox(height: 16),
+                  _buildDateFormField(),
+                  SizedBox(height: 16),
+                  _buildActivateSwitch(),
+                  SizedBox(height: 24),
+                  _buildSubmitButton(),
+                ],
+              ),
             ),
           ),
         ),

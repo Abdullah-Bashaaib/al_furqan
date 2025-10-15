@@ -1,12 +1,9 @@
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/helper/sqldb.dart';
 import 'package:al_furqan/views/Supervisor/add_user.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:al_furqan/views/Supervisor/requests_list.dart';
 import 'package:al_furqan/views/Supervisor/user_list.dart';
-import 'package:al_furqan/utils/app_theme.dart';
-import 'package:al_furqan/utils/constants.dart';
+import 'package:flutter/material.dart';
 
 class UserManagementPage extends StatefulWidget {
   const UserManagementPage({super.key});
@@ -126,24 +123,27 @@ class _UserManagementPageState extends State<UserManagementPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: _buildAppBar(),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Container(
-            padding: EdgeInsets.all(16),
-            child: UserList(),
-          ),
-          Container(
-            padding: EdgeInsets.all(16),
-            child: RequestsList(),
-          ),
-        ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: _buildAppBar(),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              child: UserList(),
+            ),
+            Container(
+              padding: EdgeInsets.all(16),
+              child: RequestsList(),
+            ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _buildFloatingActionButton(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _buildFloatingActionButton(),
     );
   }
 }

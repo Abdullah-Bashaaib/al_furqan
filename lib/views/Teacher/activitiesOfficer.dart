@@ -1,71 +1,95 @@
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
 class StatisticsScreen extends StatelessWidget {
   final int totalActivities = 10;
   final double completionPercentage = 75.0;
 
   final List<Map<String, dynamic>> recentActivities = [
-    {"name": "اجتماع الفريق", "category": "إدارة", "date": "2025-02-10", "status": "تم"},
-    {"name": "إعداد تقرير", "category": "عمل", "date": "2025-02-09", "status": "لم يتم"},
-    {"name": "تدريب", "category": "تطوير ذاتي", "date": "2025-02-08", "status": "تم"},
+    {
+      "name": "اجتماع الفريق",
+      "category": "إدارة",
+      "date": "2025-02-10",
+      "status": "تم"
+    },
+    {
+      "name": "إعداد تقرير",
+      "category": "عمل",
+      "date": "2025-02-09",
+      "status": "لم يتم"
+    },
+    {
+      "name": "تدريب",
+      "category": "تطوير ذاتي",
+      "date": "2025-02-08",
+      "status": "تم"
+    },
   ];
 
-   StatisticsScreen({super.key});
+  StatisticsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("الإحصائيات")),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // الصف الأول: الكاردات
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                StatCard(title: "عدد الأنشطة", value: "$totalActivities"),
-                StatCard(title: "نسبة التنفيذ", value: "$completionPercentage%"),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // المخطط المتعرج
-            Text("نسبة تنفيذ الأنشطة", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            SizedBox(height: 200, child: ActivityChart()),
-
-            SizedBox(height: 20),
-
-            // جدول الأنشطة الأخيرة
-            Text("الأنشطة الأخيرة", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Expanded(
-              child: ListView(
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(title: Text("الإحصائيات")),
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // الصف الأول: الكاردات
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  DataTable(
-                    columns: [
-                      DataColumn(label: Text("النشاط")),
-                      DataColumn(label: Text("المجال")),
-                      DataColumn(label: Text("التاريخ")),
-                      DataColumn(label: Text("الحالة")),
-                    ],
-                    rows: recentActivities.map((activity) {
-                      return DataRow(cells: [
-                        DataCell(Text(activity["name"])),
-                        DataCell(Text(activity["category"])),
-                        DataCell(Text(activity["date"])),
-                        DataCell(Text(activity["status"], style: TextStyle(
-                          color: activity["status"] == "تم" ? Colors.green : Colors.red,
-                        ))),
-                      ]);
-                    }).toList(),
-                  ),
+                  StatCard(title: "عدد الأنشطة", value: "$totalActivities"),
+                  StatCard(
+                      title: "نسبة التنفيذ", value: "$completionPercentage%"),
                 ],
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+
+              // المخطط المتعرج
+              Text("نسبة تنفيذ الأنشطة",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              SizedBox(height: 200, child: ActivityChart()),
+
+              SizedBox(height: 20),
+
+              // جدول الأنشطة الأخيرة
+              Text("الأنشطة الأخيرة",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Expanded(
+                child: ListView(
+                  children: [
+                    DataTable(
+                      columns: [
+                        DataColumn(label: Text("النشاط")),
+                        DataColumn(label: Text("المجال")),
+                        DataColumn(label: Text("التاريخ")),
+                        DataColumn(label: Text("الحالة")),
+                      ],
+                      rows: recentActivities.map((activity) {
+                        return DataRow(cells: [
+                          DataCell(Text(activity["name"])),
+                          DataCell(Text(activity["category"])),
+                          DataCell(Text(activity["date"])),
+                          DataCell(Text(activity["status"],
+                              style: TextStyle(
+                                color: activity["status"] == "تم"
+                                    ? Colors.green
+                                    : Colors.red,
+                              ))),
+                        ]);
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -89,9 +113,14 @@ class StatCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(title,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
-            Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue)),
+            Text(value,
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue)),
           ],
         ),
       ),

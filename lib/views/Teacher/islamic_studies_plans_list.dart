@@ -3,6 +3,7 @@ import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
 import 'package:al_furqan/models/student_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'EditHalagaPlanScreen.dart';
@@ -88,27 +89,11 @@ class _IslamicStudiesPlansListScreenState
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(10),
-      ),
-    );
+    Utils.showToast(message, backgroundColor: Colors.redAccent);
   }
 
   void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(10),
-      ),
-    );
+    Utils.showToast(message, backgroundColor: Colors.green);
   }
 
   List<IslamicStudiesModel> get _filteredPlans {
@@ -123,46 +108,49 @@ class _IslamicStudiesPlansListScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'خطط العلوم الشرعية - ${widget.halaga.Name ?? ""}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'خطط العلوم الشرعية - ${widget.halaga.Name ?? ""}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(15),
+            ),
           ),
         ),
-      ),
-      body: _isLoading
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        body: _isLoading
+            ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('جاري تحميل الخطط...'),
+                  ],
+                ),
+              )
+            : Column(
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('جاري تحميل الخطط...'),
+                  _buildFilterSection(),
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: _refreshData,
+                      child: _filteredPlans.isEmpty
+                          ? _buildEmptyState()
+                          : _buildPlansList(),
+                    ),
+                  ),
                 ],
               ),
-            )
-          : Column(
-              children: [
-                _buildFilterSection(),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: _refreshData,
-                    child: _filteredPlans.isEmpty
-                        ? _buildEmptyState()
-                        : _buildPlansList(),
-                  ),
-                ),
-              ],
-            ),
+      ),
     );
   }
 
