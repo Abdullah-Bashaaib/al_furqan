@@ -292,7 +292,51 @@ class _TeacherDashboardState extends State<TeacherDashboard>
   void initState() {
     super.initState();
 
-    _loadPlans();
+    // عرض دايلوج التحميل فور فتح الصفحة
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(color: Colors.green),
+                const SizedBox(height: 20),
+                Text(
+                  'جاري تحميل البيانات...',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      try {
+        await _loadPlans();
+        await context.read<HalaqaProvider>().loadHalagaFromFirebase();
+        await context.read<MessageProvider>().loadMessageFromFirebase();
+
+        if (mounted) Navigator.pop(context); // إغلاق الدايلوج بعد الانتهاء
+      } catch (e) {
+        if (mounted) Navigator.pop(context);
+        Utils.showToast(
+          'حدث خطأ أثناء التحميل: $e',
+          backgroundColor: Colors.red,
+        );
+      }
+    });
   }
 
   @override
@@ -340,14 +384,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                 onPressed: () async {
                   // عرض دايلوج التحميل
                   log("message:InternetConnectionChecker.instance.hasConnection ${await InternetConnectionChecker.instance.hasConnection}");
-                  if (!await InternetConnectionChecker.instance.hasConnection) {
-                    Utils.showToast("message: no internet");
-                    await _loadPlans();
-                    await (context)
-                        .read<HalaqaProvider>()
-                        .loadedHalaqatFromLocal();
-                    return;
-                  }
+
                   showDialog(
                     context: context,
                     barrierDismissible: false, // يمنع الإغلاق أثناء التحميل
@@ -436,10 +473,12 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                             await prefs.clear();
                             perf.clear();
                             (context).read<MessageProvider>().clear();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()),
+                              (route) => false,
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,

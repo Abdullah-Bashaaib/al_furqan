@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/helper/current_user.dart';
 import 'package:al_furqan/models/student_model.dart';
@@ -41,21 +43,12 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
       _isLoading = true;
       _errorMessage = null;
     });
+    log("message: hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 
     try {
-      // if (user == null || user!.elhalagatID == null) {
-      //   await fetchUserData();
-      //   if (user == null || user!.elhalagatID == null) {
-      //     setState(() {
-      //       _errorMessage = "لم يتم العثور على بيانات المستخدم أو الحلقة";
-      //       _isLoading = false;
-      //     });
-      //     return;
-      //   }
-      // }
-
       // تحميل الطلاب من حلقة المعلم
       final students = await _studentController.getStudents(user!.elhalagatID!);
+      log("--------------> message: ${students.length} ");
 
       // تعيين جميع الطلاب كحاضرين افتراضياً
       for (var student in students) {

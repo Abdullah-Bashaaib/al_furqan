@@ -60,75 +60,79 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'خطط حلقة: ${halagaModel.Name ?? ""}',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-          backgroundColor: Theme.of(context).primaryColor,
-          titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
-          elevation: 2,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(15),
+    return SafeArea(
+      top: false,
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'خطط حلقة: ${halagaModel.Name ?? ""}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            backgroundColor: Theme.of(context).primaryColor,
+            titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+            elevation: 2,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(15),
+              ),
+            ),
+            bottom: TabBar(
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.white70,
+              indicatorColor: Colors.white,
+              indicatorWeight: 3,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+              tabs: const [
+                Tab(
+                  text: 'خطط الحفظ',
+                  icon: Icon(Icons.book),
+                ),
+                Tab(
+                  text: 'خطط التلاوة',
+                  icon: Icon(Icons.menu_book),
+                ),
+              ],
             ),
           ),
-          bottom: TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.white,
-            indicatorWeight: 3,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            tabs: const [
-              Tab(
-                text: 'خطط الحفظ',
-                icon: Icon(Icons.book),
-              ),
-              Tab(
-                text: 'خطط التلاوة',
-                icon: Icon(Icons.menu_book),
-              ),
-            ],
+          body: _isLoading
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text('جاري تحميل الخطط...'),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: _refreshPlans,
+                  child: TabBarView(
+                    children: [
+                      _buildConservationPlansList(),
+                      _buildTlawahPlansList(),
+                    ],
+                  ),
+                ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AddHalagaPlansScreen(halaga: halagaModel),
+                ),
+              );
+              if (result == true) {
+                _loadPlans(); // تحديث القوائم بعد إضافة خطط جديدة
+              }
+            },
+            backgroundColor: Theme.of(context).primaryColor,
+            elevation: 4,
+            child: const Icon(Icons.add, color: Colors.white),
           ),
-        ),
-        body: _isLoading
-            ? const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('جاري تحميل الخطط...'),
-                  ],
-                ),
-              )
-            : RefreshIndicator(
-                onRefresh: _refreshPlans,
-                child: TabBarView(
-                  children: [
-                    _buildConservationPlansList(),
-                    _buildTlawahPlansList(),
-                  ],
-                ),
-              ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AddHalagaPlansScreen(halaga: halagaModel),
-              ),
-            );
-            if (result == true) {
-              _loadPlans(); // تحديث القوائم بعد إضافة خطط جديدة
-            }
-          },
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 4,
-          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
