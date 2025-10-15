@@ -449,16 +449,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                     title: 'خطة الحفظ والتلاوة',
                     onTap: () {
                       Navigator.pop(context);
-                      // if (_isLoadingHalaga) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //       content: Text(
-                      //           'جار تحميل بيانات الحلقة، يرجى الانتظار...'),
-                      //       backgroundColor: Colors.orange,
-                      //     ),
-                      //   );
-                      //   return;
-                      // }
+
                       if (CurrentUser.user == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

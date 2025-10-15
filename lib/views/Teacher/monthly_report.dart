@@ -114,7 +114,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
     for (var eltlawahPlan in planController.eltlawahPlans) {
       if (eltlawahPlan.planMonth == currentMonthFormat) {
         this.eltlawahPlan = eltlawahPlan;
-        log("تم العثور على خطة التلاوة: $eltlawahPlan");
+        log("تم العثور على خطة التلاوة: ${eltlawahPlan.planMonth}");
         break;
       }
     }
@@ -148,6 +148,8 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
 
       // تحميل الطلاب من حلقة المعلم
       final students = await _studentController.getStudents(user!.elhalagatID!);
+      log("message: students"
+          " ${students.first.elhalaqaID}");
       await _loadPlans();
 
       // إنشاء بيانات تجريبية للتقرير
