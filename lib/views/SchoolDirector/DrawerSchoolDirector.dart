@@ -179,8 +179,11 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                     onTap: () {
                       (context).read<UserProvider>().loadUsersFromFirebase();
                       // Navigator.pop(context);
-                      Navigator.of(context).push(CupertinoPageRoute(
-                          builder: (context) => TeacherManagement()));
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => TeacherManagement(),
+                        ),
+                      );
                     },
                   ),
                   _buildMenuItem(
@@ -203,8 +206,10 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                       // Navigator.pop(context);
                       Navigator.of(context).push(
                         CupertinoPageRoute(
-                            builder: (context) => TeachersAttendanceListScreen(
-                                schoolId: widget.user!.schoolID!.toString())),
+                          builder: (context) => TeachersAttendanceListScreen(
+                            schoolId: widget.user!.schoolID!.toString(),
+                          ),
+                        ),
                       );
                     },
                   ),

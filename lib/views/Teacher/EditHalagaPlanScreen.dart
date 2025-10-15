@@ -310,61 +310,64 @@ class _EditHalagaPlanScreenState extends State<EditHalagaPlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(titleText, style: TextStyle(color: Colors.white)),
-        backgroundColor: Theme.of(context).primaryColor,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // معلومات الطالب
-              _buildStudentInfoCard(),
-              SizedBox(height: 24),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(titleText, style: TextStyle(color: Colors.white)),
+          backgroundColor: Theme.of(context).primaryColor,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // معلومات الطالب
+                _buildStudentInfoCard(),
+                SizedBox(height: 24),
 
-              // رأس الخطة والشهر
-              _buildHeaderSection(),
-              SizedBox(height: 24),
+                // رأس الخطة والشهر
+                _buildHeaderSection(),
+                SizedBox(height: 24),
 
-              // بناء محتوى الشاشة حسب نوع الخطة
-              if (widget.planType == "conservation" ||
-                  widget.planType == "tlawah")
-                _buildQuranPlanContent(),
+                // بناء محتوى الشاشة حسب نوع الخطة
+                if (widget.planType == "conservation" ||
+                    widget.planType == "tlawah")
+                  _buildQuranPlanContent(),
 
-              if (widget.planType == "islamic") _buildIslamicStudiesContent(),
+                if (widget.planType == "islamic") _buildIslamicStudiesContent(),
 
-              // رسائل الخطأ
-              if (_errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text(
-                    _errorMessage!,
-                    style: TextStyle(color: Colors.red),
+                // رسائل الخطأ
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+
+                // زر التحديث
+                SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _updatePlan,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: _isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text('تحديث الخطة', style: TextStyle(fontSize: 18)),
                   ),
                 ),
-
-              // زر التحديث
-              SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _updatePlan,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: _isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text('تحديث الخطة', style: TextStyle(fontSize: 18)),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

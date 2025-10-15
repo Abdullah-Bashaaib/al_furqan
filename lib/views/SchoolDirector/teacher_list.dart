@@ -3,9 +3,10 @@ import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/helper/current_user.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
-import 'package:flutter/material.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/SchoolDirector/edit_teacher.dart';
 import 'package:al_furqan/views/SchoolDirector/teacher_request.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class TeacherList extends StatefulWidget {
@@ -150,141 +151,142 @@ class _TeacherListState extends State<TeacherList>
 
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _buildSearchBar(),
-          ),
-          
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Selector<UserProvider, int>(
-                        builder: (context, prov, child) => Text(
-                              'عدد المعلمين المفعلين: $prov',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                        selector: (_, s) => s.teacherCount),
-                    const Text(
-                      '(يتم عرض المعلمين المفعلين فقط)',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.green,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.refresh),
-                  onPressed: () =>
-                      (context).read<UserProvider>().loadTeachers(),
-                  tooltip: 'تحديث البيانات',
-                  color: const Color.fromARGB(255, 1, 117, 70),
-                ),
-              ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildSearchBar(),
             ),
-          ),
-          Expanded(
-            child: (_isRefreshing && !_forceShowContent) // تعديل الشرط هنا
-                ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(
-                          color: Color.fromARGB(255, 1, 117, 70),
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'جاري تحميل بيانات المعلمين...',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Consumer<UserProvider>(
-                    builder: (context, prov, child) => prov.teachers.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.people_outline,
-                                  size: 64,
-                                  color: Colors.grey,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Selector<UserProvider, int>(
+                          builder: (context, prov, child) => Text(
+                                'عدد المعلمين المفعلين: $prov',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                 ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  _searchQuery.isNotEmpty
-                                      ? 'لا يوجد معلمين مفعلين بهذا الاسم'
-                                      : 'لا يوجد معلمين مفعلين في هذه المدرسة',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                              ),
+                          selector: (_, s) => s.teacherCount),
+                      const Text(
+                        '(يتم عرض المعلمين المفعلين فقط)',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.green,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () =>
+                        (context).read<UserProvider>().loadTeachers(),
+                    tooltip: 'تحديث البيانات',
+                    color: const Color.fromARGB(255, 1, 117, 70),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: (_isRefreshing && !_forceShowContent) // تعديل الشرط هنا
+                  ? const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: Color.fromARGB(255, 1, 117, 70),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'جاري تحميل بيانات المعلمين...',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Consumer<UserProvider>(
+                      builder: (context, prov, child) => prov.teachers.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.people_outline,
+                                    size: 64,
                                     color: Colors.grey,
                                   ),
-                                ),
-                                if (_searchQuery.isNotEmpty) ...[
                                   const SizedBox(height: 16),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _searchQuery = '';
-                                        _isSearching = false;
-                                        // _updateFilteredTeachers();
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 1, 117, 70),
-                                      foregroundColor: Colors.white,
-                                    ),
-                                    child: const Text('إظهار جميع المعلمين'),
-                                  ),
-                                ],
-                                // Add a refresh button when no teachers are found
-                                if (_searchQuery.isEmpty) ...[
-                                  const SizedBox(height: 16),
-                                  ElevatedButton.icon(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.refresh),
-                                    label: const Text('تحديث البيانات'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 1, 117, 70),
-                                      foregroundColor: Colors.white,
+                                  Text(
+                                    _searchQuery.isNotEmpty
+                                        ? 'لا يوجد معلمين مفعلين بهذا الاسم'
+                                        : 'لا يوجد معلمين مفعلين في هذه المدرسة',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey,
                                     ),
                                   ),
+                                  if (_searchQuery.isNotEmpty) ...[
+                                    const SizedBox(height: 16),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _searchQuery = '';
+                                          _isSearching = false;
+                                          // _updateFilteredTeachers();
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 1, 117, 70),
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      child: const Text('إظهار جميع المعلمين'),
+                                    ),
+                                  ],
+                                  // Add a refresh button when no teachers are found
+                                  if (_searchQuery.isEmpty) ...[
+                                    const SizedBox(height: 16),
+                                    ElevatedButton.icon(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.refresh),
+                                      label: const Text('تحديث البيانات'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 1, 117, 70),
+                                        foregroundColor: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
+                            )
+                          : ListView.builder(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              itemCount: prov.teachers.length,
+                              itemBuilder: (context, index) {
+                                final UserModel? teacher = prov.teachers[index];
+                                return _buildTeacherCard(prov.teachers[index]!);
+                              },
                             ),
-                          )
-                        : ListView.builder(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            itemCount: prov.teachers.length,
-                            itemBuilder: (context, index) {
-                              final UserModel? teacher = prov.teachers[index];
-                              return _buildTeacherCard(prov.teachers[index]!);
-                            },
-                          ),
-                  ),
-          )
-        ],
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -629,28 +631,14 @@ class _TeacherListState extends State<TeacherList>
         Navigator.of(context).pop();
 
         // عرض رسالة نجاح
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم حذف المعلم بنجاح'),
-            backgroundColor: Color.fromARGB(255, 1, 117, 70),
-            duration: Duration(seconds: 2),
-          ),
-        );
+        Utils.showToast('تم حذف المعلم بنجاح', backgroundColor: Colors.green);
       }
     } catch (e) {
       // إغلاق مؤشر التحميل في حالة حدوث خطأ
-      if (!mounted) return;
       Navigator.of(context).pop();
-
       // عرض رسالة الخطأ
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ أثناء حذف المعلم: $e'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      Utils.showToast('حدث خطأ أثناء حذف المعلم: $e',
+          backgroundColor: Colors.red);
     }
   }
 }

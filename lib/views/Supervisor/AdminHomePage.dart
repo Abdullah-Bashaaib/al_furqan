@@ -2,6 +2,7 @@ import 'package:al_furqan/controllers/TeacherController.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
 import 'package:al_furqan/services/sync.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/login/login.dart';
 import 'package:al_furqan/widgets/chart_card.dart';
 import 'package:al_furqan/widgets/drawer_list.dart';
@@ -182,135 +183,107 @@ class _DashboardScreenState extends State<DashboardScreen>
           "Refreshed admin data: ${_schools.length} schools, ${_teachers.length} teachers, $_totalStudents students");
 
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 10),
-              Text('تم تحديث البيانات بنجاح'),
-            ],
-          ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      Utils.showToast('تم تحديث البيانات بنجاح', backgroundColor: Colors.green);
     } catch (e) {
-      debugPrint("Error refreshing admin data: $e");
-      if (!mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error, color: Colors.white),
-              SizedBox(width: 10),
-              Expanded(child: Text('فشل في جلب البيانات: $e')),
-            ],
-          ),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      Utils.showToast('فشل في جلب البيانات: $e',
+          backgroundColor: Colors.redAccent);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'لوحة تحكم المشرف',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        actions: [
-          IconButton(
-            onPressed: () async {
-              // Show confirmation dialog
-              bool confirm = await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('تسجيل الخروج'),
-                      content: Text('هل أنت متأكد من تسجيل الخروج؟'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: Text('إلغاء'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => Navigator.pushReplacement(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => LoginScreen())),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Text('تسجيل الخروج'),
-                        ),
-                      ],
-                    ),
-                  ) ??
-                  false;
-
-              if (confirm) {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.clear();
-                Navigator.pushReplacement(context,
-                    CupertinoPageRoute(builder: (context) => LoginScreen()));
-              }
-            },
-            icon: Icon(Icons.logout),
-            tooltip: 'تسجيل الخروج',
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'لوحة تحكم المشرف',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      drawer: user == null ? null : DrawerList(user: user),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () async {
-          loadStudentsWithDialog(context);
-          _refreshData();
-        },
-        tooltip: 'تحديث البيانات',
-        child: Icon(
-          Icons.refresh,
-          color: Colors.white,
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: user == null
-            ? Center(child: Text("فشل في جلب بيانات المستخدم"))
-            : SingleChildScrollView(
-                padding: EdgeInsets.all(16.0),
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildWelcomeSection(),
-                    SizedBox(height: 24),
-                    _buildStatCards(),
-                    SizedBox(height: 24),
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          actions: [
+            IconButton(
+              onPressed: () async {
+                // Show confirmation dialog
+                bool confirm = await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('تسجيل الخروج'),
+                        content: Text('هل أنت متأكد من تسجيل الخروج؟'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: Text('إلغاء'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pushReplacement(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => LoginScreen())),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: Text('تسجيل الخروج'),
+                          ),
+                        ],
+                      ),
+                    ) ??
+                    false;
 
-                    _buildSectionTitle('الإحصائيات', Icons.analytics),
-                    SizedBox(height: 8),
-                    // _buildChartCard('نسبة تنفيذ الأنشطة', Colors.blue, _activitiesCompletionRate),
-                    SizedBox(height: 16),
-                    _buildChartCard(
-                        'نسبة حضور المعلمين', Colors.green, _attendanceRate),
-                    SizedBox(height: 24),
-                  ],
+                if (confirm) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.clear();
+                  Navigator.pushReplacement(context,
+                      CupertinoPageRoute(builder: (context) => LoginScreen()));
+                }
+              },
+              icon: Icon(Icons.logout),
+              tooltip: 'تسجيل الخروج',
+            ),
+          ],
+        ),
+        drawer: user == null ? null : DrawerList(user: user),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          onPressed: () async {
+            loadStudentsWithDialog(context);
+            _refreshData();
+          },
+          tooltip: 'تحديث البيانات',
+          child: Icon(
+            Icons.refresh,
+            color: Colors.white,
+          ),
+        ),
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: user == null
+              ? Center(child: Text("فشل في جلب بيانات المستخدم"))
+              : SingleChildScrollView(
+                  padding: EdgeInsets.all(16.0),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildWelcomeSection(),
+                      SizedBox(height: 24),
+                      _buildStatCards(),
+                      SizedBox(height: 24),
+
+                      _buildSectionTitle('الإحصائيات', Icons.analytics),
+                      SizedBox(height: 8),
+                      // _buildChartCard('نسبة تنفيذ الأنشطة', Colors.blue, _activitiesCompletionRate),
+                      SizedBox(height: 16),
+                      _buildChartCard(
+                          'نسبة حضور المعلمين', Colors.green, _attendanceRate),
+                      SizedBox(height: 24),
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -441,8 +414,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     return InkWell(
       onTap: () {
         // Show details when tapped
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('تفاصيل $title')));
+        Utils.showToast('تفاصيل $title');
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(
@@ -530,8 +502,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           borderRadius: BorderRadius.circular(16),
           onTap: () {
             // Show details when tapped
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('تفاصيل $title')));
+            Utils.showToast('تفاصيل $title');
           },
           child: ChartCard(
             title: title,

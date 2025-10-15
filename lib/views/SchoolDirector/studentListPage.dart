@@ -6,6 +6,7 @@ import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/SchoolDirector/AddStudent.dart';
 import 'package:al_furqan/views/SchoolDirector/updateStudent.dart';
 import 'package:flutter/material.dart';
@@ -166,242 +167,245 @@ class _StudentsListPageState extends State<StudentsListPage> {
     // if (isLoading || fathers.length < students.length) {
     //   return Center(child: CircularProgressIndicator());
     // }
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        title: Text('طلاب المدرسة',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 2,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: Colors.white),
-            onPressed: () {
-              context.read<StudentProvider>().loadStudentFromFirebase();
-            },
-          )
-        ],
-      ),
-      body: Consumer<StudentProvider>(
-        builder: (context, prov, child) =>
-            //isLoading ||
-            //         prov.fathers.length < prov.students.length
-            //     ? Center(child: CircularProgressIndicator(color: Colors.teal))
-            // :
-            Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'عدد الطلاب: ${prov.students.length}',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary),
-              ),
-            ),
-            Expanded(
-              child: prov.students.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.person_off, size: 48, color: Colors.grey),
-                          SizedBox(height: 10),
-                          Text('لا يوجد طلاب', style: TextStyle(fontSize: 18)),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: prov.students.length,
-                      itemBuilder: (context, index) {
-                        final student = prov.students[index];
-                        final father = prov.fathers[index];
-                        // final halaqaName =
-                        //     getHalaqaName(student.elhalaqaID);
-
-                        // Only load halaqat if there is a valid ID
-
-                        student.elhalaqaID == null
-                            ? "الطالب: بدون حلقة"
-                            : "الحلقة: ${prov.halaqaNames[student.elhalaqaID] ?? 'غير معروف'}";
-                        return Card(
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 2,
-                          child: ListTile(
-                            contentPadding: EdgeInsets.all(16),
-                            leading: CircleAvatar(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor: Colors.white,
-                              child: Text("${index + 1}"),
-                            ),
-                            title: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "${student.firstName ?? ''} ${student.lastName ?? ''}",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.group,
-                                      size: 16,
-                                      color: student.elhalaqaID == null
-                                          ? Colors.red
-                                          : Colors.teal,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      student.elhalaqaID == null
-                                          ? "الطالب: بدون حلقة"
-                                          : "الحلقة: ${prov.halaqat.firstWhere((h) => h.halagaID == student.elhalaqaID, orElse: () => HalagaModel(Name: 'غير معروف')).Name}",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: student.elhalaqaID == null
-                                            ? Colors.red
-                                            : Colors.grey[800],
-                                        fontWeight: student.elhalaqaID == null
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.teal),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditStudentScreen(
-                                          student: student,
-                                          father: father,
-                                        ),
-                                      ),
-                                    ).then((_) => prov.loadStudents());
-                                  },
-                                ),
-                                IconButton(
-                                  onPressed: () async {
-                                    if (!mounted) return;
-                                    bool confirm = await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('تأكيد الحذف'),
-                                              content: Text(
-                                                  'هل أنت متأكد من حذف هذا الطالب؟'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: Text('إلغاء'),
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(false),
-                                                ),
-                                                TextButton(
-                                                  child: Text('حذف'),
-                                                  onPressed: () async {
-                                                    Navigator.of(context)
-                                                        .pop(true);
-                                                    await prov.loadStudents();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ) ??
-                                        false;
-                                    if (confirm) {
-                                      try {
-                                        final messenger =
-                                            ScaffoldMessenger.maybeOf(context);
-                                        await studentController
-                                            .delete(student.studentID!);
-                                        if (await checkInternet()) {
-                                          await firebasehelper.delete(
-                                              student.studentID!, "Students");
-                                        }
-                                        if (!context.mounted) return;
-                                        if (messenger == null) return;
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content:
-                                                  Text('تم حذف الطالب بنجاح')),
-                                        );
-                                        await prov.loadStudents();
-                                      } catch (e) {
-                                        final messenger =
-                                            ScaffoldMessenger.maybeOf(context);
-                                        if (!context.mounted ||
-                                            messenger == null) {
-                                          return;
-                                        }
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  ' ${e.toString()} في حذف الطالب')),
-                                        );
-                                      }
-                                    }
-                                  },
-                                  icon: Icon(Icons.delete),
-                                  color: Colors.redAccent,
-                                ),
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditStudentScreen(
-                                    student: student,
-                                    father: father,
-                                  ),
-                                ),
-                              ).then((_) => prov.loadStudents());
-                            },
-                          ),
-                        );
-                      },
-                    ),
-            ),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+          title: Text('طلاب المدرسة',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+          elevation: 2,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh, color: Colors.white),
+              onPressed: () {
+                context.read<StudentProvider>().loadStudentFromFirebase();
+              },
+            )
           ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AddStudentScreen(user: widget.user)),
-          ).then((_) => context.read<StudentProvider>().loadStudents());
-        },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(Icons.add, color: Colors.white),
+        body: Consumer<StudentProvider>(
+          builder: (context, prov, child) =>
+              //isLoading ||
+              //         prov.fathers.length < prov.students.length
+              //     ? Center(child: CircularProgressIndicator(color: Colors.teal))
+              // :
+              Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'عدد الطلاب: ${prov.students.length}',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary),
+                ),
+              ),
+              Expanded(
+                child: prov.students.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.person_off,
+                                size: 48, color: Colors.grey),
+                            SizedBox(height: 10),
+                            Text('لا يوجد طلاب',
+                                style: TextStyle(fontSize: 18)),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: prov.students.length,
+                        itemBuilder: (context, index) {
+                          final student = prov.students[index];
+                          final father = prov.fathers[index];
+                          // final halaqaName =
+                          //     getHalaqaName(student.elhalaqaID);
+
+                          // Only load halaqat if there is a valid ID
+
+                          student.elhalaqaID == null
+                              ? "الطالب: بدون حلقة"
+                              : "الحلقة: ${prov.halaqaNames[student.elhalaqaID] ?? 'غير معروف'}";
+                          return Card(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 2,
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(16),
+                              leading: CircleAvatar(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                foregroundColor: Colors.white,
+                                child: Text("${index + 1}"),
+                              ),
+                              title: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "${student.firstName ?? ''} ${student.lastName ?? ''}",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.group,
+                                        size: 16,
+                                        color: student.elhalaqaID == null
+                                            ? Colors.red
+                                            : Colors.teal,
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        student.elhalaqaID == null
+                                            ? "الطالب: بدون حلقة"
+                                            : "الحلقة: ${prov.halaqat.firstWhere((h) => h.halagaID == student.elhalaqaID, orElse: () => HalagaModel(Name: 'غير معروف')).Name}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: student.elhalaqaID == null
+                                              ? Colors.red
+                                              : Colors.grey[800],
+                                          fontWeight: student.elhalaqaID == null
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.edit, color: Colors.teal),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditStudentScreen(
+                                            student: student,
+                                            father: father,
+                                          ),
+                                        ),
+                                      ).then((_) => prov.loadStudents());
+                                    },
+                                  ),
+                                  IconButton(
+                                    onPressed: () async {
+                                      if (!mounted) return;
+                                      bool confirm = await showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('تأكيد الحذف'),
+                                                content: Text(
+                                                    'هل أنت متأكد من حذف هذا الطالب؟'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text('إلغاء'),
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(false),
+                                                  ),
+                                                  TextButton(
+                                                    child: Text('حذف'),
+                                                    onPressed: () async {
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                      await prov.loadStudents();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ) ??
+                                          false;
+                                      if (confirm) {
+                                        try {
+                                          final messenger =
+                                              ScaffoldMessenger.maybeOf(
+                                                  context);
+                                          await studentController
+                                              .delete(student.studentID!);
+                                          if (await checkInternet()) {
+                                            await firebasehelper.delete(
+                                                student.studentID!, "Students");
+                                          }
+                                          if (!context.mounted) return;
+                                          if (messenger == null) return;
+                                          Utils.showToast('تم حذف الطالب بنجاح',
+                                              backgroundColor: Colors.red);
+
+                                          await prov.loadStudents();
+                                        } catch (e) {
+                                          final messenger =
+                                              ScaffoldMessenger.maybeOf(
+                                                  context);
+                                          if (!context.mounted ||
+                                              messenger == null) {
+                                            return;
+                                          }
+                                          Utils.showToast(
+                                              ' ${e.toString()} في حذف الطالب',
+                                              backgroundColor: Colors.red);
+                                        }
+                                      }
+                                    },
+                                    icon: Icon(Icons.delete),
+                                    color: Colors.redAccent,
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditStudentScreen(
+                                      student: student,
+                                      father: father,
+                                    ),
+                                  ),
+                                ).then((_) => prov.loadStudents());
+                              },
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniStartFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddStudentScreen(user: widget.user)),
+            ).then((_) => context.read<StudentProvider>().loadStudents());
+          },
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: Icon(Icons.add, color: Colors.white),
+        ),
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:al_furqan/controllers/TeacherController.dart';
 import 'package:al_furqan/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
-import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/halaqa_provider.dart';
 import 'package:al_furqan/models/provider/message_provider.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
@@ -29,13 +28,10 @@ class SchoolManagerScreen extends StatefulWidget {
   State<SchoolManagerScreen> createState() => _SchoolManagerScreenState();
 }
 
-class _SchoolManagerScreenState extends State<SchoolManagerScreen>
-// with UserDataMixin, WidgetsBindingObserver
-{
+class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
   final teachers = teacherController.teachers;
   final UserModel? user = CurrentUser.user;
-  // final students = studentController.students;
-  List<HalagaModel> _halaqatList = [];
+  // List<HalagaModel> _halaqatList = [];
   bool _isLoading = true;
   // int _teacherCount = 0;
   // int _studentCount = 0;
@@ -70,7 +66,6 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen>
     super.dispose();
   }
 
-  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // تحديث عدد الإشعارات عند العودة للتطبيق
     if (state == AppLifecycleState.resumed) {
@@ -149,152 +144,159 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0,
-        title: _isLoading || user == null
-            ? Text("جاري التحميل...",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold))
-            : Text(
-                '${user!.first_name} ${user!.last_name}',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _loadData();
-              final sw3 = Stopwatch()..start();
-              (context).read<HalaqaProvider>().loadHalaqatFromFirebase();
-              sw3.stop();
-              _elapsedHalagat = sw3.elapsedMilliseconds;
-              (context)
-                  .read<MessageProvider>()
-                  .loadMessageFromFirebase(); // تحديث عدد الإشعارات عند الضغط على زر التحديث
-              (context).read<UserProvider>().loadUsersFromFirebase();
-            },
-            icon: Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'تحديث البيانات',
-          ),
-          IconButton(
-            onPressed: () async {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('تسجيل الخروج'),
-                  content: Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('إلغاء'),
-                    ),
-                    FilledButton(
-                      style: FilledButton.styleFrom(
-                          backgroundColor: Colors.redAccent),
-                      onPressed: () async {
-                        // Implement logout logic here
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.clear();
-                        await perf.clear();
-                        (context).read<MessageProvider>().clear();
-                        Navigator.pushReplacement(
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          elevation: 0,
+          title: _isLoading || user == null
+              ? Text("جاري التحميل...",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold))
+              : Text(
+                  '${user!.first_name} ${user!.last_name}',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                _loadData();
+                final sw3 = Stopwatch()..start();
+                (context).read<HalaqaProvider>().loadHalaqatFromFirebase();
+                sw3.stop();
+                _elapsedHalagat = sw3.elapsedMilliseconds;
+                (context)
+                    .read<MessageProvider>()
+                    .loadMessageFromFirebase(); // تحديث عدد الإشعارات عند الضغط على زر التحديث
+                (context).read<UserProvider>().loadUsersFromFirebase();
+              },
+              icon: Icon(Icons.refresh, color: Colors.white),
+              tooltip: 'تحديث البيانات',
+            ),
+            IconButton(
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('تسجيل الخروج'),
+                    content: Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('إلغاء'),
+                      ),
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                            backgroundColor: Colors.redAccent),
+                        onPressed: () async {
+                          // Implement logout logic here
+                          log("------------> Hi am here log out!!!");
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.clear();
+                          await perf.clear();
+                          (context).read<MessageProvider>().clear();
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
-                        Navigator.pop(context);
-                      },
-                      child: Text('تسجيل الخروج'),
-                    ),
-                  ],
-                ),
-              );
-            },
-            icon: Icon(Icons.logout, color: Colors.white),
-            tooltip: 'تسجيل الخروج',
-          ),
-        ],
-      ),
-      drawer: user == null ? null : DrawerSchoolDirector(user: user),
-      body: _isLoading
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    "جاري تحميل البيانات...",
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : user == null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.error_outline, size: 64, color: Colors.red),
-                      SizedBox(height: 16),
-                      Text(
-                        "فشل في جلب بيانات المستخدم",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: _loadData,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: Text('إعادة المحاولة'),
+                                builder: (context) => LoginScreen()),
+                            (route) => false,
+                          );
+
+                          // Navigator.pop(context);
+                        },
+                        child: Text('تسجيل الخروج'),
                       ),
                     ],
                   ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadData,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16.0),
-                    physics: AlwaysScrollableScrollPhysics(),
+                );
+              },
+              icon: Icon(Icons.logout, color: Colors.white),
+              tooltip: 'تسجيل الخروج',
+            ),
+          ],
+        ),
+        drawer: user == null ? null : DrawerSchoolDirector(user: user),
+        body: _isLoading
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      "جاري تحميل البيانات...",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : user == null
+                ? Center(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Welcome message
-                        _buildWelcomeSection(),
+                        Icon(Icons.error_outline, size: 64, color: Colors.red),
                         SizedBox(height: 16),
-
-                        // Stats overview
-                        _buildStatisticsSection(),
-                        SizedBox(height: 24),
-
-                        // Distribution chart
-                        _buildDistributionChart(),
-                        SizedBox(height: 24),
-
-                        // Recent activity
-                        Consumer<HalaqaProvider>(
-                          builder: (context, prov, child) =>
-                              _buildRecentActivitySection(prov.halaqat),
+                        Text(
+                          "فشل في جلب بيانات المستخدم",
+                          style: TextStyle(fontSize: 18),
                         ),
                         SizedBox(height: 24),
-
-                        // Teachers list
-                        Consumer<UserProvider>(
-                          builder: (context, prov, child) =>
-                              _buildTeachersSection(prov.activeTeacher),
-                        )
+                        ElevatedButton(
+                          onPressed: _loadData,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Text('إعادة المحاولة'),
+                        ),
                       ],
                     ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _loadData,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(16.0),
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Welcome message
+                          _buildWelcomeSection(),
+                          SizedBox(height: 16),
+
+                          // Stats overview
+                          _buildStatisticsSection(),
+                          SizedBox(height: 24),
+
+                          // Distribution chart
+                          _buildDistributionChart(),
+                          SizedBox(height: 24),
+
+                          // Recent activity
+                          Consumer<HalaqaProvider>(
+                            builder: (context, prov, child) =>
+                                _buildRecentActivitySection(prov.halaqat),
+                          ),
+                          SizedBox(height: 24),
+
+                          // Teachers list
+                          Consumer<UserProvider>(
+                            builder: (context, prov, child) =>
+                                _buildTeachersSection(prov.activeTeacher),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+      ),
     );
   }
 

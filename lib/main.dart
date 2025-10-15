@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'RB',
       ),
+      themeMode: ThemeMode.light,
       locale: Locale('ar'), // تحديد اللغة الافتراضية
       builder: (context, child) {
         return Directionality(

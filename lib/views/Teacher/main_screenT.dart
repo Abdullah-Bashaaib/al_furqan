@@ -1,8 +1,7 @@
-import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/main.dart';
-import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/Teacher/mainTeacher.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -44,22 +43,16 @@ class _MainScreenState extends State<MainScreenT> {
       await sync.syncUsers();
       await sync.syncElhalagat();
       await sync.syncStudents();
-      // await loadMessages();
-      // await loadHalagat();
       await loadStudent();
       await loadPlans();
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => TeacherDashboard()));
     } else {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => TeacherDashboard()));
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('لا يوجد اتصال بالانترنت لتحديث البيانات'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('لا يوجد اتصال بالانترنت لتحديث البيانات',
+          backgroundColor: Colors.redAccent);
     }
   }
 
@@ -121,40 +114,39 @@ class _MainScreenState extends State<MainScreenT> {
       await planController.getPlansFirebaseToLocal(Id!);
     } catch (e) {
       debugPrint('خطأ في تحميل البيانات: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('خطأ في تحميل البيانات'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('خطأ في تحميل البيانات: $e', backgroundColor: Colors.red);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('جاري التحميل...',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(color: Theme.of(context).primaryColor),
-              SizedBox(height: 16),
-              Text(
-                'جاري تحميل البيانات...',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).primaryColor,
+      return SafeArea(
+        top: false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('جاري التحميل...',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            backgroundColor: Theme.of(context).primaryColor,
+            foregroundColor: Colors.white,
+            elevation: 0,
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor),
+                SizedBox(height: 16),
+                Text(
+                  'جاري تحميل البيانات...',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

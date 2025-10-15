@@ -5,6 +5,7 @@ import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/halaqa_provider.dart';
 import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/SchoolDirector/AddHalaga.dart';
 import 'package:al_furqan/views/SchoolDirector/halagaDetails.dart';
 import 'package:al_furqan/views/Teacher/HalqaReportScreen.dart';
@@ -68,128 +69,111 @@ class _HalqatListPageState extends State<HalqatListPage> {
         setState(() {}); // تحديث الواجهة بعد جلب البيانات
       } catch (e) {
         debugPrint("خطأ أثناء تحميل الحلقات: $e");
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ أثناء تحميل الحلقات: $e'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
-          ),
-        );
+        Utils.showToast("خطأ أثناء تحميل الحلقات: $e",
+            backgroundColor: Colors.red);
       }
     } else {
       debugPrint("schoolID is null");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('معرف المدرسة غير متوفر'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-        ),
-      );
+      Utils.showToast('معرف المدرسة غير متوفر', backgroundColor: Colors.red);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text('الحلقات الدراسية',
-            style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-        actions: [
-          // زر تحديث البيانات
-          IconButton(
-            icon: Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'تحديث البيانات',
-            onPressed: () {
-              // إظهار رسالة تأكيد تحديث البيانات
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('جاري تحديث البيانات...'),
-                  duration: Duration(seconds: 1),
-                ),
-              );
-              _loadHalaqat(); // استدعاء دالة تحميل البيانات
-            },
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: _loadHalaqat,
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'إجمالي الحلقات: ${halaqat.length}',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(height: 10),
-            Expanded(
-              child: halaqat.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.school_outlined,
-                              size: 64, color: Colors.grey[400]),
-                          SizedBox(height: 16),
-                          Text(
-                            'لا توجد حلقات مضافة.',
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.grey[600]),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'اضغط على زر الإضافة لإنشاء حلقة جديدة',
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey[500]),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: halaqat.length,
-                      itemBuilder: (context, index) {
-                        final halqa = halaqat[
-                            index]; // الحصول على الحلقة بناءً على الفهرس
-                        // تحديد لون المعلم بناء على وجوده
-                        Color teacherTextColor =
-                            halqa.teacherName == 'لا يوجد معلم للحلقة'
-                                ? Colors.red
-                                : Colors.green[700]!;
-                        return _buildHalqaCard(
-                            halqa, halqa.teacherName ?? '', teacherTextColor);
-                      },
-                    ),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text('الحلقات الدراسية',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
+          centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.white),
+          actions: [
+            // زر تحديث البيانات
+            IconButton(
+              icon: Icon(Icons.refresh, color: Colors.white),
+              tooltip: 'تحديث البيانات',
+              onPressed: () {
+                // إظهار رسالة تأكيد تحديث البيانات
+                Utils.showToast('جاري تحديث البيانات...');
+
+                _loadHalaqat(); // استدعاء دالة تحميل البيانات
+              },
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        tooltip: 'إضافة حلقة جديدة',
-        onPressed: () {
-          Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddHalaqaScreen()))
-              .then((_) {
-            _loadHalaqat();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('تم تحديث قائمة الحلقات'),
-                duration: Duration(seconds: 2),
+        body: RefreshIndicator(
+          onRefresh: _loadHalaqat,
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'إجمالي الحلقات: ${halaqat.length}',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
-            );
-          });
-        },
-        child: Icon(Icons.add, color: Colors.white),
+              SizedBox(height: 10),
+              Expanded(
+                child: halaqat.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.school_outlined,
+                                size: 64, color: Colors.grey[400]),
+                            SizedBox(height: 16),
+                            Text(
+                              'لا توجد حلقات مضافة.',
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey[600]),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'اضغط على زر الإضافة لإنشاء حلقة جديدة',
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.grey[500]),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: halaqat.length,
+                        itemBuilder: (context, index) {
+                          final halqa = halaqat[
+                              index]; // الحصول على الحلقة بناءً على الفهرس
+                          // تحديد لون المعلم بناء على وجوده
+                          Color teacherTextColor =
+                              halqa.teacherName == 'لا يوجد معلم للحلقة'
+                                  ? Colors.red
+                                  : Colors.green[700]!;
+                          return _buildHalqaCard(
+                              halqa, halqa.teacherName ?? '', teacherTextColor);
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          tooltip: 'إضافة حلقة جديدة',
+          onPressed: () {
+            Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddHalaqaScreen()))
+                .then((_) {
+              _loadHalaqat();
+              Utils.showToast('تم تحديث قائمة الحلقات',
+                  backgroundColor: Colors.green);
+            });
+          },
+          child: Icon(Icons.add, color: Colors.white),
+        ),
       ),
     );
   }
@@ -223,13 +207,8 @@ class _HalqatListPageState extends State<HalqatListPage> {
 
             if (result == true) {
               await _loadHalaqat();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('تم تحديث بيانات الحلقة'),
-                  backgroundColor: Colors.green,
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              Utils.showToast('تم تحديث بيانات الحلقة',
+                  backgroundColor: Colors.green);
             }
           },
           child: Padding(
@@ -389,26 +368,15 @@ class _HalqatListPageState extends State<HalqatListPage> {
       await _loadHalaqat();
 
       // إظهار رسالة نجاح الحذف
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('تم حذف الحلقة "${halqa.Name}" بنجاح'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
+      Utils.showToast('تم حذف الحلقة "${halqa.Name}" بنجاح',
+          backgroundColor: Colors.green);
     } catch (e) {
       // إغلاق مؤشر التحميل في حالة حدوث خطأ
       Navigator.of(context).pop();
       log('حدث خطأ أثناء حذف الحلقة: $e');
       // إظهار رسالة الخطأ
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ أثناء حذف الحلقة: $e'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-        ),
-      );
+      Utils.showToast('حدث خطأ أثناء حذف الحلقة: $e',
+          backgroundColor: Colors.red);
     }
   }
 

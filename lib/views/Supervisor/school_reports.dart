@@ -52,9 +52,7 @@ class _SchoolReports extends State<SchoolReports> {
       setState(() => _isLoading = false);
     } catch (e) {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('فشل في جلب البيانات: $e')),
-      );
+      Utils.showToast('فشل في جلب البيانات: $e', backgroundColor: Colors.red);
     }
   }
 
@@ -77,199 +75,196 @@ class _SchoolReports extends State<SchoolReports> {
       Navigator.of(context, rootNavigator: true).pop();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'المدارس',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: primaryColor,
-        elevation: 2,
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'تحديث',
-            onPressed: () {
-              _refreshData();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('تم تحديث البيانات'),
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              );
-            },
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'المدارس',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              keyboardType: TextInputType.name,
-              textAlign: TextAlign.right,
-              textDirection: TextDirection.rtl,
-              decoration: InputDecoration(
-                labelText: 'بحث عن مدرسة',
-                hintText: 'اكتب اسم المدرسة',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: primaryColor, width: 2),
-                ),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _searchQuery = '';
-                          });
-                        },
-                      )
-                    : null,
-                filled: true,
-                fillColor: Colors.grey.shade50,
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
+          backgroundColor: primaryColor,
+          elevation: 2,
+          centerTitle: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              tooltip: 'تحديث',
+              onPressed: () {
+                _refreshData();
+                Utils.showToast('تم تحديث البيانات',
+                    backgroundColor: Colors.green);
               },
             ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : filteredSchools.isEmpty
-                    ? _buildEmptyState()
-                    : RefreshIndicator(
-                        onRefresh: () async {
-                          await Future.delayed(
-                              const Duration(milliseconds: 300));
-                          _refreshData();
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(12),
-                          itemCount: filteredSchools.length,
-                          itemBuilder: (context, index) {
-                            final school = filteredSchools[index];
-                            return Card(
-                              elevation: 2,
-                              margin: const EdgeInsets.only(bottom: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(color: Colors.grey.shade200),
-                              ),
-                              child: ListTile(
-                                  onTap: () async {
-                                    await schoolData(school.schoolID!);
-                                    await schoolReport(school.schoolID!);
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => PdfPreview(
-                                          build: (format) => BuildPdf(
-                                                  records: schoolReportList)
-                                              .buildReportPdf(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 8),
-                                  leading: CircleAvatar(
-                                    backgroundColor:
-                                        primaryColor.withOpacity(0.2),
-                                    child:
-                                        Icon(Icons.school, color: primaryColor),
-                                  ),
-                                  title: Text(
-                                    school.school_name!,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.location_on,
-                                              size: 14, color: Colors.grey),
-                                          const SizedBox(width: 4),
-                                          Expanded(
-                                            child: Text(
-                                              school.school_location ??
-                                                  'لا يوجد موقع',
-                                              style: TextStyle(
-                                                color: Colors.grey.shade700,
-                                                fontSize: 14,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: IconButton(
-                                      onPressed: () async {
-                                        await schoolData(school.schoolID!);
-                                        await schoolReport(school.schoolID!);
-                                        await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => PdfPreview(
-                                              build: (format) => BuildPdf(
-                                                      records: schoolReportList)
-                                                  .buildReportPdf(),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(Icons.picture_as_pdf))
-                                  // Column(
-                                  //   children: [
-                                  //     Text(
-                                  //       "التقارير الجاهزة: 0",
-                                  //       style: TextStyle(color: Colors.green),
-                                  //     ),
-                                  //     SizedBox(
-                                  //       height: 10,
-                                  //     ),
-                                  //     Text(
-                                  //       "التقارير الغير جاهزة: 0",
-                                  //       style: TextStyle(color: Colors.red),
-                                  //     )
-                                  //   ],
-                                  // ),
-                                  ),
-                            );
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                keyboardType: TextInputType.name,
+                textAlign: TextAlign.right,
+                textDirection: TextDirection.rtl,
+                decoration: InputDecoration(
+                  labelText: 'بحث عن مدرسة',
+                  hintText: 'اكتب اسم المدرسة',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: primaryColor, width: 2),
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                            });
                           },
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : filteredSchools.isEmpty
+                      ? _buildEmptyState()
+                      : RefreshIndicator(
+                          onRefresh: () async {
+                            await Future.delayed(
+                                const Duration(milliseconds: 300));
+                            _refreshData();
+                          },
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(12),
+                            itemCount: filteredSchools.length,
+                            itemBuilder: (context, index) {
+                              final school = filteredSchools[index];
+                              return Card(
+                                elevation: 2,
+                                margin: const EdgeInsets.only(bottom: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(color: Colors.grey.shade200),
+                                ),
+                                child: ListTile(
+                                    onTap: () async {
+                                      await schoolData(school.schoolID!);
+                                      await schoolReport(school.schoolID!);
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => PdfPreview(
+                                            build: (format) => BuildPdf(
+                                                    records: schoolReportList)
+                                                .buildReportPdf(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    leading: CircleAvatar(
+                                      backgroundColor:
+                                          primaryColor.withOpacity(0.2),
+                                      child: Icon(Icons.school,
+                                          color: primaryColor),
+                                    ),
+                                    title: Text(
+                                      school.school_name!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 4),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.location_on,
+                                                size: 14, color: Colors.grey),
+                                            const SizedBox(width: 4),
+                                            Expanded(
+                                              child: Text(
+                                                school.school_location ??
+                                                    'لا يوجد موقع',
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade700,
+                                                  fontSize: 14,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: IconButton(
+                                        onPressed: () async {
+                                          await schoolData(school.schoolID!);
+                                          await schoolReport(school.schoolID!);
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => PdfPreview(
+                                                build: (format) => BuildPdf(
+                                                        records:
+                                                            schoolReportList)
+                                                    .buildReportPdf(),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(Icons.picture_as_pdf))
+                                    // Column(
+                                    //   children: [
+                                    //     Text(
+                                    //       "التقارير الجاهزة: 0",
+                                    //       style: TextStyle(color: Colors.green),
+                                    //     ),
+                                    //     SizedBox(
+                                    //       height: 10,
+                                    //     ),
+                                    //     Text(
+                                    //       "التقارير الغير جاهزة: 0",
+                                    //       style: TextStyle(color: Colors.red),
+                                    //     )
+                                    //   ],
+                                    // ),
+                                    ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

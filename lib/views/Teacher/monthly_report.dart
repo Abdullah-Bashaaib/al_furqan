@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/helper/current_user.dart';
@@ -6,8 +8,10 @@ import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/Teacher/printing_report.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -96,10 +100,10 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
         ? "0${_selectedMonth.month}"
         : "${_selectedMonth.month}";
     String currentMonthFormat = "${_selectedMonth.year}-$monthStr";
-    print("currentMonthFormat: $currentMonthFormat");
+    log("currentMonthFormat: $currentMonthFormat");
 
     // طباعة عدد خطط التلاوة المتوفرة
-    print("عدد خطط التلاوة: ${planController.eltlawahPlans.length}");
+    log("عدد خطط التلاوة: ${planController.eltlawahPlans.length}");
 
     // طباعة تنسيق التاريخ لكل خطة تلاوة للتحقق
     // for (var plan in planController.eltlawahPlans) {
@@ -110,14 +114,16 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
     for (var eltlawahPlan in planController.eltlawahPlans) {
       if (eltlawahPlan.planMonth == currentMonthFormat) {
         this.eltlawahPlan = eltlawahPlan;
-        print("تم العثور على خطة التلاوة: $eltlawahPlan");
+        log("تم العثور على خطة التلاوة: $eltlawahPlan");
         break;
       }
     }
 
     // التحقق من نتيجة البحث
     if (this.eltlawahPlan == null) {
-      print("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat");
+      log("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat");
+      Utils.showToast("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat",
+          backgroundColor: Colors.red, gravity: ToastGravity.CENTER);
     }
     return currentMonthFormat;
   }
@@ -218,321 +224,464 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('التقرير الشهري'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.calendar_today),
-            onPressed: _selectMonth,
-            tooltip: 'اختر الشهر',
-          ),
-          IconButton(
-            icon: Icon(Icons.print),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MonthlyReportPDFScreen(
-                    students: _students,
-                    reportData: _reportData,
-                    eltlawahPlan: eltlawahPlan,
-                    islamicStudyPlan: _islamicStudyPlan,
-                    selectedMonth: _selectedMonth,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('التقرير الشهري'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: _selectMonth,
+              tooltip: 'اختر الشهر',
+            ),
+            IconButton(
+              icon: Icon(Icons.print),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MonthlyReportPDFScreen(
+                      students: _students,
+                      reportData: _reportData,
+                      eltlawahPlan: eltlawahPlan,
+                      islamicStudyPlan: _islamicStudyPlan,
+                      selectedMonth: _selectedMonth,
+                    ),
                   ),
-                ),
-              );
-            },
-            tooltip: 'طباعة التقرير',
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _errorMessage != null
-              ? Center(
-                  child:
-                      Text(_errorMessage!, style: TextStyle(color: Colors.red)))
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // عرض الشهر المحدد
-                      Container(
-                        padding: EdgeInsets.all(16),
-                        color: Colors.grey.shade100,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'تقرير شهر:',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              DateFormat('MMMM yyyy', 'ar')
-                                  .format(_selectedMonth),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                );
+              },
+              tooltip: 'طباعة التقرير',
+            ),
+          ],
+        ),
+        body: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : _errorMessage != null
+                ? Center(
+                    child: Text(_errorMessage!,
+                        style: TextStyle(color: Colors.red)))
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // عرض الشهر المحدد
+                        Container(
+                          padding: EdgeInsets.all(16),
+                          color: Colors.grey.shade100,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'تقرير شهر:',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                DateFormat('MMMM yyyy', 'ar')
+                                    .format(_selectedMonth),
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      // إحصائيات عامة
-                      Container(
-                        padding: EdgeInsets.all(16),
-                        color: Colors.grey.shade200,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: _buildStatCard(
-                                  'إجمالي الطلاب',
-                                  _students.length.toString(),
-                                  Colors.blue,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: _buildStatCard(
-                                  'متوسط الحضور',
-                                  _calculateAverageAttendance(),
-                                  Colors.green,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: _buildStatCard(
-                                  'عدد أيام الشهر',
-                                  '30',
-                                  Colors.orange,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // كارد خطة التلاوة والعلوم الشرعية
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: 16, bottom: 16, left: 16, right: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 6,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            // العنوان
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.menu_book, color: Colors.white),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'خطة التلاوة والعلوم الشرعية',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
+                        // إحصائيات عامة
+                        Container(
+                          padding: EdgeInsets.all(16),
+                          color: Colors.grey.shade200,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: _buildStatCard(
+                                    'إجمالي الطلاب',
+                                    _students.length.toString(),
+                                    Colors.blue,
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                            // محتوى الكارد
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                children: [
-                                  // خطة التلاوة
-                                  _buildPlanSection(
-                                    title: 'خطة التلاوة',
-                                    icon: Icons.import_contacts,
-                                    color: Colors.green,
-                                    items: [
-                                      eltlawahPlan == null
-                                          ? SizedBox()
-                                          : _buildPlanItem(
-                                              eltlawahPlan!.executedEndSurah!,
-                                              'الآيات ${eltlawahPlan?.executedStartAya} - ${eltlawahPlan!.executedEndAya!}',
-                                              '${eltlawahPlan!.executedRate!.toStringAsFixed(1)}%'),
-                                    ],
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: _buildStatCard(
+                                    'متوسط الحضور',
+                                    _calculateAverageAttendance(),
+                                    Colors.green,
                                   ),
-                                  SizedBox(height: 16),
-                                  Divider(),
-                                  SizedBox(height: 16),
-                                  // خطة العلوم الشرعية
-                                  _buildPlanSection(
-                                    title: 'خطة العلوم الشرعية',
-                                    icon: Icons.school,
-                                    color: Colors.blue,
-                                    items: [
-                                      _buildPlanItem(
-                                        _islamicStudyPlan!.subject!,
-                                        _islamicStudyPlan!.executedContent!,
-                                        '100%',
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: _buildStatCard(
+                                    'عدد أيام الشهر',
+                                    '30',
+                                    Colors.orange,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // كارد خطة التلاوة والعلوم الشرعية
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: 16, bottom: 16, left: 16, right: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 6,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              // العنوان
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 16),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.menu_book, color: Colors.white),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'خطة التلاوة والعلوم الشرعية',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // جدول خطة حفظ الطلاب
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: 16, bottom: 16, left: 16, right: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 6,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            // العنوان
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.auto_stories, color: Colors.white),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'جدول خطة حفظ الطلاب',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                              // محتوى الكارد
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    // خطة التلاوة
+                                    _buildPlanSection(
+                                      title: 'خطة التلاوة',
+                                      icon: Icons.import_contacts,
+                                      color: Colors.green,
+                                      items: [
+                                        eltlawahPlan?.planMonth == null
+                                            ? SizedBox()
+                                            : _buildPlanItem(
+                                                eltlawahPlan!.executedEndSurah!,
+                                                'الآيات ${eltlawahPlan?.executedStartAya} - ${eltlawahPlan!.executedEndAya!}',
+                                                '${eltlawahPlan!.executedRate!.toStringAsFixed(1)}%'),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(height: 16),
+                                    Divider(),
+                                    SizedBox(height: 16),
+                                    // خطة العلوم الشرعية
+                                    _buildPlanSection(
+                                      title: 'خطة العلوم الشرعية',
+                                      icon: Icons.school,
+                                      color: Colors.blue,
+                                      items: [
+                                        _buildPlanItem(
+                                          _islamicStudyPlan?.subject ?? "null",
+                                          _islamicStudyPlan?.executedContent ??
+                                              "null",
+                                          '100%',
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            // محتوى الجدول
-                            _students.isEmpty
-                                ? Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Center(
-                                        child:
-                                            Text('لا يوجد طلاب في هذه الحلقة')),
-                                  )
-                                : Column(
-                                    children: [
-                                      // عنوان الجدول
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 16),
-                                        color: Colors.grey.shade100,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text(
-                                                'اسم الطالب',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.right,
+                            ],
+                          ),
+                        ),
+                        // جدول خطة حفظ الطلاب
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: 16, bottom: 16, left: 16, right: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 6,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              // العنوان
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 16),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.auto_stories,
+                                        color: Colors.white),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'جدول خطة حفظ الطلاب',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // محتوى الجدول
+                              _students.isEmpty
+                                  ? Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child: Center(
+                                          child: Text(
+                                              'لا يوجد طلاب في هذه الحلقة')),
+                                    )
+                                  : Column(
+                                      children: [
+                                        // عنوان الجدول
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 16),
+                                          color: Colors.grey.shade100,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 3,
+                                                child: Text(
+                                                  'اسم الطالب',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.right,
+                                                ),
                                               ),
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                'السورة الحالية',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.center,
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  'السورة الحالية',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
                                               ),
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                'الآية الحالية',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.center,
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  'الآية الحالية',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
                                               ),
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                'نسبة الإنجاز',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                textAlign: TextAlign.center,
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  'نسبة الإنجاز',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
+                                        ),
+                                        // صفوف الجدول
+                                        ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemCount: _students.length,
+                                          itemBuilder: (context, index) {
+                                            final student = _students[index];
+                                            // بيانات تجريبية لخطة الحفظ
+                                            final reportData =
+                                                _reportData[student.studentID];
+
+                                            // اختيار بيانات عشوائية لكل طالب
+
+                                            // final surah = reportData!
+                                            //     ['conservationPlan'];
+                                            // final dailyAssignment =
+                                            //     surah['dailyAssignment'];
+                                            // final progress =
+                                            //     surah['progress'];
+                                            final progressValue =
+                                                reportData!['executedRate'] ??
+                                                    '0';
+
+                                            return Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 12, horizontal: 16),
+                                              decoration: BoxDecoration(
+                                                color: index % 2 == 0
+                                                    ? Colors.white
+                                                    : Colors.grey.shade50,
+                                                border: Border(
+                                                  bottom: index <
+                                                          _students.length - 1
+                                                      ? BorderSide(
+                                                          color: Colors
+                                                              .grey.shade200)
+                                                      : BorderSide.none,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  // اسم الطالب
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Text(
+                                                      '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.lastName ?? ''}',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                    ),
+                                                  ),
+                                                  // السورة الحالية
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      reportData[
+                                                          'executedEndSurah']!,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ),
+                                                  // المقرر اليومي
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      "${reportData['executedEndAya']}",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ),
+                                                  // نسبة الإنجاز
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          "${(reportData['executedRate'] as double).toStringAsFixed(1)}%",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: _getProgressColor(
+                                                                progressValue),
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                        SizedBox(height: 4),
+                                                        LinearProgressIndicator(
+                                                          value: progressValue /
+                                                              100,
+                                                          backgroundColor:
+                                                              Colors.grey
+                                                                  .shade200,
+                                                          valueColor: AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              _getProgressColor(
+                                                                  progressValue)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                            ],
+                          ),
+                        ),
+                        // جدول التقرير
+                        _students.isEmpty
+                            ? Container(
+                                padding: EdgeInsets.all(20),
+                                child: Center(
+                                    child: Text('لا يوجد طلاب في هذه الحلقة')),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    // عنوان الجدول
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 12),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).primaryColor,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
                                         ),
                                       ),
-                                      // صفوف الجدول
-                                      ListView.builder(
+                                      child: Row(
+                                        children: [
+                                          _buildTableHeader('اسم الطالب', 3),
+                                          _buildTableHeader('أيام الحضور', 1),
+                                          _buildTableHeader('أيام الغياب', 1),
+                                          _buildTableHeader('نسبة الحضور', 1),
+                                        ],
+                                      ),
+                                    ),
+                                    // صفوف الجدول
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: ListView.builder(
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
                                         itemCount: _students.length,
                                         itemBuilder: (context, index) {
                                           final student = _students[index];
-                                          // بيانات تجريبية لخطة الحفظ
                                           final reportData =
                                               _reportData[student.studentID];
 
-                                          // اختيار بيانات عشوائية لكل طالب
-
-                                          // final surah = reportData!
-                                          //     ['conservationPlan'];
-                                          // final dailyAssignment =
-                                          //     surah['dailyAssignment'];
-                                          // final progress =
-                                          //     surah['progress'];
-                                          final progressValue =
-                                              reportData!['executedRate'] ??
-                                                  '0';
-
                                           return Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 12, horizontal: 16),
                                             decoration: BoxDecoration(
                                               color: index % 2 == 0
                                                   ? Colors.white
@@ -542,70 +691,38 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                                                     index < _students.length - 1
                                                         ? BorderSide(
                                                             color: Colors
-                                                                .grey.shade200)
+                                                                .grey.shade300)
                                                         : BorderSide.none,
                                               ),
                                             ),
                                             child: Row(
                                               children: [
-                                                // اسم الطالب
-                                                Expanded(
-                                                  flex: 3,
-                                                  child: Text(
-                                                    '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.lastName ?? ''}',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                    textAlign: TextAlign.right,
-                                                  ),
+                                                _buildTableCell(
+                                                  '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.lastName ?? ''}',
+                                                  3,
+                                                  alignment:
+                                                      Alignment.centerRight,
                                                 ),
-                                                // السورة الحالية
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Text(
-                                                    reportData[
-                                                        'executedEndSurah']!,
-                                                    textAlign: TextAlign.center,
-                                                  ),
+                                                _buildTableCell(
+                                                  reportData?['attendanceDays']
+                                                          ?.toString() ??
+                                                      '0',
+                                                  1,
                                                 ),
-                                                // المقرر اليومي
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Text(
-                                                    "${reportData['executedEndAya']}",
-                                                    textAlign: TextAlign.center,
-                                                  ),
+                                                _buildTableCell(
+                                                  reportData?['absenceDays']
+                                                          ?.toString() ??
+                                                      '0',
+                                                  1,
                                                 ),
-                                                // نسبة الإنجاز
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        "${(reportData['executedRate'] as double).toStringAsFixed(1)}%",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color:
-                                                              _getProgressColor(
-                                                                  progressValue),
-                                                        ),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                      SizedBox(height: 4),
-                                                      LinearProgressIndicator(
-                                                        value:
-                                                            progressValue / 100,
-                                                        backgroundColor: Colors
-                                                            .grey.shade200,
-                                                        valueColor:
-                                                            AlwaysStoppedAnimation<
-                                                                    Color>(
-                                                                _getProgressColor(
-                                                                    progressValue)),
-                                                      ),
-                                                    ],
+                                                _buildTableCell(
+                                                  '${double.tryParse(reportData?['attendanceRate'])?.toStringAsFixed(1) ?? '0'}%',
+                                                  1,
+                                                  color: _getAttendanceColor(
+                                                    double.tryParse(reportData?[
+                                                                'attendanceRate'] ??
+                                                            '0') ??
+                                                        0,
                                                   ),
                                                 ),
                                               ],
@@ -613,116 +730,14 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                                           );
                                         },
                                       ),
-                                    ],
-                                  ),
-                          ],
-                        ),
-                      ),
-                      // جدول التقرير
-                      _students.isEmpty
-                          ? Container(
-                              padding: EdgeInsets.all(20),
-                              child: Center(
-                                  child: Text('لا يوجد طلاب في هذه الحلقة')),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                children: [
-                                  // عنوان الجدول
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 12),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                      ),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        _buildTableHeader('اسم الطالب', 3),
-                                        _buildTableHeader('أيام الحضور', 1),
-                                        _buildTableHeader('أيام الغياب', 1),
-                                        _buildTableHeader('نسبة الحضور', 1),
-                                      ],
-                                    ),
-                                  ),
-                                  // صفوف الجدول
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey.shade300),
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: _students.length,
-                                      itemBuilder: (context, index) {
-                                        final student = _students[index];
-                                        final reportData =
-                                            _reportData[student.studentID];
-
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            color: index % 2 == 0
-                                                ? Colors.white
-                                                : Colors.grey.shade50,
-                                            border: Border(
-                                              bottom: index <
-                                                      _students.length - 1
-                                                  ? BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300)
-                                                  : BorderSide.none,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              _buildTableCell(
-                                                '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.lastName ?? ''}',
-                                                3,
-                                                alignment:
-                                                    Alignment.centerRight,
-                                              ),
-                                              _buildTableCell(
-                                                reportData?['attendanceDays']
-                                                        ?.toString() ??
-                                                    '0',
-                                                1,
-                                              ),
-                                              _buildTableCell(
-                                                reportData?['absenceDays']
-                                                        ?.toString() ??
-                                                    '0',
-                                                1,
-                                              ),
-                                              _buildTableCell(
-                                                '${double.tryParse(reportData?['attendanceRate'])?.toStringAsFixed(1) ?? '0'}%',
-                                                1,
-                                                color: _getAttendanceColor(
-                                                  double.tryParse(reportData?[
-                                                              'attendanceRate'] ??
-                                                          '0') ??
-                                                      0,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+      ),
     );
   }
 
@@ -840,6 +855,10 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
 
   // دالة لبناء عنصر من عناصر الخطة
   Widget _buildPlanItem(String title, String subtitle, String progress) {
+    if (title == "null" && subtitle == "null") {
+      Utils.showToast("لا توجد خطة لهذا الشهر بعد!");
+      return SizedBox();
+    }
     // تحويل النسبة المئوية إلى قيمة عددية
     final double progressValue =
         double.tryParse(progress.replaceAll('%', '')) ?? 0;

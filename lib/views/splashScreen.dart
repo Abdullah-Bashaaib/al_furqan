@@ -2,17 +2,12 @@ import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
-import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/views/SchoolDirector/main_screenD.dart';
-import 'package:al_furqan/views/Supervisor/AdminHomePage.dart';
-import 'package:al_furqan/views/SchoolDirector/SchoolDirectorHome.dart';
 import 'package:al_furqan/views/Supervisor/mainScreenSupervisor.dart';
-import 'package:al_furqan/views/Teacher/mainTeacher.dart';
 import 'package:al_furqan/views/Teacher/main_screenT.dart';
 import 'package:al_furqan/views/login/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -142,40 +137,43 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.green.shade100, Colors.white],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.green.shade100, Colors.white],
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  'assets/pictures/al_furqan_icon.png',
-                  height: 180,
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  fit: BoxFit.contain,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/pictures/al_furqan_icon.png',
+                    height: 180,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              CircularProgressIndicator(color: Colors.green),
-              SizedBox(height: 20),
-              Text(
-                "جاري التحميل...",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.green.shade800,
-                  fontWeight: FontWeight.bold,
+                SizedBox(height: 20),
+                CircularProgressIndicator(color: Colors.green),
+                SizedBox(height: 20),
+                Text(
+                  "جاري التحميل...",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.green.shade800,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

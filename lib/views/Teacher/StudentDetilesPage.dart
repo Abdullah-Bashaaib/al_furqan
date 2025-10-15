@@ -4,115 +4,122 @@ import 'package:flutter/material.dart';
 class StudentDetailsPage extends StatelessWidget {
   final String studentName;
   @override
-  const StudentDetailsPage({super.key, required this.studentName, required StudentModel student});
+  const StudentDetailsPage(
+      {super.key, required this.studentName, required StudentModel student});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(
-          studentName, // اسم الطالب
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(
+            studentName, // اسم الطالب
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // نسب الحفظ والحضور
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildInfoCard("نسبة الحفظ", "progressPercentage%"),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child:
-                        _buildInfoCard("نسبة الحضور", "attendancePercentage%"),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // نسب الحفظ والحضور
+                Row(
+                  children: [
+                    Expanded(
+                      child:
+                          _buildInfoCard("نسبة الحفظ", "progressPercentage%"),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: _buildInfoCard(
+                          "نسبة الحضور", "attendancePercentage%"),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
 
-              // مقدار الحفظ
-              _buildSectionTitle("مقدار الحفظ"),
-              _buildTextField("اكتب مقدار الحفظ هنا"),
+                // مقدار الحفظ
+                _buildSectionTitle("مقدار الحفظ"),
+                _buildTextField("اكتب مقدار الحفظ هنا"),
 
-              SizedBox(height: 16),
-              _buildSectionTitle("مخطط الحفظ"),
-              Row(
-                children: [
-                  Expanded(
-                      child: _buildTextField("من (مثل سورة المدثر آية 5)")),
-                  SizedBox(width: 16),
-                  Expanded(child: _buildTextField("إلى (مثل سورة الجن آية 5)")),
-                ],
-              ),
-              Divider(),
+                SizedBox(height: 16),
+                _buildSectionTitle("مخطط الحفظ"),
+                Row(
+                  children: [
+                    Expanded(
+                        child: _buildTextField("من (مثل سورة المدثر آية 5)")),
+                    SizedBox(width: 16),
+                    Expanded(
+                        child: _buildTextField("إلى (مثل سورة الجن آية 5)")),
+                  ],
+                ),
+                Divider(),
 
-              _buildSectionTitle("منفذ الحفظ"),
-              Row(
-                children: [
-                  Expanded(
-                      child: _buildTextField("من (مثل سورة المدثر آية 5)")),
-                  SizedBox(width: 16),
-                  Expanded(
-                      child: _buildTextField("إلى (مثل سورة المزمل آية 5)")),
-                ],
-              ),
-              SizedBox(height: 16),
+                _buildSectionTitle("منفذ الحفظ"),
+                Row(
+                  children: [
+                    Expanded(
+                        child: _buildTextField("من (مثل سورة المدثر آية 5)")),
+                    SizedBox(width: 16),
+                    Expanded(
+                        child: _buildTextField("إلى (مثل سورة المزمل آية 5)")),
+                  ],
+                ),
+                SizedBox(height: 16),
 
-              // أزرار التعديل والحذف
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildActionButton("تعديل", Colors.blue, Icons.edit, () {}),
-                  _buildActionButton("حذف", Colors.red, Icons.delete, () {}),
-                ],
-              ),
-              SizedBox(height: 16),
+                // أزرار التعديل والحذف
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildActionButton("تعديل", Colors.blue, Icons.edit, () {}),
+                    _buildActionButton("حذف", Colors.red, Icons.delete, () {}),
+                  ],
+                ),
+                SizedBox(height: 16),
 
-              // كارد رسم بياني (تطور الحفظ)
-              Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                child: SizedBox(
-                  height: 200,
-                  child: Center(
-                    child: Text(
-                      '📊 رسم بياني (تطور الحفظ)',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[700]),
+                // كارد رسم بياني (تطور الحفظ)
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: SizedBox(
+                    height: 200,
+                    child: Center(
+                      child: Text(
+                        '📊 رسم بياني (تطور الحفظ)',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700]),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 16),
+                SizedBox(height: 16),
 
-              // زر الحفظ
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.save, size: 24),
-                  label: Text('حفظ',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                // زر الحفظ
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.save, size: 24),
+                    label: Text('حفظ',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
