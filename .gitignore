@@ -75,3 +75,11 @@ coverage/
 *.tmp
 *.temp
 *.DS_Store
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+firebase.json
+android/app/google-services.json
+lib/firebase_options.dart
