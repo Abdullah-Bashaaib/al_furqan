@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
-
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/fathers_controller.dart';
 import 'package:al_furqan/controllers/validation_from_excelfile.dart';
@@ -20,12 +18,12 @@ class ExcelTesting {
   List<Map<String, dynamic>> dataList = []; // قائمة لتخزين البيانات
 
   Future<void> readExcelFile(BuildContext context) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    final List<PlatformFile> pickedFiles = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
 
-    if (result == null || result.files.isEmpty) {
+    if (pickedFiles.isEmpty) {
       Utils.showToast('لم يتم اختيار ملف');
 
       return;
@@ -36,7 +34,7 @@ class ExcelTesting {
     final validFathers = <UserModel>[];
 
     try {
-      final file = File(result.files.single.path!);
+      final file = File(pickedFiles.first.path!);
       final bytes = file.readAsBytesSync();
       final excel = Excel.decodeBytes(bytes);
 
