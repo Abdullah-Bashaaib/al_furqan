@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/message_controller.dart';
@@ -18,10 +20,12 @@ import 'package:flutter/material.dart';
 
 class Sync {
   Future<void> syncUsers() async {
-    debugPrint('===== sync Users =====');
+    log('===== sync Users =====');
+    // get all user that not sync
     List<Map<String, dynamic>> map =
         await sqlDb.readDataID("Users", 'isSync', 0);
     if (map.isNotEmpty) {
+      // if there user Un sync
       debugPrint('===== map.isNotEmpty =====');
       List<UserModel> users = map.map((map) => UserModel.fromMap(map)).toList();
       for (var user in users) {
@@ -108,36 +112,6 @@ class Sync {
     }
   }
 
-// Future<void> syncActivities() async {
-//     debugPrint('===== sync Activities =====');
-//     List<Map<String, dynamic>> map =
-//         await sqlDb.readDataID("Activities", 'isSync', 0);
-//     if (map.isNotEmpty) {
-//       debugPrint('===== map.isNotEmpty =====');
-  // List<ActivitiesModel> Activities = map.map((map) => ActivitiesModel.fromJson(map)).toList();
-  // for (var Activitie in Activities) {
-  // bool exists =
-  // await firebasehelper.checkDocumentExists('Activities', Activitie.ActivityID!);
-  // if (exists) {
-  // await firebasehelper.updateActivitie(Activitie, Activitie.ActivityID!);
-
-  //   await sqlDb.updateData(
-  //       'update Activities set isSync = 1 where ActivityID = ${Activitie.ActivityID}');
-  //   debugPrint('===== sync Activitie (update) =====');
-
-  // } else {
-  // await firebasehelper.addActivitie(Activities, Activitie.ActivityID!);
-  // await sqlDb.updateData(
-  // 'update Activities set isSync = 1 where ActivityID = ${Activitie.ActivityID}');
-
-  // debugPrint('===== sync school (add) =====');
-  // }
-  //     }
-  //   } else {
-  //     debugPrint('===== map.isEmpty =====');
-  //   }
-  // }
-
   Future<void> syncElhalagat() async {
     debugPrint('===== sync Elhalagat =====');
     List<Map<String, dynamic>> map =
@@ -170,7 +144,7 @@ class Sync {
 
   Future<void> syncIslamicStudies() async {
     final db = await sqlDb.database;
-    debugPrint('===== sync IslamicStudies =====');
+    log('================================== sync IslamicStudies ===========================================');
     List<Map<String, dynamic>> map =
         await sqlDb.readDataID("IslamicStudies", 'isSync', 0);
     if (map.isNotEmpty) {

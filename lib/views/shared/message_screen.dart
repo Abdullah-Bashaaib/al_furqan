@@ -3,6 +3,7 @@ import 'package:al_furqan/models/messages_model.dart';
 import 'package:al_furqan/models/provider/message_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/services/message_sevice.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -94,23 +95,16 @@ class _ChatScreenState extends State<ChatScreen> {
   // دالة لإرسال رسالة جديدة
   Future<void> sendMessage() async {
     if (_controller.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('يرجى إدخال رسالة'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('يرجى إدخال رسالة');
+
       return;
     }
 
     if (widget.selectedUser == null || widget.selectedUser!.user_id == null) {
       debugPrint('خطأ: لا يمكن إرسال رسالة بدون مستخدم مختار');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('خطأ: اختر مستخدمًا للمراسلة'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('خطأ: اختر مستخدمًا للمراسلة',
+          backgroundColor: Colors.red);
+
       return;
     }
 
@@ -128,22 +122,11 @@ class _ChatScreenState extends State<ChatScreen> {
       _controller.clear();
       loadMessages(); // تحديث الرسائل بعد الإرسال
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('تم إرسال الرسالة'),
-          // ignore: use_build_context_synchronously
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
+      Utils.showToast('تم إرسال الرسالة');
     } catch (e) {
       debugPrint('خطأ في إرسال الرسالة: $e');
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('فشل إرسال الرسالة'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('فشل إرسال الرسالة', backgroundColor: Colors.red);
     }
   }
 
@@ -211,265 +194,273 @@ class _ChatScreenState extends State<ChatScreen> {
           DateTime.parse(a.timestamp).compareTo(DateTime.parse(b.timestamp)),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: ListTile(
-          title: Text(
-            textAlign: TextAlign.center,
-            showReceivedMessages
-                ? 'الرسائل المستلمة'
-                : '${widget.selectedUser!.first_name} ${widget.selectedUser!.middle_name ?? ''} ${widget.selectedUser!.last_name}',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
-          ),
-          subtitle: Container(
-            width: 100,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: (widget.selectedUser != null &&
-                      (widget.selectedUser!.roleID == 2 ||
-                          widget.selectedUser!.roleID == 1))
-                  ? Colors.blue.shade50
-                  : Colors.green.shade50,
-              borderRadius: BorderRadius.circular(12),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: ListTile(
+            title: Text(
+              textAlign: TextAlign.center,
+              showReceivedMessages
+                  ? 'الرسائل المستلمة'
+                  : '${widget.selectedUser!.first_name} ${widget.selectedUser!.middle_name ?? ''} ${widget.selectedUser!.last_name}',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 16),
             ),
-            child: Center(
-              child: Text(
-                widget.selectedUser!.roleID == 1
-                    ? 'مدير'
-                    : widget.selectedUser!.roleID == 2
-                        ? 'معلم'
-                        : 'ولي أمر',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: widget.selectedUser!.roleID == 2 ||
-                          widget.selectedUser!.roleID == 1
-                      ? Colors.blue.shade700
-                      : Colors.green.shade700,
+            subtitle: Container(
+              width: 100,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: (widget.selectedUser != null &&
+                        (widget.selectedUser!.roleID == 2 ||
+                            widget.selectedUser!.roleID == 1))
+                    ? Colors.blue.shade50
+                    : Colors.green.shade50,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  widget.selectedUser!.roleID == 1
+                      ? 'مدير'
+                      : widget.selectedUser!.roleID == 2
+                          ? 'معلم'
+                          : 'ولي أمر',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: widget.selectedUser!.roleID == 2 ||
+                            widget.selectedUser!.roleID == 1
+                        ? Colors.blue.shade700
+                        : Colors.green.shade700,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // يمكن إضافة وظيفة البحث في المستقبل
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('سيتم إضافة البحث قريباً')));
-            },
-            tooltip: 'بحث في الرسائل',
-          ),
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed:
-                showReceivedMessages ? loadReceivedMessages : loadMessages,
-            tooltip: 'تحديث الرسائل',
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // قائمة الرسائل
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh:
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                // يمكن إضافة وظيفة البحث في المستقبل
+                Utils.showToast('سيتم إضافة البحث قريباً');
+              },
+              tooltip: 'بحث في الرسائل',
+            ),
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed:
                   showReceivedMessages ? loadReceivedMessages : loadMessages,
-              child: displayMessages.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.chat_bubble_outline,
-                              size: 64, color: Theme.of(context).disabledColor),
-                          SizedBox(height: 16),
-                          Text(
-                            showReceivedMessages
-                                ? 'لا توجد رسائل مستلمة'
-                                : 'لا توجد رسائل، ابدأ المحادثة!',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.color),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      controller: _scrollController,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      reverse: false, // Keep messages in chronological order
-                      itemCount: displayMessages.length,
-                      itemBuilder: (context, index) {
-                        final message = displayMessages[index];
-                        final isSender =
-                            message.senderId == widget.currentUser.user_id;
+              tooltip: 'تحديث الرسائل',
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            // قائمة الرسائل
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh:
+                    showReceivedMessages ? loadReceivedMessages : loadMessages,
+                child: displayMessages.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.chat_bubble_outline,
+                                size: 64,
+                                color: Theme.of(context).disabledColor),
+                            SizedBox(height: 16),
+                            Text(
+                              showReceivedMessages
+                                  ? 'لا توجد رسائل مستلمة'
+                                  : 'لا توجد رسائل، ابدأ المحادثة!',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: _scrollController,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        reverse: false, // Keep messages in chronological order
+                        itemCount: displayMessages.length,
+                        itemBuilder: (context, index) {
+                          final message = displayMessages[index];
+                          final isSender =
+                              message.senderId == widget.currentUser.user_id;
 
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: isSender
-                                ? MainAxisAlignment.end
-                                : MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (!isSender)
-                                CircleAvatar(
-                                  radius: 16,
-                                  backgroundColor: showReceivedMessages
-                                      ? Colors.orange.shade100
-                                      : widget.selectedUser!.roleID == 2
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: isSender
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (!isSender)
+                                  CircleAvatar(
+                                    radius: 16,
+                                    backgroundColor: showReceivedMessages
+                                        ? Colors.orange.shade100
+                                        : widget.selectedUser!.roleID == 2
+                                            ? Colors.blue.shade100
+                                            : Colors.green.shade100,
+                                    child: Text(
+                                      showReceivedMessages
+                                          ? (message.senderType == '2'
+                                              ? 'م'
+                                              : 'و')
+                                          : widget.selectedUser!
+                                                  .first_name?[0] ??
+                                              '?',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: showReceivedMessages
+                                            ? Colors.orange.shade800
+                                            : widget.selectedUser!.roleID == 2
+                                                ? Colors.blue.shade700
+                                                : Colors.green.shade700,
+                                      ),
+                                    ),
+                                  ),
+                                SizedBox(width: 8),
+                                Flexible(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: isSender
                                           ? Colors.blue.shade100
-                                          : Colors.green.shade100,
-                                  child: Text(
-                                    showReceivedMessages
-                                        ? (message.senderType == '2'
-                                            ? 'م'
-                                            : 'و')
-                                        : widget.selectedUser!.first_name?[0] ??
-                                            '?',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: showReceivedMessages
-                                          ? Colors.orange.shade800
-                                          : widget.selectedUser!.roleID == 2
-                                              ? Colors.blue.shade700
-                                              : Colors.green.shade700,
+                                          : Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(18),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          // ignore: deprecated_member_use
+                                          color: Colors.black.withOpacity(0.05),
+                                          blurRadius: 2,
+                                          offset: Offset(0, 1),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          message.content,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        SizedBox(height: 4),
+                                        Text(
+                                          _formatTimestamp(message.timestamp),
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color: isSender
-                                        ? Colors.blue.shade100
-                                        : Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(18),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        // ignore: deprecated_member_use
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 2,
-                                        offset: Offset(0, 1),
-                                      ),
-                                    ],
+                                SizedBox(width: 8),
+                                if (isSender)
+                                  IconButton(
+                                    icon: Icon(Icons.delete_outline,
+                                        size: 18, color: Colors.red.shade300),
+                                    constraints: BoxConstraints(
+                                        maxWidth: 24, maxHeight: 24),
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () => deleteMessage(message.id!),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        message.content,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        _formatTimestamp(message.timestamp),
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              if (isSender)
-                                IconButton(
-                                  icon: Icon(Icons.delete_outline,
-                                      size: 18, color: Colors.red.shade300),
-                                  constraints: BoxConstraints(
-                                      maxWidth: 24, maxHeight: 24),
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () => deleteMessage(message.id!),
-                                ),
-                            ],
-                          ),
-                        );
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ),
+            // شريط إدخال الرسائل (داخل الـ Column بدلاً من bottomNavigationBar)
+            if (!showReceivedMessages)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      // ignore: deprecated_member_use
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 3,
+                      offset: Offset(0, -1),
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 8,
+                    bottom: MediaQuery.of(context).viewInsets.bottom > 0
+                        ? 8
+                        : 8 + MediaQuery.of(context).padding.bottom),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon:
+                          Icon(Icons.attach_file, color: Colors.grey.shade600),
+                      onPressed: () {
+                        Utils.showToast('سيتم إضافة إرفاق الملفات قريباً');
                       },
+                      tooltip: 'إرفاق ملف',
                     ),
-            ),
-          ),
-          // شريط إدخال الرسائل (داخل الـ Column بدلاً من bottomNavigationBar)
-          if (!showReceivedMessages)
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    // ignore: deprecated_member_use
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 3,
-                    offset: Offset(0, -1),
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  top: 8,
-                  bottom: MediaQuery.of(context).viewInsets.bottom > 0
-                      ? 8
-                      : 8 + MediaQuery.of(context).padding.bottom),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.attach_file, color: Colors.grey.shade600),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('سيتم إضافة إرفاق الملفات قريباً')));
-                    },
-                    tooltip: 'إرفاق ملف',
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        hintText: 'اكتب رسالة...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide.none,
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        decoration: InputDecoration(
+                          hintText: 'اكتب رسالة...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade100,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                         ),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        maxLines: null,
+                        textInputAction: TextInputAction.newline,
                       ),
-                      maxLines: null,
-                      textInputAction: TextInputAction.newline,
                     ),
-                  ),
-                  SizedBox(width: 8),
-                  Material(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(24),
-                    child: InkWell(
+                    SizedBox(width: 8),
+                    Material(
+                      color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(24),
-                      onTap: sendMessage,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        child: Icon(Icons.send, color: Colors.white, size: 20),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(24),
+                        onTap: sendMessage,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child:
+                              Icon(Icons.send, color: Colors.white, size: 20),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
+        resizeToAvoidBottomInset: true,
       ),
-      resizeToAvoidBottomInset: true,
     );
   }
 }

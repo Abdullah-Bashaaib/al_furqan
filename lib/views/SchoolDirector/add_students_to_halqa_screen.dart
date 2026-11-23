@@ -1,5 +1,6 @@
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/models/student_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class AddStudentsToHalqaScreen extends StatefulWidget {
@@ -35,9 +36,8 @@ class _AddStudentsToHalqaScreenState extends State<AddStudentsToHalqaScreen> {
           availableStudents = [];
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('خطأ: معرف المدرسة غير متوفر')),
-        );
+        Utils.showToast('خطأ: معرف المدرسة غير متوفر',
+            backgroundColor: Colors.red);
       }
       return;
     }
@@ -65,18 +65,15 @@ class _AddStudentsToHalqaScreenState extends State<AddStudentsToHalqaScreen> {
           availableStudents = [];
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('فشل في جلب الطلاب: $e')),
-        );
+        Utils.showToast('فشل في جلب الطلاب: $e', backgroundColor: Colors.red);
       }
     }
   }
 
   Future<void> _addSelectedStudents() async {
     if (selectedStudentIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يرجى اختيار طالب واحد على الأقل')),
-      );
+      Utils.showToast('يرجى اختيار طالب واحد على الأقل');
+
       return;
     }
 
@@ -88,96 +85,95 @@ class _AddStudentsToHalqaScreenState extends State<AddStudentsToHalqaScreen> {
       }
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تمت إضافة الطلاب بنجاح'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        Utils.showToast('تمت إضافة الطلاب بنجاح',
+            backgroundColor: Colors.green);
+
         Navigator.pop(context);
       }
     } catch (e) {
       debugPrint("Error adding students to halqa: $e");
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('فشل في إضافة الطلاب: $e')),
-        );
+        Utils.showToast('فشل في إضافة الطلاب: $e', backgroundColor: Colors.red);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('إضافة طلاب إلى الحلقة'),
-        backgroundColor: Colors.teal,
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : availableStudents.isEmpty
-              ? const Center(
-                  child: Text(
-                    'لا يوجد طلاب متاحين',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: availableStudents.length,
-                        itemBuilder: (context, index) {
-                          final student = availableStudents[index];
-                          final isSelected =
-                              selectedStudentIds.contains(student.studentID);
-                          return CheckboxListTile(
-                            title: Text(
-                              '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.grandfatherName ?? ''} ${student.lastName ?? ''}'
-                                  .trim(),
-                              style: const TextStyle(fontSize: 16),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('إضافة طلاب إلى الحلقة'),
+          backgroundColor: Colors.teal,
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : availableStudents.isEmpty
+                ? const Center(
+                    child: Text(
+                      'لا يوجد طلاب متاحين',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: availableStudents.length,
+                          itemBuilder: (context, index) {
+                            final student = availableStudents[index];
+                            final isSelected =
+                                selectedStudentIds.contains(student.studentID);
+                            return CheckboxListTile(
+                              title: Text(
+                                '${student.firstName ?? ''} ${student.middleName ?? ''} ${student.grandfatherName ?? ''} ${student.lastName ?? ''}'
+                                    .trim(),
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              value: isSelected,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  if (value == true) {
+                                    selectedStudentIds.add(student.studentID!);
+                                  } else {
+                                    selectedStudentIds
+                                        .remove(student.studentID);
+                                  }
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          onPressed: _addSelectedStudents,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
                             ),
-                            value: isSelected,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                if (value == true) {
-                                  selectedStudentIds.add(student.studentID!);
-                                } else {
-                                  selectedStudentIds.remove(student.studentID);
-                                }
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ElevatedButton(
-                        onPressed: _addSelectedStudents,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 12,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'إضافة الطلاب المحددين',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          child: const Text(
+                            'إضافة الطلاب المحددين',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+      ),
     );
   }
 }

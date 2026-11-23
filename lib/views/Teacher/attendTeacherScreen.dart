@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart';
 
 class AttendanceScannerPage extends StatefulWidget {
   const AttendanceScannerPage({super.key});
@@ -342,108 +341,111 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('تحضير المعلمين'),
-        backgroundColor: Color.fromARGB(255, 1, 117, 70),
-        elevation: 0,
-      ),
-      body: _attendanceDone
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _attendanceStatus == "متأخر"
-                          ? Icons.access_time
-                          : Icons.check_circle_outline,
-                      size: 100,
-                      color: _attendanceStatus == "متأخر"
-                          ? Colors.orange
-                          : Colors.blueAccent,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      _attendanceStatus == "متأخر"
-                          ? "تم تسجيل حضورك بنجاح (متأخر) ⏰"
-                          : "تم تسجيل حضورك بنجاح ✅",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('تحضير المعلمين'),
+          backgroundColor: Color.fromARGB(255, 1, 117, 70),
+          elevation: 0,
+        ),
+        body: _attendanceDone
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        _attendanceStatus == "متأخر"
+                            ? Icons.access_time
+                            : Icons.check_circle_outline,
+                        size: 100,
                         color: _attendanceStatus == "متأخر"
                             ? Colors.orange
                             : Colors.blueAccent,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      _teacherName,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    ElevatedButton.icon(
-                      onPressed: () => Navigator.of(context).pop(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
-                          vertical: 14,
+                      const SizedBox(height: 20),
+                      Text(
+                        _attendanceStatus == "متأخر"
+                            ? "تم تسجيل حضورك بنجاح (متأخر) ⏰"
+                            : "تم تسجيل حضورك بنجاح ✅",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: _attendanceStatus == "متأخر"
+                              ? Colors.orange
+                              : Colors.blueAccent,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        _teacherName,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black54,
                         ),
                       ),
-                      icon: const Icon(Icons.arrow_back),
-                      label: const Text(
-                        "رجوع",
-                        style: TextStyle(fontSize: 18),
+                      const SizedBox(height: 30),
+                      ElevatedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 14,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        icon: const Icon(Icons.arrow_back),
+                        label: const Text(
+                          "رجوع",
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            )
-          : Column(
-              children: <Widget>[
-                const SizedBox(height: 20),
-                const Text(
-                  '📷 امسح رمز QR لتسجيل الحضور ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.blueAccent, width: 3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blueAccent.withOpacity(0.2),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
+              )
+            : Column(
+                children: <Widget>[
+                  const SizedBox(height: 20),
+                  const Text(
+                    '📷 امسح رمز QR لتسجيل الحضور ',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.blueAccent, width: 3),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: MobileScanner(
+                          controller: _controller,
+                          onDetect: _handleScan,
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: MobileScanner(
-                        controller: _controller,
-                        onDetect: _handleScan,
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+      ),
     );
   }
 }

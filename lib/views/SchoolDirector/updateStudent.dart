@@ -5,10 +5,11 @@ import 'dart:developer';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/fathers_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:al_furqan/models/student_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
 import '../../models/users_model.dart';
 
 class EditStudentScreen extends StatefulWidget {
@@ -133,160 +134,166 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('تعديل بيانات الطالب',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // قسم بيانات الطالب
-                Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Colors.blue.shade100, width: 1),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('تعديل بيانات الطالب',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // قسم بيانات الطالب
+                  Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: Colors.blue.shade100, width: 1),
+                    ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            "بيانات الطالب",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildTextField(firstNameController,
+                                  'الاسم الأول', Icons.person),
+                              _buildTextField(middleNameController,
+                                  'الاسم الأوسط', Icons.person),
+                              _buildTextField(grandfatherNameController,
+                                  'اسم الجد', Icons.person),
+                              _buildTextField(lastNameController, 'اسم العائلة',
+                                  Icons.family_restroom),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Column(
+
+                  SizedBox(height: 16),
+
+                  // قسم بيانات ولي الأمر
+                  Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: Colors.teal.shade100, width: 1),
+                    ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            "بيانات ولي الأمر",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal.shade700,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildTextField(middleNameController,
+                                  "اسم ولى الأمر", Icons.person),
+                              _buildTextField(grandfatherNameController,
+                                  "الاسم الاوسط لولي الامر", Icons.person),
+                              _buildTextField(grandFatherNameForFatherStudent,
+                                  "اسم جد ولي الامر", Icons.person),
+                              _buildTextField(lastNameController, "القبيلة",
+                                  Icons.family_restroom),
+                              _buildTextFieldData(),
+                              _buildTextField(gmailOfFatherStudent,
+                                  "البريد الالكتروني", Icons.email),
+                              _builtTextFieldNumber("رقم الجوال",
+                                  phoneFatherStudent, 9, Icons.phone),
+                              _builtTextFieldNumber(
+                                  "رقم البيت",
+                                  telephoneFatherStudent,
+                                  6,
+                                  Icons.phone_in_talk),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  // أزرار العمليات
+                  Row(
                     children: [
-                      ListTile(
-                        title: Text(
-                          "بيانات الطالب",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _submitForm,
+                          icon: Icon(Icons.save, color: Colors.white),
+                          label: Text(
+                            'تعديل',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 3,
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildTextField(firstNameController, 'الاسم الأول',
-                                Icons.person),
-                            _buildTextField(middleNameController,
-                                'الاسم الأوسط', Icons.person),
-                            _buildTextField(grandfatherNameController,
-                                'اسم الجد', Icons.person),
-                            _buildTextField(lastNameController, 'اسم العائلة',
-                                Icons.family_restroom),
-                          ],
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pop(context); // العودة بدون حفظ التعديلات
+                          },
+                          icon: Icon(Icons.cancel, color: Colors.white),
+                          label: Text(
+                            'إلغاء',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 3,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-
-                SizedBox(height: 16),
-
-                // قسم بيانات ولي الأمر
-                Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Colors.teal.shade100, width: 1),
-                  ),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: Text(
-                          "بيانات ولي الأمر",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal.shade700,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildTextField(middleNameController,
-                                "اسم ولى الأمر", Icons.person),
-                            _buildTextField(grandfatherNameController,
-                                "الاسم الاوسط لولي الامر", Icons.person),
-                            _buildTextField(grandFatherNameForFatherStudent,
-                                "اسم جد ولي الامر", Icons.person),
-                            _buildTextField(lastNameController, "القبيلة",
-                                Icons.family_restroom),
-                            _buildTextFieldData(),
-                            _buildTextField(gmailOfFatherStudent,
-                                "البريد الالكتروني", Icons.email),
-                            _builtTextFieldNumber("رقم الجوال",
-                                phoneFatherStudent, 9, Icons.phone),
-                            _builtTextFieldNumber("رقم البيت",
-                                telephoneFatherStudent, 6, Icons.phone_in_talk),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 24),
-                // أزرار العمليات
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: _submitForm,
-                        icon: Icon(Icons.save, color: Colors.white),
-                        label: Text(
-                          'تعديل',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 3,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.pop(context); // العودة بدون حفظ التعديلات
-                        },
-                        icon: Icon(Icons.cancel, color: Colors.white),
-                        label: Text(
-                          'إلغاء',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 3,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

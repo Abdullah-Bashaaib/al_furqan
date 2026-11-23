@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/fathers_controller.dart';
@@ -7,9 +6,10 @@ import 'package:al_furqan/controllers/validation_from_excelfile.dart';
 import 'package:al_furqan/helper/sqldb.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_excel/excel.dart';
-import 'package:file_picker/file_picker.dart';
 
 class ExcelTesting {
   int? schoolID;
@@ -18,15 +18,14 @@ class ExcelTesting {
   List<Map<String, dynamic>> dataList = []; // قائمة لتخزين البيانات
 
   Future<void> readExcelFile(BuildContext context) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    final List<PlatformFile> pickedFiles = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
 
-    if (result == null || result.files.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('لم يتم اختيار ملف')),
-      );
+    if (pickedFiles.isEmpty) {
+      Utils.showToast('لم يتم اختيار ملف');
+
       return;
     }
 
@@ -35,7 +34,7 @@ class ExcelTesting {
     final validFathers = <UserModel>[];
 
     try {
-      final file = File(result.files.single.path!);
+      final file = File(pickedFiles.first.path!);
       final bytes = file.readAsBytesSync();
       final excel = Excel.decodeBytes(bytes);
 
@@ -117,9 +116,8 @@ class ExcelTesting {
         _showValidationErrors(context, errors);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ: $e')),
-      );
+      Utils.showToast('حدث خطأ: $e', backgroundColor: Colors.redAccent);
+
       debugPrint("-------------the error is $e");
     }
   }
@@ -180,12 +178,8 @@ class ExcelTesting {
 
     // عرض رسالة النجاح
     if (successfulInserts > 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('تم إدخال $successfulInserts طالب بنجاح'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      Utils.showToast('تم إدخال $successfulInserts طالب بنجاح',
+          backgroundColor: Colors.green);
     }
   }
 }

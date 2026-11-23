@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
+import 'package:flutter/material.dart';
 
 Widget buildSaveButton({
   required GlobalKey<FormState> formKey,
@@ -88,24 +89,14 @@ Future<bool> _handleFormSubmission({
 
     await userController.updateUser(user, 0);
     setEditable(false);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("تم حفظ التعديلات بنجاح"),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    Utils.showToast("تم حفظ التعديلات بنجاح", backgroundColor: Colors.green);
 
     Navigator.of(context).pop(true); // Return true to indicate success
     return true;
   } catch (e) {
     debugPrint("Error in _handleFormSubmission: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("حدث خطأ أثناء حفظ التعديلات"),
-        backgroundColor: Colors.redAccent,
-      ),
-    );
+    Utils.showToast("حدث خطأ أثناء حفظ التعديلات", backgroundColor: Colors.red);
+
     return false;
   }
 }

@@ -1,6 +1,5 @@
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/main.dart';
-import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +59,6 @@ class UserProvider with ChangeNotifier {
     users.clear();
     users.addAll(usersList);
     notifyListeners();
-    print(users);
     await loadTeachers();
     // sw3.stop();
     // int timeSyncStudents = sw3.elapsedMilliseconds;

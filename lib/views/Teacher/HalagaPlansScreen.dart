@@ -5,6 +5,7 @@ import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../utils/utils.dart';
 
 class AddHalagaPlansScreen extends StatefulWidget {
@@ -331,191 +332,194 @@ class _HalagaPlansScreenState extends State<AddHalagaPlansScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('خطط الحلقة', style: TextStyle(color: Colors.white)),
-        backgroundColor: Theme.of(context).primaryColor,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'خطط حلقة: ${halaga.Name ?? ""}',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('خطط الحلقة', style: TextStyle(color: Colors.white)),
+          backgroundColor: Theme.of(context).primaryColor,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'خطط حلقة: ${halaga.Name ?? ""}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-              ),
-              SizedBox(height: 24),
-              _buildCard(
-                title: 'خطة الحفظ',
-                icon: Icons.menu_book,
-                child: Column(
-                  children: [
-                    _buildSubtitle('المخطط'),
-                    _buildSurahInputRow(
-                      label: 'من',
-                      surahController: conservationStartSurahController,
-                      verseController: conservationStartVerseController,
-                      surahHint: 'سورة الفاتحة',
-                    ),
-                    SizedBox(height: 10),
-                    _buildSurahInputRow(
-                      label: 'إلى',
-                      surahController: conservationEndSurahController,
-                      verseController: conservationEndVerseController,
-                      surahHint: 'سورة البقرة',
-                    ),
-                  ],
+                SizedBox(height: 24),
+                _buildCard(
+                  title: 'خطة الحفظ',
+                  icon: Icons.menu_book,
+                  child: Column(
+                    children: [
+                      _buildSubtitle('المخطط'),
+                      _buildSurahInputRow(
+                        label: 'من',
+                        surahController: conservationStartSurahController,
+                        verseController: conservationStartVerseController,
+                        surahHint: 'سورة الفاتحة',
+                      ),
+                      SizedBox(height: 10),
+                      _buildSurahInputRow(
+                        label: 'إلى',
+                        surahController: conservationEndSurahController,
+                        verseController: conservationEndVerseController,
+                        surahHint: 'سورة البقرة',
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 24),
-              _buildCard(
-                title: 'خطة التلاوة',
-                icon: Icons.record_voice_over,
-                child: Column(
-                  children: [
-                    _buildSubtitle('المخطط'),
-                    _buildSurahInputRow(
-                      label: 'من',
-                      surahController: recitationStartSurahController,
-                      verseController: recitationStartVerseController,
-                      surahHint: 'سورة الفاتحة',
-                    ),
-                    SizedBox(height: 10),
-                    _buildSurahInputRow(
-                      label: 'إلى',
-                      surahController: recitationEndSurahController,
-                      verseController: recitationEndVerseController,
-                      surahHint: 'سورة البقرة',
-                    ),
-                  ],
+                SizedBox(height: 24),
+                _buildCard(
+                  title: 'خطة التلاوة',
+                  icon: Icons.record_voice_over,
+                  child: Column(
+                    children: [
+                      _buildSubtitle('المخطط'),
+                      _buildSurahInputRow(
+                        label: 'من',
+                        surahController: recitationStartSurahController,
+                        verseController: recitationStartVerseController,
+                        surahHint: 'سورة الفاتحة',
+                      ),
+                      SizedBox(height: 10),
+                      _buildSurahInputRow(
+                        label: 'إلى',
+                        surahController: recitationEndSurahController,
+                        verseController: recitationEndVerseController,
+                        surahHint: 'سورة البقرة',
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 24),
-              _buildCard(
-                title: 'خطة العلوم الشرعية',
-                icon: Icons.local_library,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'المقرر',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                        Spacer(),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade400),
-                              borderRadius: BorderRadius.circular(30),
+                SizedBox(height: 24),
+                _buildCard(
+                  title: 'خطة العلوم الشرعية',
+                  icon: Icons.local_library,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'المقرر',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
                             ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                isExpanded: true,
-                                hint: Text('اختر المقرر'),
-                                value: selectedIslamicSubject,
-                                items: islamicSubjects.map((String item) {
-                                  return DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(item),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    selectedIslamicSubject = newValue;
-                                  });
-                                },
+                          ),
+                          Spacer(),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade400),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: Text('اختر المقرر'),
+                                  value: selectedIslamicSubject,
+                                  items: islamicSubjects.map((String item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedIslamicSubject = newValue;
+                                    });
+                                  },
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        IconButton(
-                          onPressed: _showAddSubjectDialog,
-                          icon: Icon(Icons.add_circle),
-                          color: Theme.of(context).primaryColor,
-                          tooltip: 'إضافة مقرر جديد',
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'المخطط',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
+                          SizedBox(width: 8),
+                          IconButton(
+                            onPressed: _showAddSubjectDialog,
+                            icon: Icon(Icons.add_circle),
+                            color: Theme.of(context).primaryColor,
+                            tooltip: 'إضافة مقرر جديد',
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    TextFormField(
-                      controller: islamicStudiesContentController,
-                      maxLines: 3,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "الحقل مطلوب!";
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'أدخل المحتوى المخطط للمقرر',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                      SizedBox(height: 16),
+                      Text(
+                        'المخطط',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[800],
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 8),
+                      TextFormField(
+                        controller: islamicStudiesContentController,
+                        maxLines: 3,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "الحقل مطلوب!";
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'أدخل المحتوى المخطط للمقرر',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              if (_errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _savePlans,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: _isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text('حفظ الخطط', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Center(
                   child: Text(
-                    _errorMessage!,
-                    style: TextStyle(color: Colors.red),
+                    'يمكنك إدخال بيانات التنفيذ في صفحة تفاصيل الحلقة',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
-              SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _savePlans,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: _isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text('حفظ الخطط', style: TextStyle(fontSize: 18)),
-                ),
-              ),
-              SizedBox(height: 16),
-              Center(
-                child: Text(
-                  'يمكنك إدخال بيانات التنفيذ في صفحة تفاصيل الحلقة',
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

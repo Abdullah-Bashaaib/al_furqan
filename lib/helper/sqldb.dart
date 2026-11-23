@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SqlDb {
   static Database? _db;
@@ -14,7 +14,7 @@ class SqlDb {
     return _db!;
   }
 
-  initalDb() async {
+  Future<Database> initalDb() async {
     String databasePath = await getDatabasesPath();
     String path = join(databasePath, 'alforqanDB.db');
     Database mydb = await openDatabase(
@@ -61,7 +61,7 @@ class SqlDb {
     Database mydb = await database;
     return await mydb.rawQuery(sql);
   }
-  
+
   readDataID(String table, String column, int sync) async {
     Database mydb = await database;
     return await mydb.query(table, where: "$column = ?", whereArgs: [sync]);

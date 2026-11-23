@@ -1,17 +1,21 @@
+import 'dart:developer';
+
+import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/controllers/StudentController.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/halaqa_provider.dart';
 import 'package:al_furqan/models/student_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/Teacher/HalagaPlansListScreen.dart';
 import 'package:al_furqan/views/Teacher/attendTeacherScreen.dart';
 import 'package:al_furqan/views/Teacher/islamic_studies_plans_list.dart';
 import 'package:al_furqan/views/Teacher/main_screenT.dart';
 import 'package:al_furqan/views/Teacher/monthly_report.dart';
 import 'package:al_furqan/views/Teacher/students_attendance.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:al_furqan/models/halaga_model.dart';
-import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:provider/provider.dart';
 
 import '../shared/Conversation_list.dart';
@@ -29,8 +33,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
 //  with UserDataMixin
 {
   final HalagaController _halagaController = HalagaController();
-  // HalagaModel? _teacherHalaga;
-  // bool _isLoadingHalaga = true;
+
   String? _errorMessage;
   List<StudentModel> students = [];
 
@@ -38,12 +41,6 @@ class _DrawerTeacherState extends State<DrawerTeacher>
   void initState() {
     super.initState();
     debugPrint("DrawerTeacher - initState called");
-    // نضيف مؤقت صغير للتأكد من أن بيانات المستخدم تم تحميلها قبل تحميل الحلقة
-    // Future.delayed(Duration(milliseconds: 500), () {
-    //   if (mounted) {
-    //     _loadTeacherHalaga();
-    //   }
-    // });
 
     planController.getPlans(CurrentUser.halaga!.halagaID!);
     loadStudents();
@@ -356,9 +353,9 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                     title: 'مزامنة البيانات',
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (context) => MainScreenT(),
                         ),
                       );
@@ -398,39 +395,49 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                     icon: Icons.assessment,
                     title: 'التقرير الشهري',
                     onTap: () async {
-                      print(
-                          'Conservation Plans: ${planController.conservationPlans.length}');
-                      print(
-                          'Eltlawah Plans: ${planController.eltlawahPlans.length}');
-                      print(
-                          'Islamic Study Plans: ${planController.islamicStudyPlans.length}');
-                      print('Students: ${students.length}');
-                      if (planController.conservationPlans.isEmpty ||
-                          planController.eltlawahPlans.isEmpty ||
-                          planController.islamicStudyPlans.isEmpty ||
-                          students.isEmpty) {
-                        return showDialog(
+                      try {
+                        final hasPlans =
+                            planController.conservationPlans.isNotEmpty &&
+                                planController.eltlawahPlans.isNotEmpty &&
+                                planController.islamicStudyPlans.isNotEmpty &&
+                                students.isNotEmpty;
+
+                        if (!hasPlans) {
+                          return showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                                  title: Row(
-                                    children: [
-                                      Icon(Icons.error_outline),
-                                      Text(
-                                        'غير جاهز',
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.red),
-                                        textDirection: TextDirection.rtl,
-                                      ),
-                                    ],
+                              title: Row(
+                                children: const [
+                                  Icon(Icons.warning_rounded,
+                                      color: Colors.amberAccent),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'غير جاهز',
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    textDirection: TextDirection.rtl,
                                   ),
-                                ));
-                      } else {
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        // التحقق من أن الخطة ليست null
+                        if (planController.conservationPlans.first.planMonth ==
+                            null) {
+                          Utils.showToast("لا توجد خطة الشهر بعد");
+                          return;
+                        }
+                        log("-----> message : ${planController.conservationPlans.first.planMonth}");
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
+                          CupertinoPageRoute(
                             builder: (context) => MonthlyReportScreen(),
                           ),
                         );
+                      } catch (e) {
+                        Utils.showToast("حدث خطأ أثناء فتح التقرير الشهري");
                       }
                     },
                   ),
@@ -442,19 +449,11 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                     title: 'خطة الحفظ والتلاوة',
                     onTap: () {
                       Navigator.pop(context);
-                      // if (_isLoadingHalaga) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //       content: Text(
-                      //           'جار تحميل بيانات الحلقة، يرجى الانتظار...'),
-                      //       backgroundColor: Colors.orange,
-                      //     ),
-                      //   );
-                      //   return;
-                      // }
+
                       if (CurrentUser.user == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            behavior: SnackBarBehavior.floating,
                             content: Text(_errorMessage ??
                                 'لم يتم العثور على بيانات الحلقة'),
                             backgroundColor: Colors.red,
@@ -462,13 +461,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                               label: 'إعادة المحاولة',
                               onPressed: () {
                                 // _loadTeacherHalaga();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content:
-                                        Text('جار إعادة تحميل البيانات...'),
-                                    backgroundColor: Colors.blue,
-                                  ),
-                                );
+                                Utils.showToast('جار إعادة تحميل البيانات...');
                               },
                             ),
                           ),
@@ -479,7 +472,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                       // الانتقال إلى شاشة المناهج
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (context) => HalagaPlansListScreen(
                             halaga: CurrentUser.halaga!,
                           ),

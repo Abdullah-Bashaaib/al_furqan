@@ -1,7 +1,7 @@
-import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
-import 'package:al_furqan/models/schools_model.dart';
+import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/Supervisor/add_school.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,174 +55,178 @@ class _AddUserState extends State<AddUser> {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'إضافة مستخدم جديد',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: primaryColor,
-        elevation: 2,
-        iconTheme: IconThemeData(color: Colors.white),
-        centerTitle: true,
-        toolbarHeight: 70,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'إضافة مستخدم جديد',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: primaryColor,
+          elevation: 2,
+          iconTheme: IconThemeData(color: Colors.white),
+          centerTitle: true,
+          toolbarHeight: 70,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(20),
+            ),
           ),
         ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.green.shade50, Colors.white],
-            stops: [0.0, 0.3],
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.green.shade50, Colors.white],
+              stops: [0.0, 0.3],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header section
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Text(
-                      'معلومات المستخدم',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header section
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        'معلومات المستخدم',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Form card
-                  Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          // Personal information section
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: Text(
-                              'المعلومات الشخصية',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: primaryColor,
+                    // Form card
+                    Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Personal information section
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: Text(
+                                'المعلومات الشخصية',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                ),
                               ),
                             ),
-                          ),
-                          Divider(height: 1, color: Colors.grey.shade300),
-                          SizedBox(height: 16),
-                          _buildTextFormField(
-                            controller: _firstname,
-                            label: 'الاسم الأول',
-                            maxLength: 20,
-                            inputType: TextInputType.name,
-                            validatorMsg: 'الرجاء إدخال الاسم الأول',
-                          ),
-                          SizedBox(height: 10),
-                          _buildTextFormField(
-                            controller: _fathername,
-                            label: 'اسم الأب',
-                            maxLength: 20,
-                            inputType: TextInputType.name,
-                            validatorMsg: 'الرجاء إدخال اسم الأب',
-                          ),
-                          SizedBox(height: 10),
-                          _buildTextFormField(
-                            controller: _grandfathername,
-                            label: 'اسم الجد',
-                            maxLength: 20,
-                            inputType: TextInputType.name,
-                            validatorMsg: 'الرجاء إدخال اسم الجد',
-                          ),
-                          SizedBox(height: 10),
-                          _buildTextFormField(
-                            controller: _lastname,
-                            label: 'القبيلة',
-                            maxLength: 20,
-                            inputType: TextInputType.name,
-                            validatorMsg: 'الرجاء إدخال القبيلة',
-                          ),
-                          SizedBox(height: 10),
-                          _buildNumberFormField(
-                              controller: _phone,
-                              label: 'رقم الجوال',
-                              maxLength: 9,
+                            Divider(height: 1, color: Colors.grey.shade300),
+                            SizedBox(height: 16),
+                            _buildTextFormField(
+                              controller: _firstname,
+                              label: 'الاسم الأول',
+                              maxLength: 20,
+                              inputType: TextInputType.name,
+                              validatorMsg: 'الرجاء إدخال الاسم الأول',
+                            ),
+                            SizedBox(height: 10),
+                            _buildTextFormField(
+                              controller: _fathername,
+                              label: 'اسم الأب',
+                              maxLength: 20,
+                              inputType: TextInputType.name,
+                              validatorMsg: 'الرجاء إدخال اسم الأب',
+                            ),
+                            SizedBox(height: 10),
+                            _buildTextFormField(
+                              controller: _grandfathername,
+                              label: 'اسم الجد',
+                              maxLength: 20,
+                              inputType: TextInputType.name,
+                              validatorMsg: 'الرجاء إدخال اسم الجد',
+                            ),
+                            SizedBox(height: 10),
+                            _buildTextFormField(
+                              controller: _lastname,
+                              label: 'القبيلة',
+                              maxLength: 20,
+                              inputType: TextInputType.name,
+                              validatorMsg: 'الرجاء إدخال القبيلة',
+                            ),
+                            SizedBox(height: 10),
+                            _buildNumberFormField(
+                                controller: _phone,
+                                label: 'رقم الجوال',
+                                maxLength: 9,
+                                inputType: TextInputType.phone,
+                                validatorMsg: 'الرجاء إدخال رقم الجوال',
+                                additionalValidator: (value) {
+                                  if (value!.length < 9) {
+                                    return 'رقم الجوال يجب أن يكون 9 أرقام';
+                                  } else if (!RegExp(r'^[0-9]+$')
+                                      .hasMatch(value)) {
+                                    return 'ادخل ارقاماً';
+                                  }
+                                  return null;
+                                }),
+                            SizedBox(height: 10),
+                            _buildNumberFormField(
+                              controller: _telephone,
+                              label: 'رقم البيت',
+                              maxLength: 6,
                               inputType: TextInputType.phone,
-                              validatorMsg: 'الرجاء إدخال رقم الجوال',
+                              validatorMsg: 'الرجاء إدخال رقم البيت',
                               additionalValidator: (value) {
-                                if (value!.length < 9) {
-                                  return 'رقم الجوال يجب أن يكون 9 أرقام';
+                                if (value!.length < 6) {
+                                  return 'رقم البيت يجب أن يكون 6 أرقام';
                                 } else if (!RegExp(r'^[0-9]+$')
                                     .hasMatch(value)) {
                                   return 'ادخل ارقاماً';
                                 }
                                 return null;
-                              }),
-                          SizedBox(height: 10),
-                          _buildNumberFormField(
-                            controller: _telephone,
-                            label: 'رقم البيت',
-                            maxLength: 6,
-                            inputType: TextInputType.phone,
-                            validatorMsg: 'الرجاء إدخال رقم البيت',
-                            additionalValidator: (value) {
-                              if (value!.length < 6) {
-                                return 'رقم البيت يجب أن يكون 6 أرقام';
-                              } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                                return 'ادخل ارقاماً';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 10),
-                          _buildTextFormField(
-                            controller: _email,
-                            label: 'البريد الإلكتروني',
-                            maxLength: 50,
-                            inputType: TextInputType.emailAddress,
-                            validatorMsg: 'الرجاء إدخال بريد إلكتروني',
-                            additionalValidator: (value) {
-                              final emailRegex =
-                                  RegExp(r'^[a-zA-Z0-9@._\-]+@[gmail]+\.[com]');
-                              if (!emailRegex.hasMatch(value!)) {
-                                return 'البريد الإلكتروني غير صالح';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 10),
-                          _buildPasswordFormField(),
-                          SizedBox(height: 10),
-                          _buildDateFormField(),
-                          SizedBox(height: 10),
-                          _buildSchoolDropdown(),
-                          SizedBox(height: 10),
-                          _buildRoleDropdown(),
-                          SizedBox(height: 10),
-                          _buildActivateSwitch(),
-                          SizedBox(height: 10),
-                          _buildSubmitButton(),
-                        ],
+                              },
+                            ),
+                            SizedBox(height: 10),
+                            _buildTextFormField(
+                              controller: _email,
+                              label: 'البريد الإلكتروني',
+                              maxLength: 50,
+                              inputType: TextInputType.emailAddress,
+                              validatorMsg: 'الرجاء إدخال بريد إلكتروني',
+                              additionalValidator: (value) {
+                                final emailRegex = RegExp(
+                                    r'^[a-zA-Z0-9@._\-]+@[gmail]+\.[com]');
+                                if (!emailRegex.hasMatch(value!)) {
+                                  return 'البريد الإلكتروني غير صالح';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 10),
+                            _buildPasswordFormField(),
+                            SizedBox(height: 10),
+                            _buildDateFormField(),
+                            SizedBox(height: 10),
+                            _buildSchoolDropdown(),
+                            SizedBox(height: 10),
+                            _buildRoleDropdown(),
+                            SizedBox(height: 10),
+                            _buildActivateSwitch(),
+                            SizedBox(height: 10),
+                            _buildSubmitButton(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -656,11 +660,8 @@ class _AddUserState extends State<AddUser> {
     }
     _userModel.roleID = roleID;
     userController.addUser(_userModel, 1);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("تمت إضافة مستخدم بنجاح"),
-      ),
-    );
+    Utils.showToast("تمت إضافة مستخدم بنجاح", backgroundColor: Colors.green);
+
     setState(() {});
     Navigator.of(context).pop();
   }

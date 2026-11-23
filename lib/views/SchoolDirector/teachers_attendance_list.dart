@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TeachersAttendanceListScreen extends StatefulWidget {
@@ -68,9 +69,8 @@ class _TeachersAttendanceListScreenState
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ أثناء تحميل بيانات الحضور: $e')),
-      );
+      Utils.showToast('حدث خطأ أثناء تحميل بيانات الحضور: $e',
+          backgroundColor: Colors.red);
     }
   }
 
@@ -117,177 +117,180 @@ class _TeachersAttendanceListScreenState
     // تنسيق التاريخ للعرض
     String formattedDate = DateFormat('yyyy/MM/dd').format(_selectedDate);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('حضور المعلمين',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 2,
-      ),
-      body: Column(
-        children: [
-          // شريط اختيار التاريخ
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
-            child: Row(
-              children: [
-                Icon(Icons.calendar_today,
-                    color: Theme.of(context).primaryColor),
-                SizedBox(width: 12),
-                Text(
-                  'التاريخ: $formattedDate',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Spacer(),
-                ElevatedButton.icon(
-                  onPressed: () => _selectDate(context),
-                  icon: Icon(Icons.date_range),
-                  label: Text('تغيير التاريخ'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('حضور المعلمين',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+        ),
+        body: Column(
+          children: [
+            // شريط اختيار التاريخ
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today,
+                      color: Theme.of(context).primaryColor),
+                  SizedBox(width: 12),
+                  Text(
+                    'التاريخ: $formattedDate',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          // عنوان القائمة
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'المعلمين الحاضرين: ${_teachersList.length}',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  Spacer(),
+                  ElevatedButton.icon(
+                    onPressed: () => _selectDate(context),
+                    icon: Icon(Icons.date_range),
+                    label: Text('تغيير التاريخ'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.refresh),
-                  onPressed: _loadTeachersAttendance,
-                  tooltip: 'تحديث',
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          // قائمة المعلمين
-          Expanded(
-            child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : _teachersList.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.person_off,
-                              size: 64,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              'لا يوجد معلمين حاضرين في هذا اليوم',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: EdgeInsets.all(8),
-                        itemCount: _teachersList.length,
-                        separatorBuilder: (context, index) => Divider(),
-                        itemBuilder: (context, index) {
-                          final teacher = _teachersList[index];
-                          final isLate = teacher['status'] == 'متأخر';
+            // عنوان القائمة
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'المعلمين الحاضرين: ${_teachersList.length}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.refresh),
+                    onPressed: _loadTeachersAttendance,
+                    tooltip: 'تحديث',
+                  ),
+                ],
+              ),
+            ),
 
-                          return Card(
-                            elevation: 2,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
-                                color: isLate
-                                    ? Colors.orange.shade300
-                                    : Colors.green.shade300,
-                                width: 1.5,
+            // قائمة المعلمين
+            Expanded(
+              child: _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : _teachersList.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.person_off,
+                                size: 64,
+                                color: Colors.grey,
                               ),
-                            ),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              leading: CircleAvatar(
-                                backgroundColor: isLate
-                                    ? Colors.orange.shade100
-                                    : Colors.green.shade100,
-                                child: Icon(
-                                  Icons.person,
-                                  color: isLate
-                                      ? Colors.orange.shade800
-                                      : Colors.green.shade800,
-                                ),
-                              ),
-                              title: Text(
-                                teacher['name'] ?? 'غير معروف',
+                              SizedBox(height: 16),
+                              Text(
+                                'لا يوجد معلمين حاضرين في هذا اليوم',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
                                   fontSize: 16,
+                                  color: Colors.grey.shade700,
                                 ),
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.access_time,
-                                        size: 16,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        'وقت الحضور: ${_formatTimestamp(teacher['timestamp'])}',
-                                        style: TextStyle(fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              trailing: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
+                            ],
+                          ),
+                        )
+                      : ListView.separated(
+                          padding: EdgeInsets.all(8),
+                          itemCount: _teachersList.length,
+                          separatorBuilder: (context, index) => Divider(),
+                          itemBuilder: (context, index) {
+                            final teacher = _teachersList[index];
+                            final isLate = teacher['status'] == 'متأخر';
+
+                            return Card(
+                              elevation: 2,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: BorderSide(
                                   color: isLate
+                                      ? Colors.orange.shade300
+                                      : Colors.green.shade300,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: ListTile(
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                leading: CircleAvatar(
+                                  backgroundColor: isLate
                                       ? Colors.orange.shade100
                                       : Colors.green.shade100,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  teacher['status'] ?? 'غير معروف',
-                                  style: TextStyle(
+                                  child: Icon(
+                                    Icons.person,
                                     color: isLate
                                         ? Colors.orange.shade800
                                         : Colors.green.shade800,
+                                  ),
+                                ),
+                                title: Text(
+                                  teacher['name'] ?? 'غير معروف',
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.access_time,
+                                          size: 16,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                        SizedBox(width: 4),
+                                        Text(
+                                          'وقت الحضور: ${_formatTimestamp(teacher['timestamp'])}',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                trailing: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: isLate
+                                        ? Colors.orange.shade100
+                                        : Colors.green.shade100,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    teacher['status'] ?? 'غير معروف',
+                                    style: TextStyle(
+                                      color: isLate
+                                          ? Colors.orange.shade800
+                                          : Colors.green.shade800,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-          ),
-        ],
+                            );
+                          },
+                        ),
+            ),
+          ],
+        ),
       ),
     );
   }

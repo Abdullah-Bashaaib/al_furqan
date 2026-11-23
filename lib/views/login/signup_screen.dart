@@ -1,10 +1,11 @@
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
 import '../../models/users_model.dart';
-import '../Supervisor/add_school.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -54,93 +55,99 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('إنشاء حساب جديد'),
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                _buildTextFormField(
-                  controller: _firstname,
-                  labelText: 'الاسم الأول',
-                  validatorText: 'الرجاء إدخال الاسم الأول',
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('إنشاء حساب جديد'),
+        ),
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    _buildTextFormField(
+                      controller: _firstname,
+                      labelText: 'الاسم الأول',
+                      validatorText: 'الرجاء إدخال الاسم الأول',
+                    ),
+                    SizedBox(height: 10),
+                    _buildTextFormField(
+                      controller: _fathername,
+                      labelText: 'اسم الأب',
+                      validatorText: 'الرجاء إدخال اسم الأب',
+                    ),
+                    SizedBox(height: 10),
+                    _buildTextFormField(
+                      controller: _grandfathername,
+                      labelText: 'اسم الجد',
+                      validatorText: 'الرجاء إدخال اسم الجد',
+                    ),
+                    SizedBox(height: 10),
+                    _buildTextFormField(
+                      controller: _lastname,
+                      labelText: 'القبيلة',
+                      validatorText: 'الرجاء إدخال القبيلة',
+                    ),
+                    SizedBox(height: 10),
+                    _buildPhoneFormField(
+                        controller: _phone,
+                        labelText: 'رقم الجوال',
+                        validatorText: 'الرجاء إدخال رقم الجوال',
+                        lengthValidatorText: 'رقم الجوال يجب أن يكون 9 أرقام',
+                        maxLength: 9),
+                    SizedBox(height: 10),
+                    _buildPhoneFormField(
+                        controller: _telephone,
+                        labelText: 'رقم البيت',
+                        validatorText: 'الرجاء إدخال رقم البيت',
+                        maxLength: 6),
+                    SizedBox(height: 10),
+                    _buildEmailFormField(),
+                    SizedBox(height: 10),
+                    _buildPasswordFormField(),
+                    SizedBox(height: 10),
+                    _buildDateFormField(),
+                    SizedBox(height: 10),
+                    _buildDropdownFormField<int>(
+                      value: _selectedSchoolId,
+                      labelText: 'اختر المدرسة',
+                      items: _schoolItems,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedSchoolId = newValue;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    _buildDropdownFormField<String>(
+                      value: _selectedRole,
+                      labelText: 'اختر الدور',
+                      items: <String>['مدير', 'معلم'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedRole = newValue;
+                        });
+                      },
+                      validatorText: 'الرجاء اختيار الدور',
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _handleSubmit,
+                      child: Text('إنشاء حساب'),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
-                _buildTextFormField(
-                  controller: _fathername,
-                  labelText: 'اسم الأب',
-                  validatorText: 'الرجاء إدخال اسم الأب',
-                ),
-                SizedBox(height: 10),
-                _buildTextFormField(
-                  controller: _grandfathername,
-                  labelText: 'اسم الجد',
-                  validatorText: 'الرجاء إدخال اسم الجد',
-                ),
-                SizedBox(height: 10),
-                _buildTextFormField(
-                  controller: _lastname,
-                  labelText: 'القبيلة',
-                  validatorText: 'الرجاء إدخال القبيلة',
-                ),
-                SizedBox(height: 10),
-                _buildPhoneFormField(
-                    controller: _phone,
-                    labelText: 'رقم الجوال',
-                    validatorText: 'الرجاء إدخال رقم الجوال',
-                    lengthValidatorText: 'رقم الجوال يجب أن يكون 9 أرقام',
-                    maxLength: 9),
-                SizedBox(height: 10),
-                _buildPhoneFormField(
-                    controller: _telephone,
-                    labelText: 'رقم البيت',
-                    validatorText: 'الرجاء إدخال رقم البيت',
-                    maxLength: 6),
-                SizedBox(height: 10),
-                _buildEmailFormField(),
-                SizedBox(height: 10),
-                _buildPasswordFormField(),
-                SizedBox(height: 10),
-                _buildDateFormField(),
-                SizedBox(height: 10),
-                _buildDropdownFormField<int>(
-                  value: _selectedSchoolId,
-                  labelText: 'اختر المدرسة',
-                  items: _schoolItems,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedSchoolId = newValue;
-                    });
-                  },
-                ),
-                SizedBox(height: 10),
-                _buildDropdownFormField<String>(
-                  value: _selectedRole,
-                  labelText: 'اختر الدور',
-                  items: <String>['مدير', 'معلم'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedRole = newValue;
-                    });
-                  },
-                  validatorText: 'الرجاء اختيار الدور',
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _handleSubmit,
-                  child: Text('إنشاء حساب'),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -347,11 +354,9 @@ class _SignupScreenState extends State<SignupScreen> {
       _userModel.roleID = roleID;
       debugPrint("_selectedSchoolId = $_selectedSchoolId");
       userController.addRequest(_userModel);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("تم إرسال طلب التسجيل بنجاح"),
-        ),
-      );
+      Utils.showToast("تم إرسال طلب التسجيل بنجاح",
+          backgroundColor: Colors.green);
+
       setState(() {});
       Navigator.of(context).pop();
     }

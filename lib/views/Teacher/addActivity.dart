@@ -1,3 +1,4 @@
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class AddActivityScreen extends StatefulWidget {
@@ -12,8 +13,18 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   TextEditingController repeatController = TextEditingController();
   TimeOfDay? selectedTime;
   List<String> months = [
-    "محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة",
-    "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"
+    "محرم",
+    "صفر",
+    "ربيع الأول",
+    "ربيع الآخر",
+    "جمادى الأولى",
+    "جمادى الآخرة",
+    "رجب",
+    "شعبان",
+    "رمضان",
+    "شوال",
+    "ذو القعدة",
+    "ذو الحجة"
   ];
   List<String> selectedMonths = [];
 
@@ -42,13 +53,15 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   void addActivity() {
     String name = nameController.text;
     String repeat = repeatController.text;
-    if (name.isEmpty || selectedTime == null || selectedMonths.isEmpty || repeat.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("يرجى ملء جميع الحقول")),
-      );
+    if (name.isEmpty ||
+        selectedTime == null ||
+        selectedMonths.isEmpty ||
+        repeat.isEmpty) {
+      Utils.showToast("يرجى ملء جميع الحقول");
+
       return;
     }
-    
+
     Navigator.pop(context, {
       "name": name,
       "time": selectedTime!.format(context),
@@ -71,7 +84,9 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
               children: [
                 Text("اسم النشاط: ", style: TextStyle(fontSize: 16)),
                 Expanded(
-                  child: TextField(controller: nameController, decoration: InputDecoration(hintText: "أدخل اسم النشاط")),
+                  child: TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(hintText: "أدخل اسم النشاط")),
                 ),
               ],
             ),
@@ -83,14 +98,17 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                 Text("الزمن: ", style: TextStyle(fontSize: 16)),
                 ElevatedButton(
                   onPressed: pickTime,
-                  child: Text(selectedTime != null ? selectedTime!.format(context) : "اختيار الوقت"),
+                  child: Text(selectedTime != null
+                      ? selectedTime!.format(context)
+                      : "اختيار الوقت"),
                 ),
               ],
             ),
             SizedBox(height: 16),
 
             // اختيار الشهور
-            Text("الشهور:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text("الشهور:",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Wrap(
               spacing: 8.0,
               children: months.map((month) {
@@ -101,7 +119,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   onSelected: (selected) => toggleMonthSelection(month),
                   selectedColor: Colors.blue,
                   backgroundColor: Colors.grey[300],
-                  labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
+                  labelStyle: TextStyle(
+                      color: isSelected ? Colors.white : Colors.black),
                 );
               }).toList(),
             ),

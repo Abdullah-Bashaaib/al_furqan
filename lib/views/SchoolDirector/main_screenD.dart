@@ -1,5 +1,7 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
+
 import '../../services/sync.dart';
 import 'SchoolDirectorHome.dart';
 
@@ -69,15 +71,18 @@ class _MainScreenState extends State<MainScreenD> {
   Widget build(BuildContext context) {
     // شاشة التحميل
     if (isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('جاري التحميل...',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          backgroundColor: Theme.of(context).primaryColor,
+      return SafeArea(
+        top: false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('جاري التحميل...',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          body: Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor)),
         ),
-        body: Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor)),
       );
     }
 

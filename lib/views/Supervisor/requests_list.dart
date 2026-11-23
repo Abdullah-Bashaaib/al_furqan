@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
+import 'package:al_furqan/utils/utils.dart';
+import 'package:flutter/material.dart';
+
 import '../../controllers/school_controller.dart';
 import '../../models/schools_model.dart';
 
@@ -39,243 +41,243 @@ class _RequestsListState extends State<RequestsList> {
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'طلبات التفعيل',
-          style:
-              const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: primaryColor,
-        elevation: 2,
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'تحديث',
-            onPressed: () {
-              _refreshData();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('تم تحديث البيانات'),
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              );
-            },
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'طلبات التفعيل',
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.white),
           ),
-        ],
-      ),
-      body: userController.requests.isEmpty
-          ? _buildEmptyState(context)
-          : RefreshIndicator(
-              onRefresh: () async {
-                await Future.delayed(const Duration(milliseconds: 300));
-                await Future.delayed(Duration(milliseconds: 300));
+          backgroundColor: primaryColor,
+          elevation: 2,
+          centerTitle: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              tooltip: 'تحديث',
+              onPressed: () {
                 _refreshData();
+                Utils.showToast('تم تحديث البيانات',
+                    backgroundColor: Colors.green);
               },
-              child: ListView.builder(
-                padding: EdgeInsets.all(12),
-                itemCount: userController.requests.length,
-                itemBuilder: (context, index) {
-                  // Determine role name based on roleID
-                  String? roleName;
-                  Color roleColor;
-                  IconData roleIcon;
+            ),
+          ],
+        ),
+        body: userController.requests.isEmpty
+            ? _buildEmptyState(context)
+            : RefreshIndicator(
+                onRefresh: () async {
+                  await Future.delayed(const Duration(milliseconds: 300));
+                  await Future.delayed(Duration(milliseconds: 300));
+                  _refreshData();
+                },
+                child: ListView.builder(
+                  padding: EdgeInsets.all(12),
+                  itemCount: userController.requests.length,
+                  itemBuilder: (context, index) {
+                    // Determine role name based on roleID
+                    String? roleName;
+                    Color roleColor;
+                    IconData roleIcon;
 
-                  switch (userController.requests[index].roleID) {
-                    case 0:
-                      roleName = 'مشرف';
-                      roleColor = Colors.purple;
-                      roleIcon = Icons.admin_panel_settings;
-                      break;
-                    case 1:
-                      roleName = 'مدير';
-                      roleColor = Colors.blue;
-                      roleIcon = Icons.school;
-                      break;
-                    case 2:
-                      roleName = 'معلم';
-                      roleColor = Colors.green;
-                      roleIcon = Icons.person;
-                      break;
-                    case 3:
-                      roleName = 'ولي أمر';
-                      roleColor = Colors.green;
-                      roleIcon = Icons.person;
-                      break;
-                    default:
-                      roleName = 'غير محدد';
-                      roleColor = Colors.grey;
-                      roleIcon = Icons.person_outline;
-                  }
+                    switch (userController.requests[index].roleID) {
+                      case 0:
+                        roleName = 'مشرف';
+                        roleColor = Colors.purple;
+                        roleIcon = Icons.admin_panel_settings;
+                        break;
+                      case 1:
+                        roleName = 'مدير';
+                        roleColor = Colors.blue;
+                        roleIcon = Icons.school;
+                        break;
+                      case 2:
+                        roleName = 'معلم';
+                        roleColor = Colors.green;
+                        roleIcon = Icons.person;
+                        break;
+                      case 3:
+                        roleName = 'ولي أمر';
+                        roleColor = Colors.green;
+                        roleIcon = Icons.person;
+                        break;
+                      default:
+                        roleName = 'غير محدد';
+                        roleColor = Colors.grey;
+                        roleIcon = Icons.person_outline;
+                    }
 
-                  // Find the school associated with the request
-                  final school = schoolController.schools.firstWhere(
-                      (school) =>
-                          school.schoolID ==
-                          userController.requests[index].schoolID,
-                      orElse: () => SchoolModel(school_name: 'المكتب'));
+                    // Find the school associated with the request
+                    final school = schoolController.schools.firstWhere(
+                        (school) =>
+                            school.schoolID ==
+                            userController.requests[index].schoolID,
+                        orElse: () => SchoolModel(school_name: 'المكتب'));
 
-                  return Card(
-                    elevation: 2,
-                    margin: EdgeInsets.only(bottom: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(color: Colors.grey.shade200),
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () => showDialogDetailsRequest(context, index),
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: roleColor.withOpacity(0.2),
-                                  child: Icon(roleIcon,
-                                      color: roleColor, size: 20),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '${userController.requests[index].first_name!} ${userController.requests[index].middle_name!} ${userController.requests[index].last_name!}',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                    return Card(
+                      elevation: 2,
+                      margin: EdgeInsets.only(bottom: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(color: Colors.grey.shade200),
+                      ),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () => showDialogDetailsRequest(context, index),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: roleColor.withOpacity(0.2),
+                                    child: Icon(roleIcon,
+                                        color: roleColor, size: 20),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${userController.requests[index].first_name!} ${userController.requests[index].middle_name!} ${userController.requests[index].last_name!}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.phone,
+                                                size: 14, color: Colors.grey),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              '${userController.requests[index].phone_number}',
+                                              style: TextStyle(
+                                                color: Colors.grey.shade700,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuButton(
+                                    icon: Icon(Icons.more_vert),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.check_circle,
+                                                color: Colors.green),
+                                            const SizedBox(width: 8),
+                                            Text('قبول الطلب'),
+                                          ],
+                                        ),
+                                        onTap: () => Future.delayed(
+                                          Duration.zero,
+                                          () => acceptRequest(index, context),
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.phone,
-                                              size: 14, color: Colors.grey),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            '${userController.requests[index].phone_number}',
-                                            style: TextStyle(
-                                              color: Colors.grey.shade700,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
+                                      PopupMenuItem(
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.info,
+                                                color: Colors.blue),
+                                            const SizedBox(width: 8),
+                                            Text('تفاصيل الطلب'),
+                                          ],
+                                        ),
+                                        onTap: () => Future.delayed(
+                                          Duration.zero,
+                                          () => showDialogDetailsRequest(
+                                              context, index),
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.delete,
+                                                color: Colors.red),
+                                            const SizedBox(width: 8),
+                                            Text('حذف الطلب'),
+                                          ],
+                                        ),
+                                        onTap: () => Future.delayed(
+                                          Duration.zero,
+                                          () => showDialogDeleteRequest(
+                                              context, index),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                PopupMenuButton(
-                                  icon: Icon(Icons.more_vert),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                ],
+                              ),
+                              Divider(height: 24),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _buildInfoChip(
+                                    label: roleName,
+                                    icon: roleIcon,
+                                    color: roleColor,
                                   ),
-                                  itemBuilder: (context) => [
-                                    PopupMenuItem(
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.check_circle,
-                                              color: Colors.green),
-                                          const SizedBox(width: 8),
-                                          Text('قبول الطلب'),
-                                        ],
-                                      ),
-                                      onTap: () => Future.delayed(
-                                        Duration.zero,
-                                        () => acceptRequest(index, context),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.info, color: Colors.blue),
-                                          const SizedBox(width: 8),
-                                          Text('تفاصيل الطلب'),
-                                        ],
-                                      ),
-                                      onTap: () => Future.delayed(
-                                        Duration.zero,
-                                        () => showDialogDetailsRequest(
-                                            context, index),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.delete, color: Colors.red),
-                                          const SizedBox(width: 8),
-                                          Text('حذف الطلب'),
-                                        ],
-                                      ),
-                                      onTap: () => Future.delayed(
-                                        Duration.zero,
-                                        () => showDialogDeleteRequest(
-                                            context, index),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Divider(height: 24),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _buildInfoChip(
-                                  label: roleName,
-                                  icon: roleIcon,
-                                  color: roleColor,
-                                ),
-                                _buildInfoChip(
-                                  label: school.school_name!,
-                                  icon: Icons.location_on,
-                                  color: Colors.orange,
-                                ),
-                                _buildInfoChip(
-                                  label: 'طلب تفعيل',
-                                  icon: Icons.pending_actions,
-                                  color: Colors.amber,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _buildActionButton(
-                                  label: 'قبول',
-                                  icon: Icons.check_circle,
-                                  color: Colors.green,
-                                  onPressed: () =>
-                                      acceptRequest(index, context),
-                                ),
-                                _buildActionButton(
-                                  label: 'حذف',
-                                  icon: Icons.delete,
-                                  color: Colors.red,
-                                  onPressed: () =>
-                                      showDialogDeleteRequest(context, index),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  _buildInfoChip(
+                                    label: school.school_name!,
+                                    icon: Icons.location_on,
+                                    color: Colors.orange,
+                                  ),
+                                  _buildInfoChip(
+                                    label: 'طلب تفعيل',
+                                    icon: Icons.pending_actions,
+                                    color: Colors.amber,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _buildActionButton(
+                                    label: 'قبول',
+                                    icon: Icons.check_circle,
+                                    color: Colors.green,
+                                    onPressed: () =>
+                                        acceptRequest(index, context),
+                                  ),
+                                  _buildActionButton(
+                                    label: 'حذف',
+                                    icon: Icons.delete,
+                                    color: Colors.red,
+                                    onPressed: () =>
+                                        showDialogDeleteRequest(context, index),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
+      ),
     );
   }
 
@@ -373,13 +375,7 @@ class _RequestsListState extends State<RequestsList> {
   void acceptRequest(int index, BuildContext context) async {
     await userController.activateUser(userController.requests[index].user_id!);
     _refreshData();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Text("تم تنشيط الحساب"),
-      duration: const Duration(seconds: 1),
-      backgroundColor: Colors.green,
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ));
+    Utils.showToast("تم تنشيط الحساب", backgroundColor: Colors.green);
   }
 
   // Function to show a dialog for deleting a request
@@ -432,16 +428,8 @@ class _RequestsListState extends State<RequestsList> {
                 userController
                     .deleteRequest(userController.requests[index].user_id!);
                 _refreshData();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text("تم حذف الطلب"),
-                    duration: const Duration(seconds: 1),
-                    backgroundColor: Colors.red,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                );
+                Utils.showToast("تم حذف الطلب", backgroundColor: Colors.green);
+
                 Navigator.of(context).pop();
               },
             ),

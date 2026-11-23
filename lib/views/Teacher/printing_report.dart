@@ -1,14 +1,15 @@
 import 'dart:io';
+
+import 'package:al_furqan/models/eltlawah_plan_model.dart';
+import 'package:al_furqan/models/islamic_studies_model.dart';
+import 'package:al_furqan/models/student_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:al_furqan/models/student_model.dart';
-import 'package:al_furqan/models/conservation_plan_model.dart';
-import 'package:al_furqan/models/eltlawah_plan_model.dart';
-import 'package:al_furqan/models/islamic_studies_model.dart';
 
 class MonthlyReportPDF {
   final List<StudentModel> students;
@@ -95,6 +96,10 @@ class MonthlyReportPDF {
                                 ),
                                 children: [
                                   _buildTableHeader('اسم الطالب', arabicFont),
+                                  _buildTableHeader(
+                                      'عدد أيام الحضور', arabicFont),
+                                  _buildTableHeader(
+                                      'عدد أيام الغياب', arabicFont),
                                   _buildTableHeader('نسبة الحضور', arabicFont),
                                 ],
                               ),
@@ -103,8 +108,26 @@ class MonthlyReportPDF {
                                 final data = reportData[student.studentID];
                                 return pw.TableRow(
                                   children: [
+                                    pw.Row(
+                                        mainAxisAlignment:
+                                            pw.MainAxisAlignment.center,
+                                        children: [
+                                          _buildTableCell(
+                                              student.firstName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.middleName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.lastName ?? '',
+                                              arabicFont),
+                                        ]),
                                     _buildTableCell(
-                                        student.firstName ?? '', arabicFont),
+                                        "${data?['absenceDays'] ?? '0'}",
+                                        arabicFont),
+                                    _buildTableCell(
+                                        "${data?['attendanceDays'] ?? '0'}",
+                                        arabicFont),
                                     _buildTableCell(
                                         '${data?['attendanceRate'] ?? '0'}%',
                                         arabicFont),
@@ -159,8 +182,20 @@ class MonthlyReportPDF {
                                 final data = reportData[student.studentID];
                                 return pw.TableRow(
                                   children: [
-                                    _buildTableCell(
-                                        student.firstName ?? '', arabicFont),
+                                    pw.Row(
+                                        mainAxisAlignment:
+                                            pw.MainAxisAlignment.center,
+                                        children: [
+                                          _buildTableCell(
+                                              student.firstName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.middleName ?? '',
+                                              arabicFont),
+                                          _buildTableCell(
+                                              student.lastName ?? '',
+                                              arabicFont),
+                                        ]),
                                     _buildTableCell(
                                         data?['executedEndSurah'] ?? '',
                                         arabicFont),
@@ -387,16 +422,16 @@ class MonthlyReportPDFScreen extends StatelessWidget {
       // الحصول على مسار مجلد التنزيلات
       final directory = await getExternalStorageDirectory();
       if (directory == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('لم يتم العثور على مجلد الحفظ')),
-        );
+        Utils.showToast('لم يتم العثور على مجلد الحفظ',
+            backgroundColor: Colors.red);
+
         return;
       }
 
       // تكوين اسم الملف باستخدام التاريخ
       final String month = selectedMonth.month.toString().padLeft(2, '0');
       final String year = selectedMonth.year.toString();
-      final String fileName = 'تقرير_شهري_${year}_${month}.pdf';
+      final String fileName = 'تقرير _ شهري _${year}_${month}.pdf';
       final String filePath = '${directory.path}/$fileName';
 
       // حفظ الملف
@@ -404,8 +439,10 @@ class MonthlyReportPDFScreen extends StatelessWidget {
       await file.writeAsBytes(await pdf.save());
 
       // عرض رسالة نجاح مع زر لفتح الملف
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text('تم حفظ التقرير في المجلد: ${directory.path}'),
           action: SnackBarAction(
             label: 'فتح',
@@ -420,40 +457,42 @@ class MonthlyReportPDFScreen extends StatelessWidget {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ أثناء حفظ الملف: $e')),
-      );
+      Utils.showToast('حدث خطأ أثناء حفظ الملف: $e',
+          backgroundColor: Colors.red);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('معاينة التقرير'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () => _savePDF(context),
-            tooltip: 'حفظ كملف PDF',
-          ),
-        ],
-      ),
-      body: FutureBuilder(
-        future: MonthlyReportPDF(
-          students: students,
-          reportData: reportData,
-          eltlawahPlan: eltlawahPlan,
-          islamicStudyPlan: islamicStudyPlan,
-          selectedMonth: selectedMonth,
-        ).generateAndPrintReport(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return Container();
-        },
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('معاينة التقرير'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () => _savePDF(context),
+              tooltip: 'حفظ كملف PDF',
+            ),
+          ],
+        ),
+        body: FutureBuilder(
+          future: MonthlyReportPDF(
+            students: students,
+            reportData: reportData,
+            eltlawahPlan: eltlawahPlan,
+            islamicStudyPlan: islamicStudyPlan,
+            selectedMonth: selectedMonth,
+          ).generateAndPrintReport(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return Container();
+          },
+        ),
       ),
     );
   }

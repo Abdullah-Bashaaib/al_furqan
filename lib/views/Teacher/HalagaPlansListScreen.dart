@@ -5,9 +5,11 @@ import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'HalagaPlansScreen.dart';
+
 import 'EditHalagaPlanScreen.dart';
+import 'HalagaPlansScreen.dart';
 
 // ignore: must_be_immutable
 class HalagaPlansListScreen extends StatefulWidget {
@@ -37,12 +39,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
       await planController.getPlans(halagaModel.halagaID!);
       await studentController.getStudents(halagaModel.halagaID!);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ في تحميل الخطط: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('حدث خطأ في تحميل الخطط: $e',
+          backgroundColor: Colors.redAccent);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -53,12 +51,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     try {
       await planController.getPlans(halagaModel.halagaID!);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('حدث خطأ في تحديث الخطط: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Utils.showToast('حدث خطأ في تحديث الخطط: $e',
+          backgroundColor: Colors.redAccent);
     } finally {
       setState(() => _isRefreshing = false);
     }
@@ -66,75 +60,79 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'خطط حلقة: ${halagaModel.Name ?? ""}',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-          backgroundColor: Theme.of(context).primaryColor,
-          titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
-          elevation: 2,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(15),
+    return SafeArea(
+      top: false,
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'خطط حلقة: ${halagaModel.Name ?? ""}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            backgroundColor: Theme.of(context).primaryColor,
+            titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+            elevation: 2,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(15),
+              ),
+            ),
+            bottom: TabBar(
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.white70,
+              indicatorColor: Colors.white,
+              indicatorWeight: 3,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+              tabs: const [
+                Tab(
+                  text: 'خطط الحفظ',
+                  icon: Icon(Icons.book),
+                ),
+                Tab(
+                  text: 'خطط التلاوة',
+                  icon: Icon(Icons.menu_book),
+                ),
+              ],
             ),
           ),
-          bottom: TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.white,
-            indicatorWeight: 3,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            tabs: const [
-              Tab(
-                text: 'خطط الحفظ',
-                icon: Icon(Icons.book),
-              ),
-              Tab(
-                text: 'خطط التلاوة',
-                icon: Icon(Icons.menu_book),
-              ),
-            ],
+          body: _isLoading
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text('جاري تحميل الخطط...'),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: _refreshPlans,
+                  child: TabBarView(
+                    children: [
+                      _buildConservationPlansList(),
+                      _buildTlawahPlansList(),
+                    ],
+                  ),
+                ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AddHalagaPlansScreen(halaga: halagaModel),
+                ),
+              );
+              if (result == true) {
+                _loadPlans(); // تحديث القوائم بعد إضافة خطط جديدة
+              }
+            },
+            backgroundColor: Theme.of(context).primaryColor,
+            elevation: 4,
+            child: const Icon(Icons.add, color: Colors.white),
           ),
-        ),
-        body: _isLoading
-            ? const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('جاري تحميل الخطط...'),
-                  ],
-                ),
-              )
-            : RefreshIndicator(
-                onRefresh: _refreshPlans,
-                child: TabBarView(
-                  children: [
-                    _buildConservationPlansList(),
-                    _buildTlawahPlansList(),
-                  ],
-                ),
-              ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AddHalagaPlansScreen(halaga: halagaModel),
-              ),
-            );
-            if (result == true) {
-              _loadPlans(); // تحديث القوائم بعد إضافة خطط جديدة
-            }
-          },
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 4,
-          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
@@ -149,7 +147,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     return _isRefreshing
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
-            itemCount: planC.length,
+            itemCount:
+                planC.length < student0.length ? planC.length : student0.length,
             padding: const EdgeInsets.all(12.0),
             itemBuilder: (context, index) {
               final plan = planC[index];
@@ -248,7 +247,7 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                         _buildInfoRow('إلى',
                             '${plan.executedEndSurah} ، ${plan.executedEndAya}'),
                         _buildInfoRow('معدل التنفيذ',
-                            '${(plan.executedRate ?? 0) * 100}%'),
+                            '${(plan.executedRate ?? 0).toStringAsFixed(1)}%'),
 
                         // يمكن إضافة معلومات منفذة أخرى هنا إذا كانت متوفرة
                       ],
@@ -287,8 +286,7 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                       '${plan.plannedStartSurah}، آية: ${plan.plannedStartAya ?? 0}'),
                   _buildInfoRow('إلى',
                       '${plan.plannedEndSurah}، آية: ${plan.plannedEndAya ?? 0}'),
-                  _buildInfoRow(
-                      'معدل التنفيذ', '${(plan.executedRate ?? 0) * 100}%'),
+                  _buildInfoRow('معدل التنفيذ', '${(plan.executedRate ?? 0)}%'),
                   _buildSyncStatus(plan.isSync),
                 ],
                 onEdit: () => _editPlan(context, plan),
@@ -503,12 +501,9 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                 }
                 Navigator.of(context).pop(true);
               } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('حدث خطأ أثناء الحذف: $e'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+                Utils.showToast('حدث خطأ أثناء الحذف: $e',
+                    backgroundColor: Colors.redAccent);
+
                 Navigator.of(context).pop(false);
               }
             },
@@ -523,12 +518,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     );
 
     if (result == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('تم حذف الخطة بنجاح'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      Utils.showToast('تم حذف الخطة بنجاح', backgroundColor: Colors.green);
+
       await _loadPlans(); // تحديث القوائم بعد الحذف
     }
   }
@@ -562,13 +553,8 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
     }
 
     if (!foundStudent && planType == 'conservation') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('لم يتم العثور على الطالب، سيتم استخدام بيانات افتراضية'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      Utils.showToast('لم يتم العثور على الطالب، سيتم استخدام بيانات افتراضية',
+          backgroundColor: Colors.amber);
     }
 
     // الانتقال إلى شاشة تعديل الخطة الجديدة

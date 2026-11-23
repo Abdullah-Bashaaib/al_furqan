@@ -1,15 +1,14 @@
 import 'package:al_furqan/controllers/users_controller.dart';
-import 'package:al_furqan/helper/sqldb.dart';
 import 'package:al_furqan/models/users_model.dart';
+import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../controllers/school_controller.dart';
-import 'add_school.dart';
-import '../../widgets/build_text_field.dart';
-import '../../widgets/build_password_field.dart';
 import '../../widgets/build_date_field.dart';
 import '../../widgets/build_dropdown_field.dart';
+import '../../widgets/build_password_field.dart';
+import '../../widgets/build_text_field.dart';
+import 'add_school.dart';
 
 class UserDetails extends StatefulWidget {
   final UserModel user;
@@ -100,208 +99,211 @@ class _UserDetailsState extends State<UserDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "معلومات المستخدم",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 2,
-        actions: [
-          IconButton(
-            icon: Icon(_isEditable ? Icons.close : Icons.edit),
-            tooltip: _isEditable ? 'إلغاء التعديل' : 'تعديل البيانات',
-            onPressed: () {
-              setState(() {
-                _isEditable = !_isEditable;
-              });
-            },
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "معلومات المستخدم",
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // User Profile Header
-                // _buildUserProfileHeader(),
-                // SizedBox(height: 24),
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          actions: [
+            IconButton(
+              icon: Icon(_isEditable ? Icons.close : Icons.edit),
+              tooltip: _isEditable ? 'إلغاء التعديل' : 'تعديل البيانات',
+              onPressed: () {
+                setState(() {
+                  _isEditable = !_isEditable;
+                });
+              },
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // User Profile Header
+                  // _buildUserProfileHeader(),
+                  // SizedBox(height: 24),
 
-                // Section Title
-                _buildSectionTitle('المعلومات الشخصية', Icons.person),
-                SizedBox(height: 16),
+                  // Section Title
+                  _buildSectionTitle('المعلومات الشخصية', Icons.person),
+                  SizedBox(height: 16),
 
-                // Personal Information
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        _buildTextField(
-                            _firstname, 'الاسم الأول', TextInputType.text, 50),
-                        SizedBox(height: 16),
-                        _buildTextField(
-                            _fathername, 'اسم الأب', TextInputType.text, 50),
-                        SizedBox(height: 16),
-                        _buildTextField(_grandfathername, 'اسم الجد',
-                            TextInputType.text, 50),
-                        SizedBox(height: 16),
-                        _buildTextField(
-                            _lastname, 'القبيلة', TextInputType.text, 50),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24),
-
-                // Section Title
-                _buildSectionTitle('معلومات الاتصال', Icons.contact_phone),
-                SizedBox(height: 16),
-
-                // Contact Information
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        _buildTextField(
-                            _phone, 'رقم الجوال', TextInputType.phone, 9),
-                        SizedBox(height: 16),
-                        _buildTextField(
-                            _telephone, 'رقم البيت', TextInputType.phone, 6),
-                        SizedBox(height: 16),
-                        _buildTextField(_email, 'البريد الإلكتروني',
-                            TextInputType.emailAddress, 50),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24),
-
-                // Section Title
-                _buildSectionTitle('معلومات الحساب', Icons.security),
-                SizedBox(height: 16),
-
-                // Account Information
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        buildPasswordField(
-                          controller: _password,
-                          isPasswordVisible: _isPasswordVisible,
-                          isEditable: _isEditable,
-                          togglePasswordVisibility: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        buildDateField(
-                          controller: _date,
-                          isEditable: _isEditable,
-                          context: context,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24),
-
-                // Section Title
-                _buildSectionTitle('معلومات المدرسة والدور', Icons.school),
-                SizedBox(height: 16),
-
-                // School and Role Information
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        _buildSchoolDropdown(),
-                        SizedBox(height: 16),
-                        buildDropdownField(
-                          selectedRole: _selectedRole,
-                          isEditable: _isEditable,
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedRole = newValue;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24),
-
-                // Activation Switch
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _buildCustomSwitchListTile(),
-                  ),
-                ),
-                SizedBox(height: 24),
-
-                // Save Button (only shown in edit mode)
-                if (_isEditable)
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          await _handleFormSubmission();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 3,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  // Personal Information
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
                         children: [
-                          Icon(Icons.save),
-                          SizedBox(width: 8),
-                          Text(
-                            'حفظ التعديلات',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                          _buildTextField(_firstname, 'الاسم الأول',
+                              TextInputType.text, 50),
+                          SizedBox(height: 16),
+                          _buildTextField(
+                              _fathername, 'اسم الأب', TextInputType.text, 50),
+                          SizedBox(height: 16),
+                          _buildTextField(_grandfathername, 'اسم الجد',
+                              TextInputType.text, 50),
+                          SizedBox(height: 16),
+                          _buildTextField(
+                              _lastname, 'القبيلة', TextInputType.text, 50),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+
+                  // Section Title
+                  _buildSectionTitle('معلومات الاتصال', Icons.contact_phone),
+                  SizedBox(height: 16),
+
+                  // Contact Information
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _buildTextField(
+                              _phone, 'رقم الجوال', TextInputType.phone, 9),
+                          SizedBox(height: 16),
+                          _buildTextField(
+                              _telephone, 'رقم البيت', TextInputType.phone, 6),
+                          SizedBox(height: 16),
+                          _buildTextField(_email, 'البريد الإلكتروني',
+                              TextInputType.emailAddress, 50),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+
+                  // Section Title
+                  _buildSectionTitle('معلومات الحساب', Icons.security),
+                  SizedBox(height: 16),
+
+                  // Account Information
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          buildPasswordField(
+                            controller: _password,
+                            isPasswordVisible: _isPasswordVisible,
+                            isEditable: _isEditable,
+                            togglePasswordVisibility: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          buildDateField(
+                            controller: _date,
+                            isEditable: _isEditable,
+                            context: context,
                           ),
                         ],
                       ),
                     ),
                   ),
-                SizedBox(height: 24),
-              ],
+                  SizedBox(height: 24),
+
+                  // Section Title
+                  _buildSectionTitle('معلومات المدرسة والدور', Icons.school),
+                  SizedBox(height: 16),
+
+                  // School and Role Information
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _buildSchoolDropdown(),
+                          SizedBox(height: 16),
+                          buildDropdownField(
+                            selectedRole: _selectedRole,
+                            isEditable: _isEditable,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedRole = newValue;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+
+                  // Activation Switch
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildCustomSwitchListTile(),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+
+                  // Save Button (only shown in edit mode)
+                  if (_isEditable)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await _handleFormSubmission();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 3,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.save),
+                            SizedBox(width: 8),
+                            Text(
+                              'حفظ التعديلات',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         ),
@@ -527,39 +529,11 @@ class _UserDetailsState extends State<UserDetails> {
       setState(() {
         _isEditable = false;
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 10),
-              Text('تم حفظ التعديلات بنجاح'),
-            ],
-          ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      Utils.showToast('تم حفظ التعديلات بنجاح', backgroundColor: Colors.green);
     } catch (e) {
       debugPrint("Error in _handleFormSubmission: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error, color: Colors.white),
-              SizedBox(width: 10),
-              Expanded(child: Text('حدث خطأ أثناء حفظ التعديلات: $e')),
-            ],
-          ),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      Utils.showToast('حدث خطأ أثناء حفظ التعديلات: $e',
+          backgroundColor: Colors.red);
     }
   }
 

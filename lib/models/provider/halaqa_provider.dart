@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:al_furqan/controllers/HalagaController.dart';
 import 'package:al_furqan/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
@@ -47,9 +49,10 @@ class HalaqaProvider with ChangeNotifier {
 
   Future<void> loadedHalaqatFromLocal() async {
     // final sw3 = Stopwatch()..start();
-
+    log("--------------> in provider ");
     final db = await sqlDb.database;
     final List<Map<String, dynamic>> request = await db.query('Elhalagat');
+    log("message: ${request.length}");
     List<HalagaModel> halaqatList =
         request.map((j) => HalagaModel.fromJson(j)).toList();
     halaqat.clear();
