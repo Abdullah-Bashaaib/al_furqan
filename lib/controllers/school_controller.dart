@@ -1,7 +1,7 @@
 import 'package:al_furqan/controllers/some_controller.dart';
-import 'package:al_furqan/helper/sqldb.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/models/schools_model.dart';
-import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/models/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 

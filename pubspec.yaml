@@ -44,7 +44,8 @@ dependencies:
   qr_flutter:
   mobile_scanner:
   uuid:
-  provider:
+  provider: 
+  get_it: 
   fluttertoast:
 
 

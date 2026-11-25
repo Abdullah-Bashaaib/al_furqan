@@ -1,9 +1,9 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import '../helper/sqldb.dart';
 
 class SomeController {
   final SqlDb _sqlDb = SqlDb();

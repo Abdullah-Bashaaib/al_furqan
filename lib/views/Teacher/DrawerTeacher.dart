@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:al_furqan/controllers/HalagaController.dart';
-import 'package:al_furqan/controllers/StudentController.dart';
+import 'package:al_furqan/controllers/Halaga_controller.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
-import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/halaqa_provider.dart';
 import 'package:al_furqan/models/student_model.dart';

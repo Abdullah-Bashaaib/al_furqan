@@ -1,9 +1,9 @@
-import 'package:al_furqan/controllers/HalagaController.dart';
+import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
-import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
-import 'package:al_furqan/views/SchoolDirector/main_screenD.dart';
-import 'package:al_furqan/views/Supervisor/mainScreenSupervisor.dart';
+import 'package:al_furqan/views/School_director/main_screenD.dart';
+import 'package:al_furqan/views/Supervisor/main_screen_supervisor.dart';
 import 'package:al_furqan/views/Teacher/main_screenT.dart';
 import 'package:al_furqan/views/login/login.dart';
 import 'package:flutter/cupertino.dart';

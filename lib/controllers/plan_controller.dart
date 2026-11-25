@@ -1,9 +1,9 @@
-import 'package:al_furqan/helper/new_id2.dart';
-import 'package:al_furqan/helper/sqldb.dart';
+import 'package:al_furqan/models/helper/new_id2.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
-import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/models/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
@@ -520,7 +520,7 @@ class PlanController {
 
       /// Conservation plan
       for (var c in cp) {
-        bool exists = await sqlDb.checkIfitemExists2(
+        bool exists = await sqlDb.checkIfItemExists2(
             'ConservationPlans', c.conservationPlanId!, 'ConservationPlanID');
         print(exists);
         exists
@@ -532,7 +532,7 @@ class PlanController {
       }
 
       for (var e in ep) {
-        bool exists = await sqlDb.checkIfitemExists2(
+        bool exists = await sqlDb.checkIfItemExists2(
             'EltlawahPlans', e.eltlawahPlanId!, 'EltlawahPlanID');
         print(exists);
         exists
@@ -543,7 +543,7 @@ class PlanController {
       }
 
       for (var i in ip) {
-        bool exists = await sqlDb.checkIfitemExists2(
+        bool exists = await sqlDb.checkIfItemExists2(
             'IslamicStudies', i.islamicStudiesID!, 'IslamicStudiesID');
         print(exists);
         exists

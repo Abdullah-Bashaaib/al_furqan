@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/StudentController.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/main.dart';
 import 'package:al_furqan/utils/utils.dart';
@@ -8,7 +8,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import '../../services/message_sevice.dart';
-import '../../services/sync.dart';
+import '../../models/services/sync.dart';
 // import '../../services/sync.dart';
 
 class MainScreenT extends StatefulWidget {

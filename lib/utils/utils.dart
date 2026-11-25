@@ -76,5 +76,6 @@ class Utils {
       textColor: textColor,
       fontSize: 16.0,
     );
+  
   }
 }

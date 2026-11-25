@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/StudentController.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';

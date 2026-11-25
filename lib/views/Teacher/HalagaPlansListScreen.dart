@@ -1,10 +1,10 @@
-import 'package:al_furqan/controllers/StudentController.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/student_model.dart';
-import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/models/services/firebase_service.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 

@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:io';
-import 'package:al_furqan/controllers/StudentController.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/fathers_controller.dart';
 import 'package:al_furqan/controllers/validation_from_excelfile.dart';
-import 'package:al_furqan/helper/sqldb.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/utils/utils.dart';
@@ -18,12 +18,12 @@ class ExcelTesting {
   List<Map<String, dynamic>> dataList = []; // قائمة لتخزين البيانات
 
   Future<void> readExcelFile(BuildContext context) async {
-    final List<PlatformFile> pickedFiles = await FilePicker.pickFiles(
+    final pickedFiles = await FilePickerPlatform.instance.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
 
-    if (pickedFiles.isEmpty) {
+    if (pickedFiles == null || pickedFiles.isEmpty) {
       Utils.showToast('لم يتم اختيار ملف');
 
       return;
@@ -155,7 +155,7 @@ class ExcelTesting {
       String lastName = students[i].lastName?.trim() ?? '';
 
       // التحقق من وجود الطالب
-      bool studentExists = await SqlDb().checkIfitemExistsForExcel("Students", {
+      bool studentExists = await SqlDb().checkIfItemExistsForExcel("Students", {
         "firstName": firstName,
         "lastName": lastName,
       });

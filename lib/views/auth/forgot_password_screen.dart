@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:al_furqan/services/verification_service.dart';
+import 'package:al_furqan/models/services/verification_service.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/auth/change_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

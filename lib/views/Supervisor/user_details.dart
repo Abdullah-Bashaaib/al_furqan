@@ -4,10 +4,10 @@ import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../controllers/school_controller.dart';
-import '../../widgets/build_date_field.dart';
-import '../../widgets/build_dropdown_field.dart';
-import '../../widgets/build_password_field.dart';
-import '../../widgets/build_text_field.dart';
+import '../widgets/build_date_field.dart';
+import '../widgets/build_dropdown_field.dart';
+import '../widgets/build_password_field.dart';
+import '../widgets/build_text_field.dart';
 import 'add_school.dart';
 
 class UserDetails extends StatefulWidget {

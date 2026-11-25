@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:al_furqan/main.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/models/provider/message_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/shared/message_screen.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../helper/current_user.dart';
 import '../../utils/utils.dart';
 
 class ConversationsScreen extends StatefulWidget {
