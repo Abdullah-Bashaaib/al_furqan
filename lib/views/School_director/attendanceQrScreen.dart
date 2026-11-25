@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 
 import 'package:al_furqan/controllers/School_directore_controller.dart';
 import 'package:al_furqan/utils/utils.dart';
@@ -42,12 +42,6 @@ class _AttendanceQRScreenState extends State<AttendanceQRScreen> {
     if (id != null) {
       setState(() {
         schoolId = id.toString();
-      });
-      _loadAttendanceCode();
-    } else {
-      // إذا لم يتم العثور على معرف المدرسة، نستخدم معرف افتراضي
-      setState(() {
-        schoolId = "default_school";
       });
       _loadAttendanceCode();
     }

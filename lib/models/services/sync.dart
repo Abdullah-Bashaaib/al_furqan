@@ -265,7 +265,7 @@ class Sync {
   }
 
   Future<void> syncStudents() async {
-    final db = await sqlDb.database;
+    await sqlDb.database;
     debugPrint('===== sync Students =====');
     List<Map<String, dynamic>> map =
         await sqlDb.readDataID("Students", 'isSync', 0);

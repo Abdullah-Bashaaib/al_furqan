@@ -345,7 +345,7 @@ class StudentController {
       final count = await _sqldb.readData(
           "SELECT COUNT(*) as count FROM Students WHERE ElhalagatID = '$halqaID'");
       final studentCount = count[0]['count'] as int;
-      int halagaResponse = await _sqldb.updateData(
+      await _sqldb.updateData(
           "UPDATE Elhalagat SET NumberStudent = $studentCount, isSync = 0 WHERE halagaID = '$halqaID'");
       // log("Updated NumberStudent to $studentCount for halqa $halqaID, response: $halagaResponse");
     } catch (e) {

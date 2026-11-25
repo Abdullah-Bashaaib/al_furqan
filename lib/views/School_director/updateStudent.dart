@@ -88,8 +88,7 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
   }
 
   Future<void> _refreshData() async {
-    List<StudentModel>? loadedStudent =
-        await studentController.getSchoolStudents(widget.student.schoolId!);
+    await studentController.getSchoolStudents(widget.student.schoolId!);
     debugPrint("Hi this's refreshing data");
   }
 

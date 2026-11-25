@@ -1,4 +1,4 @@
-﻿import 'dart:developer';
+import 'dart:developer';
 
 import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
@@ -346,7 +346,6 @@ class _TeacherDashboardState extends State<TeacherDashboard>
     super.dispose();
   }
 
-  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // تحديث عدد الإشعارات عند العودة للتطبيق
     if (state == AppLifecycleState.resumed) {

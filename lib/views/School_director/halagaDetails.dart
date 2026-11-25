@@ -1,4 +1,4 @@
-﻿import 'dart:developer';
+import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/student_controller.dart';
@@ -26,7 +26,6 @@ class HalqaDetailsPage extends StatefulWidget {
 class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
   List<StudentModel> students = [];
   bool _isLoading = false;
-  HalagaModel? _halqaDetails;
   List<ConservationPlanModel> conservationPlans = [];
   List<EltlawahPlanModel> eltlawahPlans = [];
   List<IslamicStudiesModel> islamicStudyPlans = [];
@@ -782,18 +781,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
     );
   }
 
-  Widget _buildConservationPlanSection() {
-    // بيانات المخطط
-    // String? plannedStartSurah = _halqaDetails?.conservationStartSurah;
-    // String? plannedEndSurah = _halqaDetails?.conservationEndSurah;
-    // int? plannedStartVerse = _halqaDetails?.conservationStartVerse;
-    // int? plannedEndVerse = _halqaDetails?.conservationEndVerse;
-
-    // بيانات المنفذ
-    // String? executedStartSurah = _halqaDetails?.executedStartSurah;
-    // String? executedEndSurah = _halqaDetails?.executedEndSurah;
-    // int? executedStartVerse = _halqaDetails?.executedStartVerse;
-    // int? executedEndVerse = _halqaDetails?.executedEndVerse;
+  Widget _buildRecitationPlanSection() {
 
     // نسبة الإنجاز (يمكن حساب هذه النسبة لاحقًا)
     String completionRate = '0%';
@@ -928,16 +916,18 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
     // بيانات المخطط
     String? plannedStartSurah;
     String? plannedEndSurah;
+    // ignore: unused_local_variable
     int? plannedStartVerse;
+    // ignore: unused_local_variable
     int? plannedEndVerse;
 
     // بيانات المنفذ
     String? executedStartSurah;
     String? executedEndSurah;
+    // ignore: unused_local_variable
     int? executedStartVerse;
+    // ignore: unused_local_variable
     int? executedEndVerse;
-
-    // نسبة الإنجاز (يمكن حساب هذه النسبة لاحقًا)
     String completionRate = '0%';
 
     // طباعة معلومات تصحيح للتحقق من البيانات

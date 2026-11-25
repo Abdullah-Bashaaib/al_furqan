@@ -1,15 +1,12 @@
-﻿import 'package:al_furqan/controllers/Halaga_controller.dart';
+import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/main.dart';
-import 'package:al_furqan/models/provider/halaqa_provider.dart';
-import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/schools_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/models/services/firebase_service.dart';
 import 'package:al_furqan/views/School_director/main_screenD.dart';
-import 'package:al_furqan/views/Supervisor/admin_home_page.dart';
 import 'package:al_furqan/views/Supervisor/main_screen_supervisor.dart';
 import 'package:al_furqan/views/Teacher/main_screenT.dart';
 import 'package:al_furqan/views/auth/forgot_password_screen.dart';
@@ -17,8 +14,6 @@ import 'package:al_furqan/views/login/signup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/helper/current_user.dart';
 

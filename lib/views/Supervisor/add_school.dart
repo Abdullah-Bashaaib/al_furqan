@@ -30,7 +30,6 @@ class _AddSchoolState extends State<AddSchool> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return SafeArea(
       top: false,

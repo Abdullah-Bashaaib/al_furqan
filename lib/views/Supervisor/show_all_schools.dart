@@ -1,4 +1,4 @@
-﻿import 'package:al_furqan/controllers/student_controller.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/schools_model.dart';
@@ -19,7 +19,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
   List<SchoolModel> _filterSchools() {
     if (_searchQuery.isEmpty) return schoolController.schools;
     return schoolController.schools.where((school) {
-      final fullName = '${school.school_name ?? ''}'.toLowerCase();
+      final fullName = (school.school_name ?? '').toLowerCase();
       return fullName.contains(_searchQuery.toLowerCase());
     }).toList();
   }
@@ -261,10 +261,10 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
 
   // Show school details in a dialog
   void _showSchoolDetails(BuildContext context, SchoolModel school) async {
-    List _numberStudentOfSchool =
+    List numberStudentOfSchool =
         await studentController.getSchoolStudents(school.schoolID!);
     await teacherController.getTeachersBySchoolID(school.schoolID!);
-    List _teacher = await teacherController.teachers;
+    List teacher = teacherController.teachers;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -292,11 +292,11 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                     Icons.location_on),
                 if (school.schoolID != null) ...[
                   const Divider(),
-                  _buildDetailItem('عدد المعلمين', _teacher.length.toString(),
+                  _buildDetailItem('عدد المعلمين', teacher.length.toString(),
                       Icons.numbers_rounded),
                   const Divider(),
                   _buildDetailItem('عدد الطلاب',
-                      _numberStudentOfSchool.length.toString(), Icons.numbers),
+                      numberStudentOfSchool.length.toString(), Icons.numbers),
                 ],
               ],
             ),

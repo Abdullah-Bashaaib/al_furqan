@@ -14,8 +14,6 @@ class UserManagementPage extends StatefulWidget {
 
 class _UserManagementPageState extends State<UserManagementPage>
     with SingleTickerProviderStateMixin {
-  String? _selectedRole;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   SqlDb sqlDb = SqlDb();
   late TabController _tabController;
 

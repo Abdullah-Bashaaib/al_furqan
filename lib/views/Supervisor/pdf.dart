@@ -34,7 +34,7 @@ class PdfGenerator {
       ),
     );
     final dbPath = await getDatabasesPath();
-    final db = await openDatabase(join(dbPath, 'your_database.db'));
+    await openDatabase(join(dbPath, 'your_database.db'));
     final List<Map<String, dynamic>> halqatReportSample = [
       {
         "school_name": "مدرسة الفرقان لتحفيظ القرآن الكريم",

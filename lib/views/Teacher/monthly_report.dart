@@ -1,4 +1,4 @@
-﻿import 'dart:developer';
+import 'dart:developer';
 
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
@@ -11,7 +11,6 @@ import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/Teacher/printing_report.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -120,7 +119,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
     }
 
     // التحقق من نتيجة البحث
-    if (this.eltlawahPlan == null) {
+    if (eltlawahPlan == null) {
       log("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat");
       Utils.showToast("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat",
           backgroundColor: Colors.red);

@@ -41,7 +41,7 @@ class VerificationService {
       VerificationCode request = VerificationCode(
           phoneNumber: number.toString(), createdAt: DateTime.now());
 
-      final docRef = await _firestore
+      await _firestore
           .collection('verification_codes')
           .add(request.toMap());
       debugPrint('تم عمل Request');

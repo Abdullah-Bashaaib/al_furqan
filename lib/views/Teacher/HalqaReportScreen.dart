@@ -17,7 +17,6 @@ class HalqaReportScreen extends StatefulWidget {
 class _HalqaReportScreenState extends State<HalqaReportScreen> {
   bool _isLoading = true;
   Uint8List? _pdfBytes;
-  HalagaModel? _halqaDetails;
   String? _errorMessage;
 
   @override

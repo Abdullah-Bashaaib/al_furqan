@@ -24,7 +24,6 @@ class _TeacherListState extends State<TeacherList>
   // List<UserModel> _filteredTeachers = [];
   bool _isSearching = false;
   bool _isRefreshing = false; // Local loading state for refresh operations
-  bool _hasInitialized = false;
   bool _forceShowContent = false; // إضافة متغير جديد للتحكم في عرض المحتوى
   int _pendingActivationsCount = 0; // عدد طلبات التفعيل المعلقة
 
@@ -279,7 +278,6 @@ class _TeacherListState extends State<TeacherList>
                                   const EdgeInsets.symmetric(horizontal: 16.0),
                               itemCount: prov.teachers.length,
                               itemBuilder: (context, index) {
-                                final UserModel? teacher = prov.teachers[index];
                                 return _buildTeacherCard(prov.teachers[index]!);
                               },
                             ),

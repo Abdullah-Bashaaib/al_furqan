@@ -168,7 +168,7 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
                                       Theme.of(context).primaryColor,
                                   foregroundColor: Colors.white,
                                   child: Text(
-                                    '${teacher.first_name?[0] ?? ''}',
+                                    teacher.first_name?[0] ?? '',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -217,8 +217,8 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
         floatingActionButton: FloatingActionButton(
           onPressed: _refreshData,
           tooltip: 'تحديث البيانات',
-          child: Icon(Icons.refresh),
           backgroundColor: Theme.of(context).primaryColor,
+          child: Icon(Icons.refresh),
         ),
       ),
     );

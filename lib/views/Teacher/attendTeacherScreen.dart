@@ -1,4 +1,4 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -118,7 +118,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
 
       // تحديد حالة الحضور بناءً على الوقت
       String attendanceStatus = "حاضر";
-      TimeOfDay now = TimeOfDay.now();
+      TimeOfDay.now();
 
       // إذا كان الوقت بعد الساعة 7:30 صباحاً يعتبر متأخراً
       // يمكنك تعديل هذه القيم حسب سياسة المدرسة
@@ -169,7 +169,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
   }
 
   Future<void> _handleScan(BarcodeCapture barcodeCapture) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await SharedPreferences.getInstance();
     if (_scanned) return;
 
     final String? scannedCode = barcodeCapture.barcodes.first.rawValue;
@@ -246,7 +246,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
 
     // تحديد حالة الحضور بناءً على الوقت
     String attendanceStatus = "حاضر";
-    TimeOfDay now = TimeOfDay.now();
+    TimeOfDay.now();
 
     // إذا كان الوقت بعد الساعة 7:30 صباحاً، يعتبر متأخراً
     // تم تعليق التحقق من الوقت للاختبار

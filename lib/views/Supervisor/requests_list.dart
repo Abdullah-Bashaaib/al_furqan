@@ -1,4 +1,4 @@
-﻿import 'package:al_furqan/controllers/users_controller.dart';
+import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +13,6 @@ class RequestsList extends StatefulWidget {
 }
 
 class _RequestsListState extends State<RequestsList> {
-  // List to hold dropdown menu items for schools
-  List<DropdownMenuItem<int>> _schoolItems = [];
 
   @override
   void initState() {

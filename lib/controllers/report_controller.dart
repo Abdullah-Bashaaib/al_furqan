@@ -99,7 +99,7 @@ class ReportController {
           : 0;
 
       // جلب آخر خطة دراسات إسلامية
-      final islPlanSnapshot = await getData(
+      await getData(
           collection: 'IslamicStudies',
           field: 'ElhalagatID',
           id: halagaModel.halagaID,

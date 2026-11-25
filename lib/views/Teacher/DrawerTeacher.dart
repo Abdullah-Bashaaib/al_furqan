@@ -1,4 +1,4 @@
-﻿import 'dart:developer';
+import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/student_controller.dart';
@@ -32,8 +32,6 @@ class DrawerTeacher extends StatefulWidget {
 class _DrawerTeacherState extends State<DrawerTeacher>
 //  with UserDataMixin
 {
-  final HalagaController _halagaController = HalagaController();
-
   String? _errorMessage;
   List<StudentModel> students = [];
 
@@ -182,7 +180,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
 
   @override
   Widget build(BuildContext context) {
-    HalagaModel? h = (context).read<HalaqaProvider>().halaga;
+    (context).read<HalaqaProvider>().halaga;
     // debugPrint(
     //     "DrawerTeacher - Build called, teacherHalaga: ${_teacherHalaga != null ? 'Available' : 'Null'}");
     return Drawer(

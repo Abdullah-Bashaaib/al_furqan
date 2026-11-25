@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _loginPref() async {
     try {
       int? roleId = await getUserRoleId();
-      int? isActivate = await getIsActivate();
+      await getIsActivate();
       if (roleId != null) {
         await chooseScreen(context);
       } else {
