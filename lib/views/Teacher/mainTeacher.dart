@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
@@ -383,7 +383,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                 tooltip: 'تحديث البيانات',
                 onPressed: () async {
                   // عرض دايلوج التحميل
-                  log("message:InternetConnectionChecker.instance.hasConnection ${await InternetConnectionChecker.instance.hasConnection}");
+                  log("message:InternetConnectionChecker.instance.hasConnection ${await InternetConnectionChecker.createInstance().hasConnection}");
 
                   showDialog(
                     context: context,

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:al_furqan/controllers/TeacherController.dart';
+import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
-import 'package:al_furqan/helper/sqldb.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';

@@ -1,5 +1,5 @@
-import 'package:al_furqan/controllers/StudentController.dart';
-import 'package:al_furqan/controllers/TeacherController.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
+import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/schools_model.dart';
 import 'package:al_furqan/utils/utils.dart';

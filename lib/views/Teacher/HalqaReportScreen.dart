@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/HalagaController.dart';
+import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:al_furqan/helper/sqldb.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/main.dart';
 // import 'package:al_furqan/models/password_model.dart';
 import 'package:al_furqan/models/users_model.dart';
-import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/models/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 // import 'package:al_furqan/services/verification_service.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -182,7 +182,7 @@ class UserController {
       List<UserModel> responseFirebase = await firebasehelper.getUsers();
       for (var user in responseFirebase) {
         bool exists =
-            await _sqlDb.checkIfitemExists2("Users", user.user_id!, "user_id");
+            await _sqlDb.checkIfItemExists2("Users", user.user_id!, "user_id");
         if (exists) {
           await updateUser(user, 0);
           print('Find user (update)');

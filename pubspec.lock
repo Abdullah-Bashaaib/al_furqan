@@ -73,22 +73,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  checked_yaml:
-    dependency: transitive
-    description:
-      name: checked_yaml
-      sha256: feb6bed21949061731a7a75fc5d2aa727cf160b91af9a3e464c5e3a32e28b5ff
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
-  cli_util:
-    dependency: transitive
-    description:
-      name: cli_util
-      sha256: ff6785f7e9e3c38ac98b2fb035701789de90154024a75b6cb926445e83197d1c
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.2"
   clock:
     dependency: transitive
     description:
@@ -373,6 +357,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.0.3"
+  get_it:
+    dependency: "direct main"
+    description:
+      name: get_it
+      sha256: "2b5c6b077aad30bba9782178baff6076a2044141f1d5f2f15b43bca3fbe74874"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.3.0"
   hooks:
     dependency: transitive
     description:
@@ -501,8 +493,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
-<<<<<<< HEAD
-=======
   material_ui:
     dependency: transitive
     description:
@@ -511,7 +501,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
->>>>>>> ac0362a5c89575d932539a6a2fbd517e1bf3cc9a
   meta:
     dependency: transitive
     description:
@@ -1062,10 +1051,5 @@ packages:
     source: hosted
     version: "3.1.4"
 sdks:
-<<<<<<< HEAD
-  dart: ">=3.11.0-0 <4.0.0"
-  flutter: ">=3.27.0"
-=======
   dart: ">=3.13.0 <4.0.0"
   flutter: ">=3.47.0"
->>>>>>> ac0362a5c89575d932539a6a2fbd517e1bf3cc9a

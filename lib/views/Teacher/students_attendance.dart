@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:al_furqan/controllers/StudentController.dart';
-import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/utils/utils.dart';

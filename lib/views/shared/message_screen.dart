@@ -2,7 +2,7 @@ import 'package:al_furqan/controllers/message_controller.dart';
 import 'package:al_furqan/models/messages_model.dart';
 import 'package:al_furqan/models/provider/message_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
-import 'package:al_furqan/services/message_sevice.dart';
+import 'package:al_furqan/models/services/message_sevice.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

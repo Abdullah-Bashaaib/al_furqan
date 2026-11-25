@@ -1,14 +1,14 @@
 import 'package:al_furqan/controllers/message_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
-import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/messages_model.dart';
 import 'package:al_furqan/models/users_model.dart';
-import 'package:al_furqan/services/message_sevice.dart';
+import 'package:al_furqan/models/services/message_sevice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../controllers/HalagaController.dart';
+import '../../controllers/Halaga_controller.dart';
 import '../../controllers/fathers_controller.dart';
 
 class MessageProvider with ChangeNotifier {

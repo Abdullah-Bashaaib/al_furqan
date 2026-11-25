@@ -1,7 +1,7 @@
-import 'package:al_furqan/helper/sqldb.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:al_furqan/services/message_sevice.dart';
+import 'package:al_furqan/models/services/message_sevice.dart';
 
 import '../models/messages_model.dart';
 

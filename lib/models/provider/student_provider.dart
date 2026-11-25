@@ -1,5 +1,5 @@
-import 'package:al_furqan/controllers/HalagaController.dart';
-import 'package:al_furqan/controllers/StudentController.dart';
+import 'package:al_furqan/controllers/Halaga_controller.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/models/users_model.dart';

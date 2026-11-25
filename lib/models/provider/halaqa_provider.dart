@@ -1,14 +1,14 @@
 import 'dart:developer';
 
-import 'package:al_furqan/controllers/HalagaController.dart';
-import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/controllers/Halaga_controller.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
 import 'package:al_furqan/models/halaga_model.dart';
-import 'package:al_furqan/services/firebase_service.dart';
+import 'package:al_furqan/models/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import '../../helper/sqldb.dart';
+import '../helper/sql_db.dart';
 
 class HalaqaProvider with ChangeNotifier {
   List<HalagaModel> halaqat = [];
@@ -77,7 +77,7 @@ class HalaqaProvider with ChangeNotifier {
 
   Future<void> loadHalagaFromFirebase() async {
     halaga = await firebasehelper.getElhalaga(CurrentUser.user!.elhalagatID!);
-    bool exists = await sqlDb.checkIfitemExists2(
+    bool exists = await sqlDb.checkIfItemExists2(
         'Elhalagat', halaga!.halagaID!, 'halagaID');
     if (exists) {
       await halagaController.updateHalaga(halaga!, 0);

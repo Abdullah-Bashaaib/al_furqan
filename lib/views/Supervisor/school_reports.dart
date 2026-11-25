@@ -4,11 +4,11 @@ import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
 
-import '../../controllers/StudentController.dart';
-import '../../controllers/TeacherController.dart';
+import '../../controllers/student_controller.dart';
+import '../../controllers/teacher_controller.dart';
 import '../../controllers/report_controller.dart';
 import '../../models/report_model.dart';
-import '../../widgets/build_pdf.dart';
+import '../widgets/build_pdf.dart';
 
 class SchoolReports extends StatefulWidget {
   const SchoolReports({super.key});

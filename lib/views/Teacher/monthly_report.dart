@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:al_furqan/controllers/StudentController.dart';
+import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
-import 'package:al_furqan/helper/current_user.dart';
+import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
@@ -123,7 +123,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
     if (this.eltlawahPlan == null) {
       log("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat");
       Utils.showToast("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat",
-          backgroundColor: Colors.red, gravity: ToastGravity.CENTER);
+          backgroundColor: Colors.red);
     }
     return currentMonthFormat;
   }

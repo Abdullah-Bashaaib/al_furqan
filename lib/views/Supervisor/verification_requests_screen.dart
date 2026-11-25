@@ -1,5 +1,5 @@
+import 'package:al_furqan/models/services/verification_service.dart';
 import 'package:al_furqan/models/verification_code_model.dart';
-import 'package:al_furqan/services/verification_service.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
