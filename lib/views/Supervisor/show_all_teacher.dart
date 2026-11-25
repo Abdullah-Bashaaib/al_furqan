@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/teacher_controller.dart';
+﻿import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/utils/utils.dart';
@@ -91,7 +91,7 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: Offset(0, 5),
                   ),

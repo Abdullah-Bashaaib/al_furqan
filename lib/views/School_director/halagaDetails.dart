@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/student_controller.dart';
@@ -263,7 +263,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
                           side: BorderSide(
                               color: Theme.of(context)
                                   .primaryColor
-                                  .withOpacity(0.2)),
+                                  .withValues(alpha: 0.2)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -327,7 +327,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
                           side: BorderSide(
                               color: Theme.of(context)
                                   .primaryColor
-                                  .withOpacity(0.2)),
+                                  .withValues(alpha: 0.2)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -387,7 +387,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
+                                  color: Colors.grey.withValues(alpha: 0.1),
                                   spreadRadius: 1,
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
@@ -450,7 +450,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
                                                         backgroundColor:
                                                             Theme.of(context)
                                                                 .primaryColor
-                                                                .withOpacity(
+                                                                .withValues(alpha: 
                                                                     0.1),
                                                         child: Text(
                                                           student.firstName

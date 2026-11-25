@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:al_furqan/models/helper/current_user.dart';
 import 'package:al_furqan/main.dart';
@@ -98,7 +98,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             spreadRadius: 0,
             offset: Offset(0, 2),
@@ -110,7 +110,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: textColor.withOpacity(0.1),
+              color: textColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: textColor, size: 24),
@@ -136,7 +136,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                         value,
                         style: TextStyle(
                           fontSize: 12,
-                          color: textColor.withOpacity(0.8),
+                          color: textColor.withValues(alpha: 0.8),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -180,10 +180,10 @@ class _TeacherDashboardState extends State<TeacherDashboard>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 2,
             spreadRadius: 0,
             offset: Offset(0, 1),
@@ -259,7 +259,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                 Container(
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(icon, color: color, size: 24),
@@ -375,7 +375,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
             Container(
               margin: const EdgeInsets.only(right: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: IconButton(
@@ -452,7 +452,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
             Container(
               margin: EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: IconButton(
@@ -573,7 +573,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                           gradient: LinearGradient(
                             colors: [
                               Theme.of(context).primaryColor,
-                              Theme.of(context).primaryColor.withOpacity(0.7)
+                              Theme.of(context).primaryColor.withValues(alpha: 0.7)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -581,7 +581,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
+                              color: Colors.grey.withValues(alpha: 0.3),
                               spreadRadius: 1,
                               blurRadius: 6,
                               offset: Offset(0, 3),
@@ -604,7 +604,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               'مرحباً بك في نظام إدارة الحلقات',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                             SizedBox(height: 16),
@@ -696,7 +696,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                       Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: Colors.green.withOpacity(0.1),
+                                          color: Colors.green.withValues(alpha: 0.1),
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
@@ -718,7 +718,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
-                                      color: Colors.green.withOpacity(0.1),
+                                      color: Colors.green.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
@@ -748,7 +748,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               SizedBox(height: 16),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.1),
+                                  color: Colors.grey.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 padding: EdgeInsets.all(16),
@@ -792,7 +792,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               SizedBox(height: 16),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.green.withOpacity(0.1),
+                                  color: Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 padding: EdgeInsets.all(16),
@@ -879,7 +879,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                       Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: Colors.purple.withOpacity(0.1),
+                                          color: Colors.purple.withValues(alpha: 0.1),
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
@@ -901,7 +901,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   //   padding: EdgeInsets.symmetric(
                                   //       horizontal: 12, vertical: 6),
                                   //   decoration: BoxDecoration(
-                                  //     color: Colors.purple.withOpacity(0.1),
+                                  //     color: Colors.purple.withValues(alpha: 0.1),
                                   //     borderRadius: BorderRadius.circular(20),
                                   //   ),
                                   //   child: Row(
@@ -931,7 +931,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               // المقرر - Dropdown
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.05),
+                                  color: Colors.grey.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 padding: EdgeInsets.all(16),
@@ -961,7 +961,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
                                             color:
-                                                Colors.purple.withOpacity(0.3)),
+                                                Colors.purple.withValues(alpha: 0.3)),
                                       ),
                                       child: DropdownButtonFormField<String>(
                                         decoration: InputDecoration(
@@ -1008,7 +1008,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.05),
+                                        color: Colors.grey.withValues(alpha: 0.05),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       padding: EdgeInsets.all(16),
@@ -1045,7 +1045,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                                   BorderRadius.circular(8),
                                               border: Border.all(
                                                   color: Colors.blue
-                                                      .withOpacity(0.3)),
+                                                      .withValues(alpha: 0.3)),
                                             ),
                                             child: Text(
                                               islamicPlanSelected == null
@@ -1065,7 +1065,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.05),
+                                        color: Colors.green.withValues(alpha: 0.05),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       padding: EdgeInsets.all(16),
@@ -1103,7 +1103,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                                   BorderRadius.circular(8),
                                               border: Border.all(
                                                   color: Colors.green
-                                                      .withOpacity(0.3)),
+                                                      .withValues(alpha: 0.3)),
                                             ),
                                             child: Text(
                                               islamicPlanSelected == null
@@ -1167,7 +1167,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               //       style: OutlinedButton.styleFrom(
                               //         foregroundColor: Colors.red,
                               //         side: BorderSide(
-                              //             color: Colors.red.withOpacity(0.5)),
+                              //             color: Colors.red.withValues(alpha: 0.5)),
                               //         shape: RoundedRectangleBorder(
                               //           borderRadius: BorderRadius.circular(8),
                               //         ),
@@ -1214,7 +1214,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   Container(
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Colors.amber.withOpacity(0.1),
+                                      color: Colors.amber.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(Icons.lightbulb,
@@ -1230,10 +1230,10 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               SizedBox(height: 16),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.05),
+                                  color: Colors.grey.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                      color: Colors.grey.withOpacity(0.2)),
+                                      color: Colors.grey.withValues(alpha: 0.2)),
                                 ),
                                 child: TextField(
                                   maxLines: 5,
@@ -1288,7 +1288,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                       //                 Container(
                       //                   padding: EdgeInsets.all(8),
                       //                   decoration: BoxDecoration(
-                      //                     color: Colors.orange.withOpacity(0.1),
+                      //                     color: Colors.orange.withValues(alpha: 0.1),
                       //                     borderRadius: BorderRadius.circular(8),
                       //                   ),
                       //                   child: Icon(Icons.star,
@@ -1327,7 +1327,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                       //                 borderRadius: BorderRadius.circular(12),
                       //                 boxShadow: [
                       //                   BoxShadow(
-                      //                     color: Colors.grey.withOpacity(0.1),
+                      //                     color: Colors.grey.withValues(alpha: 0.1),
                       //                     spreadRadius: 1,
                       //                     blurRadius: 4,
                       //                     offset: Offset(0, 2),
@@ -1340,7 +1340,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                       //                   CircleAvatar(
                       //                     radius: 30,
                       //                     backgroundColor:
-                      //                         Colors.orange.withOpacity(0.1),
+                      //                         Colors.orange.withValues(alpha: 0.1),
                       //                     child: Text(
                       //                       'ط${index + 1}',
                       //                       style: TextStyle(

@@ -1,4 +1,4 @@
-import 'package:al_furqan/utils/utils.dart';
+﻿import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -148,7 +148,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   Widget _buildHeaderSection() {
     return Container(
       padding: EdgeInsets.all(16),
-      color: Theme.of(context).primaryColor.withOpacity(0.1),
+      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
       child: Column(
         children: [
           // اسم الحلقة
@@ -223,7 +223,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
+            color: color.withValues(alpha: 0.2),
             shape: BoxShape.circle,
             border: Border.all(color: color, width: 2),
           ),

@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/teacher_controller.dart';
+﻿import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
 import 'package:al_furqan/models/services/sync.dart';
@@ -295,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7)
+            Theme.of(context).primaryColor.withValues(alpha: 0.7)
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -303,7 +303,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: Offset(0, 5),
           ),
@@ -325,7 +325,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             'التاريخ: $_currentDate',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
           SizedBox(height: 4),
@@ -333,7 +333,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             'آخر تحديث: ${DateTime.now().toString().substring(11, 16)}',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
           SizedBox(height: 12),
@@ -359,9 +359,9 @@ class _DashboardScreenState extends State<DashboardScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Column(
         children: [
@@ -377,7 +377,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],
@@ -423,7 +423,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               blurRadius: 10,
               offset: Offset(0, 4),
             ),
@@ -489,7 +489,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: Offset(0, 4),
           ),

@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/main.dart';
@@ -188,7 +188,7 @@ class _HalqatListPageState extends State<HalqatListPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
           side: BorderSide(
-            color: Colors.teal.withOpacity(0.3),
+            color: Colors.teal.withValues(alpha: 0.3),
             width: 1,
           ),
         ),

@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
@@ -337,7 +337,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withValues(alpha: 0.2),
                                 spreadRadius: 1,
                                 blurRadius: 6,
                                 offset: Offset(0, 3),
@@ -423,7 +423,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withValues(alpha: 0.2),
                                 spreadRadius: 1,
                                 blurRadius: 6,
                                 offset: Offset(0, 3),
@@ -766,9 +766,9 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [

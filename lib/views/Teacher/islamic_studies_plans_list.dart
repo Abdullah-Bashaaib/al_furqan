@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/student_controller.dart';
+﻿import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/islamic_studies_model.dart';
@@ -161,7 +161,7 @@ class _IslamicStudiesPlansListScreenState
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, 2),
@@ -296,7 +296,7 @@ class _IslamicStudiesPlansListScreenState
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.9),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.9),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
@@ -423,9 +423,9 @@ class _IslamicStudiesPlansListScreenState
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
+            color: color.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: color.withOpacity(0.5)),
+            border: Border.all(color: color.withValues(alpha: 0.5)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -449,7 +449,7 @@ class _IslamicStudiesPlansListScreenState
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: Divider(color: color.withOpacity(0.3), thickness: 1),
+          child: Divider(color: color.withValues(alpha: 0.3), thickness: 1),
         ),
       ],
     );

@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/users_controller.dart';
+﻿import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -137,7 +137,7 @@ class _RequestsListState extends State<RequestsList> {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    backgroundColor: roleColor.withOpacity(0.2),
+                                    backgroundColor: roleColor.withValues(alpha: 0.2),
                                     child: Icon(roleIcon,
                                         color: roleColor, size: 20),
                                   ),
@@ -332,9 +332,9 @@ class _RequestsListState extends State<RequestsList> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

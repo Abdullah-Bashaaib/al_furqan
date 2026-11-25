@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/student_controller.dart';
+﻿import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/schools_model.dart';
@@ -149,7 +149,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                                       horizontal: 16, vertical: 8),
                                   leading: CircleAvatar(
                                     backgroundColor:
-                                        primaryColor.withOpacity(0.2),
+                                        primaryColor.withValues(alpha: 0.2),
                                     child:
                                         Icon(Icons.school, color: primaryColor),
                                   ),

@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'dart:developer' as developer;
-import 'dart:math';
 
 import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/models/student_model.dart';

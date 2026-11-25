@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/school_controller.dart';
+﻿import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/School_director/ElhalagatList.dart';
@@ -143,7 +143,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                         : Text(
                             'مدير ${_schoolName ?? 'غير متوفر'}',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 15,
                             ),
                           ),

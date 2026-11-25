@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/teacher_controller.dart';
+﻿import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/helper/user_helper.dart';
 import 'package:al_furqan/models/users_model.dart';
@@ -203,7 +203,7 @@ class _TeacherRequestState extends State<TeacherRequest> with UserDataMixin {
                                 leading: CircleAvatar(
                                   backgroundColor: Theme.of(context)
                                       .primaryColor
-                                      .withOpacity(0.2),
+                                      .withValues(alpha: 0.2),
                                   radius: 25,
                                   child: Text(
                                     teacher.first_name

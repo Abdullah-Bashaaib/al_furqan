@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/users_controller.dart';
+﻿import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -382,7 +382,7 @@ class _UserDetailsState extends State<UserDetails> {
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7)
+            Theme.of(context).primaryColor.withValues(alpha: 0.7)
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -390,7 +390,7 @@ class _UserDetailsState extends State<UserDetails> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: Offset(0, 5),
           ),
@@ -424,7 +424,7 @@ class _UserDetailsState extends State<UserDetails> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(

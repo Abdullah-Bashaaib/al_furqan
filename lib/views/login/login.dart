@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/Halaga_controller.dart';
+﻿import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/helper/sql_db.dart';
@@ -405,7 +405,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         elevation: 5,
-                        shadowColor: Colors.green.withOpacity(0.5),
+                        shadowColor: Colors.green.withValues(alpha: 0.5),
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(color: Colors.white)

@@ -1,4 +1,4 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 import 'package:al_furqan/controllers/School_directore_controller.dart';
 import 'package:al_furqan/utils/utils.dart';
@@ -320,7 +320,7 @@ class _AttendanceQRScreenState extends State<AttendanceQRScreen> {
                               BoxShadow(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.2),
+                                    .withValues(alpha: 0.2),
                                 blurRadius: 15,
                                 spreadRadius: 3,
                                 offset: const Offset(0, 5),
@@ -329,7 +329,7 @@ class _AttendanceQRScreenState extends State<AttendanceQRScreen> {
                             border: Border.all(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                                 width: 1.5),
                           ),
                           child: Column(

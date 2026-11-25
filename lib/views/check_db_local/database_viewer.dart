@@ -1,4 +1,4 @@
-import 'package:al_furqan/models/helper/sql_db.dart';
+﻿import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:flutter/material.dart';
 
 class DatabaseViewerScreen extends StatefulWidget {
@@ -319,7 +319,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withValues(alpha: 0.1),
                         spreadRadius: 1,
                         blurRadius: 3,
                         offset: const Offset(0, 2),
@@ -337,7 +337,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
+                              Theme.of(context).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(Icons.table_chart,
@@ -422,7 +422,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -438,7 +438,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.05),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
@@ -475,7 +475,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   headingRowColor: WidgetStateProperty.all(
-                    Theme.of(context).primaryColor.withOpacity(0.1),
+                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   ),
                   dataRowMinHeight: 60,
                   dataRowMaxHeight: 80,
@@ -517,7 +517,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(

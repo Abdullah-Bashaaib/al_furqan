@@ -1,4 +1,4 @@
-import 'package:fl_chart/fl_chart.dart';
+﻿import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class StatisticsScreen extends StatelessWidget {
@@ -151,7 +151,7 @@ class ActivityChart extends StatelessWidget {
             isCurved: true,
             barWidth: 3,
             // colors: [Colors.blue],
-            // belowBarData: BarAreaData(show: true, colors: [Colors.blue.withOpacity(0.3)]),
+            // belowBarData: BarAreaData(show: true, colors: [Colors.blue.withValues(alpha: 0.3)]),
           ),
         ],
       ),

@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/student_controller.dart';
@@ -208,7 +208,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),
@@ -250,7 +250,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
@@ -290,7 +290,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                   //       padding:
                   //           EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   //       decoration: BoxDecoration(
-                  //         color: Colors.white.withOpacity(0.3),
+                  //         color: Colors.white.withValues(alpha: 0.3),
                   //         borderRadius: BorderRadius.circular(20),
                   //       ),
                   //       child: Text(
@@ -312,7 +312,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                   //         padding:
                   //             EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   //         decoration: BoxDecoration(
-                  //           color: Colors.orange.withOpacity(0.3),
+                  //           color: Colors.orange.withValues(alpha: 0.3),
                   //           borderRadius: BorderRadius.circular(20),
                   //         ),
                   //         child: Text(
@@ -647,7 +647,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                 Container(
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -693,7 +693,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       child:
-          Divider(height: 1, thickness: 1, color: Colors.grey.withOpacity(0.1)),
+          Divider(height: 1, thickness: 1, color: Colors.grey.withValues(alpha: 0.1)),
     );
   }
 }
