@@ -82,4 +82,5 @@ coverage/
 /android/app/release
 firebase.json
 android/app/google-services.json
-lib/firebase_options.dart*.hprof
+lib/firebase_options.dart
+*.hprof
