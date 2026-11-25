@@ -25,14 +25,9 @@ class _RequestsListState extends State<RequestsList> {
   void _refreshData() async {
     await userController.getDataRequests();
     await schoolController.getData();
-    setState(() {
-      _schoolItems = schoolController.schools
-          .map((school) => DropdownMenuItem<int>(
-                value: school.schoolID,
-                child: Text(school.school_name!),
-              ))
-          .toList();
-    });
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

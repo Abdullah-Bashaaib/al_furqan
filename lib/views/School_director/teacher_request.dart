@@ -28,6 +28,7 @@ class TeacherRequest extends StatefulWidget {
 
 class _TeacherRequestState extends State<TeacherRequest> with UserDataMixin {
   List<UserModel> pendingTeachers = [];
+  @override
   bool isLoading = true;
   String? errorMessage;
 

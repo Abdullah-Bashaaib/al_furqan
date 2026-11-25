@@ -133,7 +133,7 @@ class MonthlyReportPDF {
                                         arabicFont),
                                   ],
                                 );
-                              }),`
+                              }),
                             ],
                           ),
                         ],
@@ -207,7 +207,7 @@ class MonthlyReportPDF {
                                         arabicFont),
                                   ],
                                 );
-                              }),`
+                              }),
                             ],
                           ),
                         ],

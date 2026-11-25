@@ -118,7 +118,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
 
       // تحديد حالة الحضور بناءً على الوقت
       String attendanceStatus = "حاضر";
-      TimeOfDay.now();
+      TimeOfDay now = TimeOfDay.now();
 
       // إذا كان الوقت بعد الساعة 7:30 صباحاً يعتبر متأخراً
       // يمكنك تعديل هذه القيم حسب سياسة المدرسة

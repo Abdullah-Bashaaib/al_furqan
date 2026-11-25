@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class StudentDetailsPage extends StatelessWidget {
   final String studentName;
-  @override
   const StudentDetailsPage(
       {super.key, required this.studentName, required StudentModel student});
 

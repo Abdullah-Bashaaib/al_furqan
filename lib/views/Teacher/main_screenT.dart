@@ -101,17 +101,17 @@ class _MainScreenState extends State<MainScreenT> {
       await studentController.addToLocalStudentH(halagaID!);
       await studentController.getStudents(halagaID);
     } catch (e) {
-      print(e);
+      debugPrint('$e');
     }
   }
 
   Future<void> loadPlans() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      String? Id = prefs.getString('halagaID');
-      debugPrint('===== halagaID ($Id) =====');
+      String? id = prefs.getString('halagaID');
+      debugPrint('===== halagaID ($id) =====');
       // تحميل الرسائل من فايربيس
-      await planController.getPlansFirebaseToLocal(Id!);
+      await planController.getPlansFirebaseToLocal(id!);
     } catch (e) {
       debugPrint('خطأ في تحميل البيانات: $e');
       Utils.showToast('خطأ في تحميل البيانات: $e', backgroundColor: Colors.red);

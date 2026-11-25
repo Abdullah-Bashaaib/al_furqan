@@ -68,7 +68,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
     try {
       if (mounted) setState(() => _isLoading = true);
       final loadedStudents =
-          await studentController.getStudents(halagaID) ?? [];
+          await studentController.getStudents(halagaID);
       if (mounted) {
         setState(() {
           students = loadedStudents;
@@ -95,10 +95,9 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
     try {
       setState(() => _isLoading = true);
       // الحصول على تفاصيل الحلقة بما في ذلك خطة الحفظ والتلاوة والعلوم الشرعية
-      final details = await halagaController.getHalqaDetails(halagaID);
+      await halagaController.getHalqaDetails(halagaID);
       if (mounted) {
         setState(() {
-          _halqaDetails = details;
           _isLoading = false;
         });
       }
@@ -292,7 +291,7 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
                                       size: 18, color: Colors.grey[700]),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'اسم المعلم: ${widget.teacher ?? 'غير متوفر'}',
+                                    'اسم المعلم: ${widget.teacher}',
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.grey[700]),
                                   ),
@@ -778,137 +777,6 @@ class _HalqaDetailsPageState extends State<HalqaDetailsPage> {
                 ),
               ),
       ),
-    );
-  }
-
-  Widget _buildRecitationPlanSection() {
-
-    // نسبة الإنجاز (يمكن حساب هذه النسبة لاحقًا)
-    String completionRate = '0%';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.menu_book, color: Theme.of(context).primaryColor),
-            const SizedBox(width: 8),
-            Text(
-              'خطة الحفظ',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-
-        // المخطط
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[300]!),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'المخطط:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('من',
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      Text('none',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('إلى',
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      Text('none',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        // المنفذ
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[50],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[300]!),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'المنفذ:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[700],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('من',
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      Text('none',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('إلى',
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      Text('none',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Text('نسبة الإنجاز: ', style: TextStyle(fontSize: 14)),
-                  Text(completionRate,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 

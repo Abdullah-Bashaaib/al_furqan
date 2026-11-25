@@ -435,7 +435,7 @@ class StudentController {
         debugPrint("لا يوجد اتصال بالانترنت");
       }
     } catch (e) {
-      print(e);
+      debugPrint('$e');
     }
   }
 

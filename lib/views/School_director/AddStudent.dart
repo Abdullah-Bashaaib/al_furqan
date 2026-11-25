@@ -50,15 +50,15 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
       _isLoading = true; // بدء التحميل
     });
 
-    int? SchoolID = widget.user!.schoolID;
-    debugPrint("معرف المدرسة للطالب الجديد: $SchoolID");
+    int? schoolID = widget.user!.schoolID;
+    debugPrint("معرف المدرسة للطالب الجديد: $schoolID");
 
     // بيانات الطالب
     studentModel.firstName = firstNameController.text;
     studentModel.middleName = middleNameController.text;
     studentModel.grandfatherName = grandfatherNameController.text;
     studentModel.lastName = lastNameController.text;
-    studentModel.schoolId = SchoolID; // تأكد من تعيين معرف المدرسة للطالب
+    studentModel.schoolId = schoolID; // تأكد من تعيين معرف المدرسة للطالب
 
     // بيانات ولي الامر
     fatherModel.schoolID = widget.user!.schoolID;

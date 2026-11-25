@@ -51,7 +51,6 @@ class _TeacherListState extends State<TeacherList>
     // التحقق من وجود طلبات تفعيل معلقة
     await _checkPendingActivations();
 
-    _hasInitialized = true;
     _forceShowContent = true; // إضافة تعيين قيمة true للمتغير الجديد
     setState(() {});
     debugPrint("TeacherList: _initializeTeachers completed");

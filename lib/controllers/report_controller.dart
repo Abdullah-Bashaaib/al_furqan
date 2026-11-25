@@ -4,6 +4,7 @@ import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/report_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class ReportController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -31,7 +32,7 @@ class ReportController {
       final querySnapshot = await query.get();
       return querySnapshot;
     } catch (e) {
-      print('Error fetching data: $e');
+      debugPrint('Error fetching data: $e');
       rethrow;
     }
   }

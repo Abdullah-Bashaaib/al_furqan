@@ -34,7 +34,6 @@ class _HalqaReportScreenState extends State<HalqaReportScreen> {
         final details =
             await halagaController.getHalqaDetails(widget.halqa.halagaID!);
         if (details != null) {
-          _halqaDetails = details;
           await _generatePdfReport();
         } else {
           _errorMessage = 'لا يمكن العثور على تفاصيل الحلقة';
@@ -44,7 +43,7 @@ class _HalqaReportScreenState extends State<HalqaReportScreen> {
       }
     } catch (e) {
       _errorMessage = 'حدث خطأ أثناء تحميل البيانات: $e';
-      print(_errorMessage);
+      debugPrint(_errorMessage);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -58,7 +57,7 @@ class _HalqaReportScreenState extends State<HalqaReportScreen> {
       // }
     } catch (e) {
       setState(() => _errorMessage = 'حدث خطأ أثناء إنشاء التقرير: $e');
-      print('Error generating PDF: $e');
+      debugPrint('Error generating PDF: $e');
     }
   }
 

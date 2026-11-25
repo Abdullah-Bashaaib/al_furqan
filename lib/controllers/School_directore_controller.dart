@@ -41,11 +41,11 @@ class SchoolDirectorController {
   }
 
   Future<String> getSchoolName(int schoolId) async {
-    List<Map> Data = await _sqlDb
+    List<Map> data = await _sqlDb
         .readData("SELECT * FROM 'SCHOOLS' WHERE SchoolID = '$schoolId'");
     String schoolName = "";
-    for (var i = 0; i < Data.length; i++) {
-      schoolName = Data[i]['school_name'];
+    for (var i = 0; i < data.length; i++) {
+      schoolName = data[i]['school_name'];
     }
     debugPrint("school name: $schoolName");
     return schoolName;

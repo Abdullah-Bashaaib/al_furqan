@@ -9,18 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/utils.dart';
 
 class AddHalagaPlansScreen extends StatefulWidget {
-  HalagaModel halaga;
-  AddHalagaPlansScreen({super.key, required this.halaga});
+  final HalagaModel halaga;
+  const AddHalagaPlansScreen({super.key, required this.halaga});
 
   @override
-  _HalagaPlansScreenState createState() =>
-      _HalagaPlansScreenState(halaga: halaga);
+  State<AddHalagaPlansScreen> createState() => _HalagaPlansScreenState();
 }
 
 class _HalagaPlansScreenState extends State<AddHalagaPlansScreen> {
   final _formKey = GlobalKey<FormState>();
-  HalagaModel halaga;
-  _HalagaPlansScreenState({required this.halaga});
+  HalagaModel get halaga => widget.halaga;
 
   final List<String> islamicSubjects = [
     'التفسير',

@@ -136,10 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (user != null) {
       await userController.saveUserToPrefs(user);
       CurrentUser.user = user;
-      print('${CurrentUser.user}======================');
-      print('$user ======================');
+      debugPrint('${CurrentUser.user}======================');
+      debugPrint('$user ======================');
       if (user.roleID == 2) {
-        print('object');
+        debugPrint('object');
         await halagaController.getHalagatFromFirebaseByID(
             user.elhalagatID, 'halagaID');
       }

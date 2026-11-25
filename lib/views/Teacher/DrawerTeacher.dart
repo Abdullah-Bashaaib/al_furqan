@@ -1,10 +1,8 @@
 import 'dart:developer';
 
-import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/helper/current_user.dart';
-import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/models/provider/halaqa_provider.dart';
 import 'package:al_furqan/models/student_model.dart';
 import 'package:al_furqan/utils/utils.dart';
@@ -401,7 +399,7 @@ class _DrawerTeacherState extends State<DrawerTeacher>
                                 students.isNotEmpty;
 
                         if (!hasPlans) {
-                          return showDialog(
+                          return await showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
                               title: Row(

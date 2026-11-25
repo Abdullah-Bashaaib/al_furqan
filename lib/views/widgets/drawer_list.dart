@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:al_furqan/views/Supervisor/user_management_page.dart';
 
 class DrawerList extends StatelessWidget {
-  UserModel? user;
-  DrawerList({super.key, required this.user});
+  final UserModel? user;
+  const DrawerList({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

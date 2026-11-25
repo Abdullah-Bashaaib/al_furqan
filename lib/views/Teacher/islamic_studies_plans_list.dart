@@ -67,7 +67,6 @@ class _IslamicStudiesPlansListScreenState
 
       setState(() {
         _islamicPlans = planController.islamicStudyPlans;
-        _students = studentController.students;
       });
     } catch (e) {
       _showErrorSnackBar('حدث خطأ في تحميل الخطط: $e');

@@ -51,7 +51,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
       setState(() {
         islamicPlanSelected = null;
       });
-      print("Error selecting subject: $e");
+      debugPrint("Error selecting subject: $e");
     }
   }
 
@@ -75,11 +75,10 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                 },
               ).toList()
             : [];
-    // ignore: unnecessary_null_comparison
-    if (eltlawahPlanB != null || islamicPlanB != null) {
+    if (eltlawahPlanB != null) {
       eltlawahPlan = eltlawahPlanB;
-      islamicPlan = islamicPlanB;
     }
+    islamicPlan = islamicPlanB;
   }
 
   // Helper method to build stat cards in the header

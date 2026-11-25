@@ -80,7 +80,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                 displayedUsers = prov
                                     .where((user) =>
                                         user.user_id != null &&
-                                        user.user_id != 0)
+                                        user.user_id!.isNotEmpty)
                                     .toList();
                               });
                             },
@@ -94,7 +94,8 @@ class _UsersScreenState extends State<UsersScreen> {
                           setState(() {
                             displayedUsers = prov
                                 .where((user) =>
-                                    user.user_id != null && user.user_id != 0)
+                                    user.user_id != null &&
+                                    user.user_id!.isNotEmpty)
                                 .toList();
                           });
                         },

@@ -37,9 +37,9 @@ class _AttendanceQRScreenState extends State<AttendanceQRScreen> {
   Future<void> _loadSchoolInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? id = prefs.getInt('schoolId');
-    schoolName = await schoolDirectorController.getSchoolName(id!);
 
     if (id != null) {
+      schoolName = await schoolDirectorController.getSchoolName(id);
       setState(() {
         schoolId = id.toString();
       });

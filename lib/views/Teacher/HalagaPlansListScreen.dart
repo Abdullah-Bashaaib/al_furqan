@@ -11,19 +11,16 @@ import 'package:flutter/material.dart';
 import 'EditHalagaPlanScreen.dart';
 import 'HalagaPlansScreen.dart';
 
-// ignore: must_be_immutable
 class HalagaPlansListScreen extends StatefulWidget {
-  HalagaModel halaga;
-  HalagaPlansListScreen({super.key, required this.halaga});
+  final HalagaModel halaga;
+  const HalagaPlansListScreen({super.key, required this.halaga});
 
   @override
-  _HalagaPlansListScreenState createState() =>
-      _HalagaPlansListScreenState(halagaModel: halaga);
+  State<HalagaPlansListScreen> createState() => _HalagaPlansListScreenState();
 }
 
 class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
-  HalagaModel halagaModel;
-  _HalagaPlansListScreenState({required this.halagaModel});
+  HalagaModel get halagaModel => widget.halaga;
   bool _isLoading = true;
   bool _isRefreshing = false;
 

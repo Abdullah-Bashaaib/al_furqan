@@ -95,7 +95,7 @@ class StudentProvider with ChangeNotifier {
         }
       }
       halaqaNames = names;
-      print(halaqaNames);
+      debugPrint('$halaqaNames');
       debugPrint("تم تحميل ${halaqaNames.length} حلقة في القاموس");
     } catch (e) {
       debugPrint("خطأ في تحميل أسماء الحلقات: $e");
