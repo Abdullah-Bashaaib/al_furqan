@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,7 +6,7 @@ import 'package:intl/intl.dart';
 class AttendanceScreen extends StatefulWidget {
   final int? halagaId;
 
-  const AttendanceScreen({Key? key, this.halagaId}) : super(key: key);
+  const AttendanceScreen({super.key, this.halagaId});
 
   @override
   State<AttendanceScreen> createState() => _AttendanceScreenState();
@@ -13,8 +14,8 @@ class AttendanceScreen extends StatefulWidget {
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
   // حالة الحضور لكل طالب
-  Map<int, bool> _attendanceStatus = {};
-  Map<int, String> _absenceReasons = {};
+  final Map<int, bool> _attendanceStatus = {};
+  final Map<int, String> _absenceReasons = {};
 
   // تاريخ اليوم للحضور
   DateTime _selectedDate = DateTime.now();
@@ -148,7 +149,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   Widget _buildHeaderSection() {
     return Container(
       padding: EdgeInsets.all(16),
-      color: Theme.of(context).primaryColor.withOpacity(0.1),
+      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
       child: Column(
         children: [
           // اسم الحلقة
@@ -223,7 +224,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
+            color: color.withValues(alpha: 0.2),
             shape: BoxShape.circle,
             border: Border.all(color: color, width: 2),
           ),
@@ -325,7 +326,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           ),
 
           // زر تحديد الكل كغائب
-          Container(
+          SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {},

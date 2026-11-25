@@ -47,6 +47,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         isLoading = false;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في تحميل الجداول: $e')),
       );
@@ -84,6 +85,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         isLoading = false;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في تحميل بيانات الجدول: $e')),
       );
@@ -156,16 +158,19 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         // إعادة تحميل بيانات الجدول
         await _loadTableData(selectedTable!);
 
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('تم حذف الصف بنجاح')),
         );
       } else {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('فشل في حذف الصف')),
         );
       }
     } catch (e) {
       debugPrint("خطأ في حذف الصف: $e");
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في حذف الصف: $e')),
       );
@@ -208,11 +213,13 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
       // إعادة تحميل بيانات الجدول
       await _loadTableData(selectedTable!);
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('تم حذف $deletedCount صف من الجدول')),
       );
     } catch (e) {
       debugPrint("خطأ في حذف بيانات الجدول: $e");
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في حذف بيانات الجدول: $e')),
       );

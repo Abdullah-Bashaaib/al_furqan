@@ -11,7 +11,7 @@ class UserList extends StatefulWidget {
   const UserList({super.key});
 
   @override
-  _UserListState createState() => _UserListState();
+  State<UserList> createState() => _UserListState();
 }
 
 class _UserListState extends State<UserList> {
@@ -139,7 +139,7 @@ class _UserListState extends State<UserList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 4),
-                    Text(roleName!),
+                    Text(roleName),
                     Text(filteredUsers[index].isActivate == 1
                         ? "مفعل"
                         : "غير مفعل"),

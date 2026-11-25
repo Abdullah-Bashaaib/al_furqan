@@ -13,7 +13,7 @@ class MainScreenSupervisor extends StatefulWidget {
   const MainScreenSupervisor({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreenSupervisor> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreenSupervisor> {
@@ -43,11 +43,12 @@ class _MainScreenState extends State<MainScreenSupervisor> {
       //await loadStudent();
       await userController.addToLocalOfFirebase();
       await schoolController.getData();
+      if (!mounted) return;
       Navigator.pushReplacement(
-          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(builder: (context) => DashboardScreen()));
     } else {
+      if (!mounted) return;
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => DashboardScreen()));
       Utils.showToast('لا يوجد اتصال بالانترنت لتحديث البيانات',

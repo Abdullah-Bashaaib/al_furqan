@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:developer';
 
 import 'package:al_furqan/models/helper/current_user.dart';
@@ -51,7 +52,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
       setState(() {
         islamicPlanSelected = null;
       });
-      print("Error selecting subject: $e");
+      debugPrint("Error selecting subject: $e");
     }
   }
 
@@ -68,18 +69,17 @@ class _TeacherDashboardState extends State<TeacherDashboard>
         planController.islamicStudyPlans.isNotEmpty
             ? planController.islamicStudyPlans.where(
                 (element) {
-                  if (element == null || element.planMonth == null) {
+                  if (element.planMonth == null) {
                     return false;
                   }
                   return element.planMonth == month;
                 },
               ).toList()
             : [];
-    // ignore: unnecessary_null_comparison
-    if (eltlawahPlanB != null || islamicPlanB != null) {
+    if (eltlawahPlanB != null) {
       eltlawahPlan = eltlawahPlanB;
-      islamicPlan = islamicPlanB;
     }
+    islamicPlan = islamicPlanB;
   }
 
   // Helper method to build stat cards in the header
@@ -98,7 +98,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             spreadRadius: 0,
             offset: Offset(0, 2),
@@ -110,7 +110,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: textColor.withOpacity(0.1),
+              color: textColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: textColor, size: 24),
@@ -136,7 +136,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                         value,
                         style: TextStyle(
                           fontSize: 12,
-                          color: textColor.withOpacity(0.8),
+                          color: textColor.withValues(alpha: 0.8),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -180,10 +180,10 @@ class _TeacherDashboardState extends State<TeacherDashboard>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 2,
             spreadRadius: 0,
             offset: Offset(0, 1),
@@ -259,7 +259,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                 Container(
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(icon, color: color, size: 24),
@@ -324,9 +324,11 @@ class _TeacherDashboardState extends State<TeacherDashboard>
       );
 
       try {
+        final halaqaProvider = context.read<HalaqaProvider>();
+        final messageProvider = context.read<MessageProvider>();
         await _loadPlans();
-        await context.read<HalaqaProvider>().loadHalagaFromFirebase();
-        await context.read<MessageProvider>().loadMessageFromFirebase();
+        await halaqaProvider.loadHalagaFromFirebase();
+        await messageProvider.loadMessageFromFirebase();
 
         if (mounted) Navigator.pop(context); // إغلاق الدايلوج بعد الانتهاء
       } catch (e) {
@@ -346,7 +348,6 @@ class _TeacherDashboardState extends State<TeacherDashboard>
     super.dispose();
   }
 
-  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // تحديث عدد الإشعارات عند العودة للتطبيق
     if (state == AppLifecycleState.resumed) {
@@ -375,7 +376,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
             Container(
               margin: const EdgeInsets.only(right: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: IconButton(
@@ -385,6 +386,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                   // عرض دايلوج التحميل
                   log("message:InternetConnectionChecker.instance.hasConnection ${await InternetConnectionChecker.createInstance().hasConnection}");
 
+                  if (!context.mounted) return;
                   showDialog(
                     context: context,
                     barrierDismissible: false, // يمنع الإغلاق أثناء التحميل
@@ -419,16 +421,15 @@ class _TeacherDashboardState extends State<TeacherDashboard>
 
                   try {
                     // العمليات (المزامنة)
+                    final halaqaProvider = context.read<HalaqaProvider>();
+                    final messageProvider = context.read<MessageProvider>();
                     await _loadPlans();
-                    await (context)
-                        .read<HalaqaProvider>()
-                        .loadHalagaFromFirebase();
-                    await (context)
-                        .read<MessageProvider>()
-                        .loadMessageFromFirebase();
+                    await halaqaProvider.loadHalagaFromFirebase();
+                    await messageProvider.loadMessageFromFirebase();
                     await _loadPlans();
 
                     // إغلاق دايلوج التحميل
+                    if (!context.mounted) return;
                     Navigator.pop(context);
 
                     // عرض رسالة النجاح
@@ -438,7 +439,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                     );
                   } catch (e) {
                     // إغلاق الدايالوج إذا حدث خطأ
-                    Navigator.pop(context);
+                    if (context.mounted) Navigator.pop(context);
                     Utils.showToast(
                       'حدث خطأ أثناء المزامنة: $e',
                       backgroundColor: Colors.red,
@@ -452,7 +453,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
             Container(
               margin: EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: IconButton(
@@ -472,7 +473,8 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.clear();
                             perf.clear();
-                            (context).read<MessageProvider>().clear();
+                            if (!context.mounted) return;
+                            context.read<MessageProvider>().clear();
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
@@ -573,7 +575,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                           gradient: LinearGradient(
                             colors: [
                               Theme.of(context).primaryColor,
-                              Theme.of(context).primaryColor.withOpacity(0.7)
+                              Theme.of(context).primaryColor.withValues(alpha: 0.7)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -581,7 +583,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
+                              color: Colors.grey.withValues(alpha: 0.3),
                               spreadRadius: 1,
                               blurRadius: 6,
                               offset: Offset(0, 3),
@@ -604,7 +606,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               'مرحباً بك في نظام إدارة الحلقات',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                             SizedBox(height: 16),
@@ -696,7 +698,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                       Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: Colors.green.withOpacity(0.1),
+                                          color: Colors.green.withValues(alpha: 0.1),
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
@@ -718,7 +720,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 6),
                                     decoration: BoxDecoration(
-                                      color: Colors.green.withOpacity(0.1),
+                                      color: Colors.green.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
@@ -748,7 +750,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               SizedBox(height: 16),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.1),
+                                  color: Colors.grey.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 padding: EdgeInsets.all(16),
@@ -792,7 +794,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               SizedBox(height: 16),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.green.withOpacity(0.1),
+                                  color: Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 padding: EdgeInsets.all(16),
@@ -879,7 +881,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                       Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: Colors.purple.withOpacity(0.1),
+                                          color: Colors.purple.withValues(alpha: 0.1),
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
@@ -901,7 +903,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   //   padding: EdgeInsets.symmetric(
                                   //       horizontal: 12, vertical: 6),
                                   //   decoration: BoxDecoration(
-                                  //     color: Colors.purple.withOpacity(0.1),
+                                  //     color: Colors.purple.withValues(alpha: 0.1),
                                   //     borderRadius: BorderRadius.circular(20),
                                   //   ),
                                   //   child: Row(
@@ -931,7 +933,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               // المقرر - Dropdown
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.05),
+                                  color: Colors.grey.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 padding: EdgeInsets.all(16),
@@ -961,7 +963,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
                                             color:
-                                                Colors.purple.withOpacity(0.3)),
+                                                Colors.purple.withValues(alpha: 0.3)),
                                       ),
                                       child: DropdownButtonFormField<String>(
                                         decoration: InputDecoration(
@@ -970,7 +972,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                           border: InputBorder.none,
                                           hintText: 'اختر المقرر',
                                         ),
-                                        value: 'التفسير',
+                                        initialValue: 'التفسير',
                                         onChanged: (String? newValue) async {
                                           if (newValue != null) {
                                             await selectedIslamicSubject(
@@ -1008,7 +1010,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.05),
+                                        color: Colors.grey.withValues(alpha: 0.05),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       padding: EdgeInsets.all(16),
@@ -1045,7 +1047,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                                   BorderRadius.circular(8),
                                               border: Border.all(
                                                   color: Colors.blue
-                                                      .withOpacity(0.3)),
+                                                      .withValues(alpha: 0.3)),
                                             ),
                                             child: Text(
                                               islamicPlanSelected == null
@@ -1065,7 +1067,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.05),
+                                        color: Colors.green.withValues(alpha: 0.05),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       padding: EdgeInsets.all(16),
@@ -1103,7 +1105,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                                   BorderRadius.circular(8),
                                               border: Border.all(
                                                   color: Colors.green
-                                                      .withOpacity(0.3)),
+                                                      .withValues(alpha: 0.3)),
                                             ),
                                             child: Text(
                                               islamicPlanSelected == null
@@ -1167,7 +1169,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               //       style: OutlinedButton.styleFrom(
                               //         foregroundColor: Colors.red,
                               //         side: BorderSide(
-                              //             color: Colors.red.withOpacity(0.5)),
+                              //             color: Colors.red.withValues(alpha: 0.5)),
                               //         shape: RoundedRectangleBorder(
                               //           borderRadius: BorderRadius.circular(8),
                               //         ),
@@ -1214,7 +1216,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                   Container(
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Colors.amber.withOpacity(0.1),
+                                      color: Colors.amber.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(Icons.lightbulb,
@@ -1230,10 +1232,10 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                               SizedBox(height: 16),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.05),
+                                  color: Colors.grey.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                      color: Colors.grey.withOpacity(0.2)),
+                                      color: Colors.grey.withValues(alpha: 0.2)),
                                 ),
                                 child: TextField(
                                   maxLines: 5,
@@ -1288,7 +1290,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                       //                 Container(
                       //                   padding: EdgeInsets.all(8),
                       //                   decoration: BoxDecoration(
-                      //                     color: Colors.orange.withOpacity(0.1),
+                      //                     color: Colors.orange.withValues(alpha: 0.1),
                       //                     borderRadius: BorderRadius.circular(8),
                       //                   ),
                       //                   child: Icon(Icons.star,
@@ -1327,7 +1329,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                       //                 borderRadius: BorderRadius.circular(12),
                       //                 boxShadow: [
                       //                   BoxShadow(
-                      //                     color: Colors.grey.withOpacity(0.1),
+                      //                     color: Colors.grey.withValues(alpha: 0.1),
                       //                     spreadRadius: 1,
                       //                     blurRadius: 4,
                       //                     offset: Offset(0, 2),
@@ -1340,7 +1342,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                       //                   CircleAvatar(
                       //                     radius: 30,
                       //                     backgroundColor:
-                      //                         Colors.orange.withOpacity(0.1),
+                      //                         Colors.orange.withValues(alpha: 0.1),
                       //                     child: Text(
                       //                       'ط${index + 1}',
                       //                       style: TextStyle(

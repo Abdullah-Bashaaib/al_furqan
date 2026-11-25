@@ -27,15 +27,13 @@ class _DashboardScreenState extends State<DashboardScreen>
 {
   final _schools = schoolController.schools;
   final _teachers = teacherController.teachers;
-  int _totalStudents = 0;
+  final int _totalStudents = 0;
   // int _unreadMessages = 0; // سيتم استخدامه مستقبلاً للرسائل
-  int _presentTeachers = 0;
-  int _lateTeachers = 0;
-  double _attendanceRate = 0.0;
-  double _activitiesCompletionRate = 0.0;
+  final int _presentTeachers = 0;
+  final int _lateTeachers = 0;
+  final double _attendanceRate = 0.0;
   String _currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   UserModel? user = CurrentUser.user;
-  final bool _isLoading = false;
 
   @override
   void initState() {
@@ -90,39 +88,6 @@ class _DashboardScreenState extends State<DashboardScreen>
   //     debugPrint("Error loading additional data: $e");
   //   }
   // }
-
-  void _calculateAttendanceData() {
-    // Simulate teacher attendance data based on current time
-    // In a real implementation, this would come from the attendance collection in Firestore
-    final now = DateTime.now();
-    final totalTeachers = _teachers.length;
-
-    if (totalTeachers > 0) {
-      // Simulate that 70-90% of teachers are present
-      _presentTeachers =
-          (totalTeachers * (0.7 + (now.minute % 20) / 100)).round();
-
-      // Simulate that 10-20% of present teachers are late (after 7:30 AM)
-      _lateTeachers = (now.hour >= 7 && now.minute > 30)
-          ? (_presentTeachers * (0.1 + (now.second % 10) / 100)).round()
-          : 0;
-
-      // Calculate attendance rate
-      _attendanceRate =
-          totalTeachers > 0 ? (_presentTeachers / totalTeachers) * 100 : 0;
-    }
-  }
-
-  void _calculateActivitiesData() {
-    // Simulate activities completion rate based on current date
-    // In a real implementation, this would be calculated from actual activity data
-    final now = DateTime.now();
-    final dayOfMonth = now.day;
-    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-
-    // Calculate completion rate based on day of month (increases as month progresses)
-    _activitiesCompletionRate = (dayOfMonth / daysInMonth) * 100;
-  }
 
   // Future<void> syncData() async {
   //   sync.syncUsers;
@@ -236,6 +201,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 if (confirm) {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
+                  if (!context.mounted) return;
                   Navigator.pushReplacement(context,
                       CupertinoPageRoute(builder: (context) => LoginScreen()));
                 }
@@ -295,7 +261,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7)
+            Theme.of(context).primaryColor.withValues(alpha: 0.7)
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -303,7 +269,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: Offset(0, 5),
           ),
@@ -325,7 +291,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             'التاريخ: $_currentDate',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
           SizedBox(height: 4),
@@ -333,7 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             'آخر تحديث: ${DateTime.now().toString().substring(11, 16)}',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
           SizedBox(height: 12),
@@ -359,9 +325,9 @@ class _DashboardScreenState extends State<DashboardScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Column(
         children: [
@@ -377,7 +343,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],
@@ -423,7 +389,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               blurRadius: 10,
               offset: Offset(0, 4),
             ),
@@ -489,7 +455,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: Offset(0, 4),
           ),

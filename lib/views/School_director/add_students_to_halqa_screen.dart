@@ -13,7 +13,7 @@ class AddStudentsToHalqaScreen extends StatefulWidget {
   });
 
   @override
-  _AddStudentsToHalqaScreenState createState() =>
+  State<AddStudentsToHalqaScreen> createState() =>
       _AddStudentsToHalqaScreenState();
 }
 

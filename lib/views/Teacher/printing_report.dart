@@ -133,7 +133,7 @@ class MonthlyReportPDF {
                                         arabicFont),
                                   ],
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                         ],
@@ -207,7 +207,7 @@ class MonthlyReportPDF {
                                         arabicFont),
                                   ],
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                         ],
@@ -399,13 +399,13 @@ class MonthlyReportPDFScreen extends StatelessWidget {
   final DateTime selectedMonth;
 
   const MonthlyReportPDFScreen({
-    Key? key,
+    super.key,
     required this.students,
     required this.reportData,
     required this.eltlawahPlan,
     required this.islamicStudyPlan,
     required this.selectedMonth,
-  }) : super(key: key);
+  });
 
   Future<void> _savePDF(BuildContext context) async {
     try {
@@ -431,7 +431,7 @@ class MonthlyReportPDFScreen extends StatelessWidget {
       // تكوين اسم الملف باستخدام التاريخ
       final String month = selectedMonth.month.toString().padLeft(2, '0');
       final String year = selectedMonth.year.toString();
-      final String fileName = 'تقرير _ شهري _${year}_${month}.pdf';
+      final String fileName = 'تقرير _ شهري _${year}_$month.pdf';
       final String filePath = '${directory.path}/$fileName';
 
       // حفظ الملف
@@ -440,6 +440,7 @@ class MonthlyReportPDFScreen extends StatelessWidget {
 
       // عرض رسالة نجاح مع زر لفتح الملف
 
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,

@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'SchoolDirectorHome.dart';
 class MainScreenD extends StatefulWidget {
   const MainScreenD({super.key});
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreenD> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreenD> {

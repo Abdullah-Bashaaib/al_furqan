@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -169,7 +170,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
   }
 
   Future<void> _handleScan(BarcodeCapture barcodeCapture) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await SharedPreferences.getInstance();
     if (_scanned) return;
 
     final String? scannedCode = barcodeCapture.barcodes.first.rawValue;
@@ -246,7 +247,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
 
     // تحديد حالة الحضور بناءً على الوقت
     String attendanceStatus = "حاضر";
-    TimeOfDay now = TimeOfDay.now();
+    TimeOfDay.now();
 
     // إذا كان الوقت بعد الساعة 7:30 صباحاً، يعتبر متأخراً
     // تم تعليق التحقق من الوقت للاختبار
@@ -428,7 +429,7 @@ class _AttendanceScannerPageState extends State<AttendanceScannerPage> {
                         border: Border.all(color: Colors.blueAccent, width: 3),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.blueAccent.withOpacity(0.2),
+                            color: Colors.blueAccent.withValues(alpha: 0.2),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),

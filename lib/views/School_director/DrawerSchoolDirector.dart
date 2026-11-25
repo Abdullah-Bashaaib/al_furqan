@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
@@ -18,7 +19,7 @@ class DrawerSchoolDirector extends StatefulWidget {
   const DrawerSchoolDirector({super.key, required this.user});
 
   @override
-  _DrawerSchoolDirectorState createState() => _DrawerSchoolDirectorState();
+  State<DrawerSchoolDirector> createState() => _DrawerSchoolDirectorState();
 }
 
 class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
@@ -143,7 +144,7 @@ class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {
                         : Text(
                             'مدير ${_schoolName ?? 'غير متوفر'}',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 15,
                             ),
                           ),

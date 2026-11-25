@@ -35,7 +35,7 @@ class MessageProvider with ChangeNotifier {
     init();
   }
   init() async {
-    print('===== تم تشغيل دالة البناء للرسائل =====');
+    debugPrint('===== تم تشغيل دالة البناء للرسائل =====');
     // final sw3 = Stopwatch()..start();
     if (CurrentUser.user != null) {
       await loadMessageFromFirebase();
@@ -48,7 +48,7 @@ class MessageProvider with ChangeNotifier {
   loadUnreadMessage() async {
     unreadMessagesCount =
         await messageController.getUnreadMessagesCount(userID!);
-    print('===== تم تحميل الرسائل الغير مقروءة =====');
+    debugPrint('===== تم تحميل الرسائل الغير مقروءة =====');
     notifyListeners();
   }
 
@@ -98,14 +98,14 @@ class MessageProvider with ChangeNotifier {
       if (roleID == 1) {
         // المدير: يحمل كل أولياء الأمور في المدرسة
         parentsList = (await fathersController.getFathersBySchoolId(schoolID!))
-            .where((user) => user.user_id != null && user.user_id != 0)
+            .where((user) => user.user_id != null && user.user_id!.isNotEmpty)
             .toList();
         parents.clear();
         parents.addAll(parentsList);
         debugPrint('Loaded ${parents.length} parents for manager');
 
         teachersList = (await halagaController.getTeachers(schoolID!))
-            .where((user) => user.user_id != null && user.user_id != 0)
+            .where((user) => user.user_id != null && user.user_id!.isNotEmpty)
             .toList();
         teachers.clear();
         teachers.addAll(teachersList);
@@ -120,7 +120,7 @@ class MessageProvider with ChangeNotifier {
           parents.clear();
           parents.addAll(parentsList);
           managerN = await userController.loadManager(schoolID!);
-          print('===== تم تحميل المدير =====');
+          debugPrint('===== تم تحميل المدير =====');
           debugPrint(
               'Loaded ${parents.length} parents for teacher in halka $elhalagatID');
         } else {

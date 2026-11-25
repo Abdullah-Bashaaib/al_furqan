@@ -30,7 +30,6 @@ class _AddSchoolState extends State<AddSchool> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return SafeArea(
       top: false,
@@ -209,7 +208,7 @@ class _AddSchoolState extends State<AddSchool> {
                   ),
 
                   // Schools list
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height *
                         0.4, // 40% of screen height
                     child: Card(

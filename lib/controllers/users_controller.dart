@@ -185,10 +185,10 @@ class UserController {
             await _sqlDb.checkIfItemExists2("Users", user.user_id!, "user_id");
         if (exists) {
           await updateUser(user, 0);
-          print('Find user (update)');
+          debugPrint('Find user (update)');
         } else {
           await addUser(user, 0);
-          print('Find user (add)');
+          debugPrint('Find user (add)');
         }
       }
     } else {

@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,7 @@ class AddIslamicStudiesPlanPage extends StatefulWidget {
   const AddIslamicStudiesPlanPage({super.key});
 
   @override
-  _AddIslamicStudiesPlanPageState createState() =>
+  State<AddIslamicStudiesPlanPage> createState() =>
       _AddIslamicStudiesPlanPageState();
 }
 
@@ -51,7 +52,7 @@ class _AddIslamicStudiesPlanPageState extends State<AddIslamicStudiesPlanPage> {
                             SizedBox(width: 16),
                             Expanded(
                               child: DropdownButtonFormField<String>(
-                                value: selectedCurriculum,
+                                initialValue: selectedCurriculum,
                                 items: curriculums.map((String curriculum) {
                                   return DropdownMenuItem<String>(
                                     value: curriculum,

@@ -94,11 +94,11 @@ class MessageController {
         where: 'senderId = ? AND receiverId = ?',
         whereArgs: [senderId, receiverId],
       );
-      print('📌 تم حذف الرسائل من SQLite بين $senderId و $receiverId');
+      debugPrint('📌 تم حذف الرسائل من SQLite بين $senderId و $receiverId');
 
       await messageService.deleteConversationFire(senderId, receiverId);
     } catch (e) {
-      print('❌ خطأ أثناء حذف المحادثة: $e');
+      debugPrint('❌ خطأ أثناء حذف المحادثة: $e');
     }
   }
 

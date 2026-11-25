@@ -3,13 +3,10 @@ import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/main.dart';
-import 'package:al_furqan/models/provider/halaqa_provider.dart';
-import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/schools_model.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/models/services/firebase_service.dart';
 import 'package:al_furqan/views/School_director/main_screenD.dart';
-import 'package:al_furqan/views/Supervisor/admin_home_page.dart';
 import 'package:al_furqan/views/Supervisor/main_screen_supervisor.dart';
 import 'package:al_furqan/views/Teacher/main_screenT.dart';
 import 'package:al_furqan/views/auth/forgot_password_screen.dart';
@@ -17,8 +14,6 @@ import 'package:al_furqan/views/login/signup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/helper/current_user.dart';
 
@@ -141,10 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (user != null) {
       await userController.saveUserToPrefs(user);
       CurrentUser.user = user;
-      print('${CurrentUser.user}======================');
-      print('$user ======================');
+      debugPrint('${CurrentUser.user}======================');
+      debugPrint('$user ======================');
       if (user.roleID == 2) {
-        print('object');
+        debugPrint('object');
         await halagaController.getHalagatFromFirebaseByID(
             user.elhalagatID, 'halagaID');
       }
@@ -159,15 +154,18 @@ class _LoginScreenState extends State<LoginScreen> {
       Future<bool> conn =
           InternetConnectionChecker.createInstance().hasConnection;
       if (await conn) {
+        if (!context.mounted) return;
         _showErrorDialog(context, "خطأ", "بيانات تسجيل الدخول غير صحيحة.");
         return;
       } else {
+        if (!context.mounted) return;
         _showErrorDialog(context, "خطأ", "لا يوجد اتصال بالانترنت");
         return;
       }
     }
 
     /// التحقق من أن الحساب مفعل
+    if (!context.mounted) return;
     await chiceRole(user, context, phone);
   }
 
@@ -204,12 +202,15 @@ class _LoginScreenState extends State<LoginScreen> {
         if (mounted) {
           setState(() => _isLoading = false);
         }
+        if (!context.mounted) return;
         _showErrorDialog(context, "خطأ", "لا يوجد لديك حلقة تواصل مع الادارة");
         perf.clear();
       } else {
+        if (!context.mounted) return;
         await chooseScreen(context);
       }
     } else {
+      if (!context.mounted) return;
       await chooseScreen(context);
     }
   }
@@ -405,7 +406,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         elevation: 5,
-                        shadowColor: Colors.green.withOpacity(0.5),
+                        shadowColor: Colors.green.withValues(alpha: 0.5),
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(color: Colors.white)

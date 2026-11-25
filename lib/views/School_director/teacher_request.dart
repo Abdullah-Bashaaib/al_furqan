@@ -28,6 +28,7 @@ class TeacherRequest extends StatefulWidget {
 
 class _TeacherRequestState extends State<TeacherRequest> with UserDataMixin {
   List<UserModel> pendingTeachers = [];
+  @override
   bool isLoading = true;
   String? errorMessage;
 
@@ -203,7 +204,7 @@ class _TeacherRequestState extends State<TeacherRequest> with UserDataMixin {
                                 leading: CircleAvatar(
                                   backgroundColor: Theme.of(context)
                                       .primaryColor
-                                      .withOpacity(0.2),
+                                      .withValues(alpha: 0.2),
                                   radius: 25,
                                   child: Text(
                                     teacher.first_name

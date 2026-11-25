@@ -82,7 +82,7 @@ class Sync {
   }
 
   Future<void> syncMessage() async {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
     List<Map<String, dynamic>> map =
         await sqlDb.readDataID("messages", 'sync', 0);
     if (map.isNotEmpty) {
@@ -94,7 +94,7 @@ class Sync {
             await firebasehelper.checkDocumentExists('messages', message.id!);
         if (exists) {
           message.sync = 1;
-          await _firestore
+          await firestore
               .collection('messages')
               .doc(message.id.toString())
               .update(message.toJson());
@@ -102,7 +102,7 @@ class Sync {
           debugPrint('===== sync message (update) =====');
         } else {
           message.sync = 1;
-          await _firestore.collection('messages').add(message.toJson());
+          await firestore.collection('messages').add(message.toJson());
           await messageController.updateMessage(message);
           debugPrint('===== sync message (add) =====');
         }
@@ -149,29 +149,29 @@ class Sync {
         await sqlDb.readDataID("IslamicStudies", 'isSync', 0);
     if (map.isNotEmpty) {
       debugPrint('===== map.isNotEmpty =====');
-      List<IslamicStudiesModel> IslamicStudies =
+      List<IslamicStudiesModel> islamicStudies =
           map.map((map) => IslamicStudiesModel.fromMap(map)).toList();
-      for (var IslamicStudy in IslamicStudies) {
+      for (var islamicStudy in islamicStudies) {
         bool exists = await firebasehelper.checkDocumentExists(
-            'IslamicStudies', int.parse(IslamicStudy.islamicStudiesID!));
+            'IslamicStudies', int.parse(islamicStudy.islamicStudiesID!));
         if (exists) {
-          IslamicStudy.isSync = 1;
+          islamicStudy.isSync = 1;
           await firebasehelper.updateIslamicStudyplan(
-              IslamicStudy, IslamicStudy.islamicStudiesID!);
+              islamicStudy, islamicStudy.islamicStudiesID!);
 
           await db.update("IslamicStudies",
-              IslamicStudy.toMap()..remove(IslamicStudy.islamicStudiesID),
+              islamicStudy.toMap()..remove(islamicStudy.islamicStudiesID),
               where: 'IslamicStudiesID = ?',
-              whereArgs: [IslamicStudy.islamicStudiesID]);
+              whereArgs: [islamicStudy.islamicStudiesID]);
           debugPrint('===== sync IslamicStudies (update) =====');
         } else {
-          IslamicStudy.isSync = 1;
+          islamicStudy.isSync = 1;
           await firebasehelper.addIslamicStudyplan(
-              IslamicStudy, IslamicStudy.islamicStudiesID!);
+              islamicStudy, islamicStudy.islamicStudiesID!);
           await db.update("IslamicStudies",
-              IslamicStudy.toMap()..remove(IslamicStudy.islamicStudiesID),
+              islamicStudy.toMap()..remove(islamicStudy.islamicStudiesID),
               where: 'IslamicStudiesID = ?',
-              whereArgs: [IslamicStudy.islamicStudiesID]);
+              whereArgs: [islamicStudy.islamicStudiesID]);
           debugPrint('===== sync IslamicStudies (add) =====');
         }
       }
@@ -265,7 +265,7 @@ class Sync {
   }
 
   Future<void> syncStudents() async {
-    final db = await sqlDb.database;
+    await sqlDb.database;
     debugPrint('===== sync Students =====');
     List<Map<String, dynamic>> map =
         await sqlDb.readDataID("Students", 'isSync', 0);

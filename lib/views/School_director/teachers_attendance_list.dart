@@ -1,4 +1,4 @@
-import 'package:al_furqan/utils/utils.dart';
+﻿import 'package:al_furqan/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -132,7 +132,7 @@ class _TeachersAttendanceListScreenState
             // شريط اختيار التاريخ
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               child: Row(
                 children: [
                   Icon(Icons.calendar_today,

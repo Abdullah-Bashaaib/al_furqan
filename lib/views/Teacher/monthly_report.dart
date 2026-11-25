@@ -11,7 +11,6 @@ import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/utils/utils.dart';
 import 'package:al_furqan/views/Teacher/printing_report.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -120,7 +119,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
     }
 
     // التحقق من نتيجة البحث
-    if (this.eltlawahPlan == null) {
+    if (eltlawahPlan == null) {
       log("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat");
       Utils.showToast("لم يتم العثور على خطة تلاوة للشهر: $currentMonthFormat",
           backgroundColor: Colors.red);
@@ -337,7 +336,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withValues(alpha: 0.2),
                                 spreadRadius: 1,
                                 blurRadius: 6,
                                 offset: Offset(0, 3),
@@ -423,7 +422,7 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withValues(alpha: 0.2),
                                 spreadRadius: 1,
                                 blurRadius: 6,
                                 offset: Offset(0, 3),
@@ -766,9 +765,9 @@ class _MonthlyReportScreenState extends State<MonthlyReportScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [

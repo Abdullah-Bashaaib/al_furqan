@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
@@ -25,7 +26,7 @@ class EditHalagaPlanScreen extends StatefulWidget {
   });
 
   @override
-  _EditHalagaPlanScreenState createState() => _EditHalagaPlanScreenState();
+  State<EditHalagaPlanScreen> createState() => _EditHalagaPlanScreenState();
 }
 
 class _EditHalagaPlanScreenState extends State<EditHalagaPlanScreen> {
@@ -294,6 +295,7 @@ class _EditHalagaPlanScreenState extends State<EditHalagaPlanScreen> {
         await planController.updateIslamicStudies2(plan);
       }
 
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -301,10 +303,12 @@ class _EditHalagaPlanScreenState extends State<EditHalagaPlanScreen> {
       Utils.showSnackBarSuccess(context, "تم تحديث الخطة بنجاح");
       Navigator.pop(context, true);
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'حدث خطأ أثناء تحديث الخطة: $e';
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'حدث خطأ أثناء تحديث الخطة: $e';
+        });
+      }
     }
   }
 

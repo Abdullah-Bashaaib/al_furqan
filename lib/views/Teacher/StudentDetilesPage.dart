@@ -1,9 +1,9 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/models/student_model.dart';
 import 'package:flutter/material.dart';
 
 class StudentDetailsPage extends StatelessWidget {
   final String studentName;
-  @override
   const StudentDetailsPage(
       {super.key, required this.studentName, required StudentModel student});
 

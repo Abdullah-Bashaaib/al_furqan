@@ -91,7 +91,7 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: Offset(0, 5),
                   ),
@@ -168,7 +168,7 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
                                       Theme.of(context).primaryColor,
                                   foregroundColor: Colors.white,
                                   child: Text(
-                                    '${teacher.first_name?[0] ?? ''}',
+                                    teacher.first_name?[0] ?? '',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -217,8 +217,8 @@ class _ShowAllTeacherState extends State<ShowAllTeacher> {
         floatingActionButton: FloatingActionButton(
           onPressed: _refreshData,
           tooltip: 'تحديث البيانات',
-          child: Icon(Icons.refresh),
           backgroundColor: Theme.of(context).primaryColor,
+          child: Icon(Icons.refresh),
         ),
       ),
     );

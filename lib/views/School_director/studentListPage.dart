@@ -34,7 +34,8 @@ class _StudentsListPageState extends State<StudentsListPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      (context).read<StudentProvider>().loadStudentFromFirebase();
+      if (!mounted) return;
+      context.read<StudentProvider>().loadStudentFromFirebase();
     });
     // int? schoolID = perf.getInt('schoolId');
     // studentController.addToLocalOfFirebase(schoolID!);
@@ -339,10 +340,10 @@ class _StudentsListPageState extends State<StudentsListPage> {
                                           ) ??
                                           false;
                                       if (confirm) {
+                                        if (!context.mounted) return;
+                                        final messenger =
+                                            ScaffoldMessenger.maybeOf(context);
                                         try {
-                                          final messenger =
-                                              ScaffoldMessenger.maybeOf(
-                                                  context);
                                           await studentController
                                               .delete(student.studentID!);
                                           if (await checkInternet()) {
@@ -356,9 +357,6 @@ class _StudentsListPageState extends State<StudentsListPage> {
 
                                           await prov.loadStudents();
                                         } catch (e) {
-                                          final messenger =
-                                              ScaffoldMessenger.maybeOf(
-                                                  context);
                                           if (!context.mounted ||
                                               messenger == null) {
                                             return;
@@ -401,7 +399,11 @@ class _StudentsListPageState extends State<StudentsListPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddStudentScreen(user: widget.user)),
-            ).then((_) => context.read<StudentProvider>().loadStudents());
+            ).then((_) {
+              if (context.mounted) {
+                context.read<StudentProvider>().loadStudents();
+              }
+            });
           },
           backgroundColor: Theme.of(context).colorScheme.primary,
           child: Icon(Icons.add, color: Colors.white),

@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:developer';
 
 import 'package:al_furqan/controllers/teacher_controller.dart';
@@ -55,7 +56,10 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
 
       _loadData();
     });
-    Future.microtask(() => (context).read<UserProvider>().loadUserFromLocal());
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<UserProvider>().loadUserFromLocal();
+    });
     // loadMessages();
   }
 
@@ -196,7 +200,8 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.clear();
                           await perf.clear();
-                          (context).read<MessageProvider>().clear();
+                          if (!context.mounted) return;
+                          context.read<MessageProvider>().clear();
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -329,7 +334,7 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
           gradient: LinearGradient(
             colors: [
               Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor.withOpacity(0.7),
+              Theme.of(context).primaryColor.withValues(alpha: 0.7),
             ],
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
@@ -339,7 +344,7 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundColor: Colors.white.withOpacity(0.9),
+              backgroundColor: Colors.white.withValues(alpha: 0.9),
               child: Icon(
                 Icons.person,
                 size: 30,
@@ -365,7 +370,7 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
                             "لديك $prov رسائل جديدة",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                             ),
                           ),
                       selector: (_, S) => S.unReadCount)
@@ -378,14 +383,14 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
                 Text(
                   dayName,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   formattedDate,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],

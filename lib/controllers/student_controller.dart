@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'dart:developer' as developer;
-import 'dart:math';
 
 import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:al_furqan/models/student_model.dart';
@@ -346,7 +345,7 @@ class StudentController {
       final count = await _sqldb.readData(
           "SELECT COUNT(*) as count FROM Students WHERE ElhalagatID = '$halqaID'");
       final studentCount = count[0]['count'] as int;
-      int halagaResponse = await _sqldb.updateData(
+      await _sqldb.updateData(
           "UPDATE Elhalagat SET NumberStudent = $studentCount, isSync = 0 WHERE halagaID = '$halqaID'");
       // log("Updated NumberStudent to $studentCount for halqa $halqaID, response: $halagaResponse");
     } catch (e) {
@@ -436,7 +435,7 @@ class StudentController {
         debugPrint("لا يوجد اتصال بالانترنت");
       }
     } catch (e) {
-      print(e);
+      debugPrint('$e');
     }
   }
 

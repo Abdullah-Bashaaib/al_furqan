@@ -4,10 +4,10 @@ import 'package:al_furqan/views/login/login.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({Key? key}) : super(key: key);
+  const ChangePasswordScreen({super.key});
 
   @override
-  _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
@@ -31,6 +31,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         Utils.showToast('تم تغيير كلمة المرور بنجاح',
             backgroundColor: Colors.green);
 
+        if (!mounted) return;
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -40,7 +41,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       } catch (e) {
         Utils.showToast(e.toString(), backgroundColor: Colors.red);
       } finally {
-        setState(() => _isLoading = false);
+        if (mounted) setState(() => _isLoading = false);
       }
     }
   }

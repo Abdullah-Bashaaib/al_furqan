@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
@@ -11,19 +12,16 @@ import 'package:flutter/material.dart';
 import 'EditHalagaPlanScreen.dart';
 import 'HalagaPlansScreen.dart';
 
-// ignore: must_be_immutable
 class HalagaPlansListScreen extends StatefulWidget {
-  HalagaModel halaga;
-  HalagaPlansListScreen({super.key, required this.halaga});
+  final HalagaModel halaga;
+  const HalagaPlansListScreen({super.key, required this.halaga});
 
   @override
-  _HalagaPlansListScreenState createState() =>
-      _HalagaPlansListScreenState(halagaModel: halaga);
+  State<HalagaPlansListScreen> createState() => _HalagaPlansListScreenState();
 }
 
 class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
-  HalagaModel halagaModel;
-  _HalagaPlansListScreenState({required this.halagaModel});
+  HalagaModel get halagaModel => widget.halaga;
   bool _isLoading = true;
   bool _isRefreshing = false;
 
@@ -499,12 +497,13 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                 } else if (table == "IslamicStudies") {
                   await firebasehelper.deleteIslamicStudyplan(planID);
                 }
+                if (!context.mounted) return;
                 Navigator.of(context).pop(true);
               } catch (e) {
                 Utils.showToast('حدث خطأ أثناء الحذف: $e',
                     backgroundColor: Colors.redAccent);
 
-                Navigator.of(context).pop(false);
+                if (context.mounted) Navigator.of(context).pop(false);
               }
             },
             style: ElevatedButton.styleFrom(

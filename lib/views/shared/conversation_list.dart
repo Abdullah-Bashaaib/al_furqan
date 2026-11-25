@@ -22,7 +22,7 @@ class ConversationsScreen extends StatefulWidget {
   });
 
   @override
-  _ConversationsScreenState createState() => _ConversationsScreenState();
+  State<ConversationsScreen> createState() => _ConversationsScreenState();
 }
 
 class _ConversationsScreenState extends State<ConversationsScreen> {
@@ -35,6 +35,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     int? r = perf.getInt('roleID');
     log("====================== $r");
     Future.microtask(() async {
+      if (!mounted) return;
       var prov = Provider.of<MessageProvider>(context, listen: false);
       await prov.loadMessageFromFirebase();
     });

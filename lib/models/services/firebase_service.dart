@@ -16,16 +16,16 @@ class FirebaseHelper {
   //  UserColl = _firestore.collection('Users');
 
   // ======================= Start Student ==============
-  Future<void> addStudent(StudentModel StudentData) async {
-    final StudentRef = _firestore.collection('Students');
+  Future<void> addStudent(StudentModel studentData) async {
+    final studentRef = _firestore.collection('Students');
 
-    // StudentData.schoolId = schoolID;
+    // studentData.schoolId = schoolID;
     try {
-      StudentData.isSync = 1;
-      await StudentRef.doc(StudentData.studentID.toString())
-          .set(StudentData.toMap());
+      studentData.isSync = 1;
+      await studentRef.doc(studentData.studentID.toString())
+          .set(studentData.toMap());
       debugPrint(
-          'تمت إضافة/تحديث الطالب بالرقم ${StudentData.studentID} بنجاح ');
+          'تمت إضافة/تحديث الطالب بالرقم ${studentData.studentID} بنجاح ');
     } catch (e) {
       debugPrint('خطأ أثناء إضافة الطالب إلى Firebase: $e');
     }
@@ -251,7 +251,9 @@ class FirebaseHelper {
       final docRef = _firestore.collection('Elhalaga');
       docRef.doc(halaga.halagaID.toString()).set(halaga.toMap());
       debugPrint('===== تم رفع حلقة ${halaga.Name} بنجاح');
-    } catch (e) {}
+    } catch (e) {
+      debugPrint('error ==== $e');
+    }
   }
 
   updateHalaga(HalagaModel halaga) async {
@@ -336,11 +338,11 @@ class FirebaseHelper {
         final data = querySnapshot.docs.first.data();
         return UserModel.fromMap(data); // تحويله إلى UserModel
       } else {
-        print('❌ لا يوجد مستخدم بهذا الرقم');
+        debugPrint('❌ لا يوجد مستخدم بهذا الرقم');
         return null;
       }
     } catch (e) {
-      print('⚠️ خطأ في جلب المستخدم: $e');
+      debugPrint('⚠️ خطأ في جلب المستخدم: $e');
       return null;
     }
   }
@@ -641,7 +643,7 @@ class FirebaseHelper {
   Future<List<ConservationPlanModel>> getConservationPlans(
       String halagaId) async {
     try {
-      print('0000000000000000000000000000000000');
+      debugPrint('0000000000000000000000000000000000');
       // جلب الخطط من مجموعة ConservationPlans حيث elhalagatId يساوي halagaId
       final QuerySnapshot querySnapshot = await _firestore
           .collection('ConservationPlans')

@@ -9,12 +9,10 @@ class RequestsList extends StatefulWidget {
   const RequestsList({super.key});
 
   @override
-  _RequestsListState createState() => _RequestsListState();
+  State<RequestsList> createState() => _RequestsListState();
 }
 
 class _RequestsListState extends State<RequestsList> {
-  // List to hold dropdown menu items for schools
-  List<DropdownMenuItem<int>> _schoolItems = [];
 
   @override
   void initState() {
@@ -27,14 +25,9 @@ class _RequestsListState extends State<RequestsList> {
   void _refreshData() async {
     await userController.getDataRequests();
     await schoolController.getData();
-    setState(() {
-      _schoolItems = schoolController.schools
-          .map((school) => DropdownMenuItem<int>(
-                value: school.schoolID,
-                child: Text(school.school_name!),
-              ))
-          .toList();
-    });
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -137,7 +130,7 @@ class _RequestsListState extends State<RequestsList> {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    backgroundColor: roleColor.withOpacity(0.2),
+                                    backgroundColor: roleColor.withValues(alpha: 0.2),
                                     child: Icon(roleIcon,
                                         color: roleColor, size: 20),
                                   ),
@@ -189,7 +182,11 @@ class _RequestsListState extends State<RequestsList> {
                                         ),
                                         onTap: () => Future.delayed(
                                           Duration.zero,
-                                          () => acceptRequest(index, context),
+                                          () {
+                                            if (context.mounted) {
+                                              acceptRequest(index, context);
+                                            }
+                                          },
                                         ),
                                       ),
                                       PopupMenuItem(
@@ -203,8 +200,12 @@ class _RequestsListState extends State<RequestsList> {
                                         ),
                                         onTap: () => Future.delayed(
                                           Duration.zero,
-                                          () => showDialogDetailsRequest(
-                                              context, index),
+                                          () {
+                                            if (context.mounted) {
+                                              showDialogDetailsRequest(
+                                                  context, index);
+                                            }
+                                          },
                                         ),
                                       ),
                                       PopupMenuItem(
@@ -218,8 +219,12 @@ class _RequestsListState extends State<RequestsList> {
                                         ),
                                         onTap: () => Future.delayed(
                                           Duration.zero,
-                                          () => showDialogDeleteRequest(
-                                              context, index),
+                                          () {
+                                            if (context.mounted) {
+                                              showDialogDeleteRequest(
+                                                  context, index);
+                                            }
+                                          },
                                         ),
                                       ),
                                     ],
@@ -332,9 +337,9 @@ class _RequestsListState extends State<RequestsList> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -392,7 +397,7 @@ class _RequestsListState extends State<RequestsList> {
                   style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -476,7 +481,7 @@ class _RequestsListState extends State<RequestsList> {
                   style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,

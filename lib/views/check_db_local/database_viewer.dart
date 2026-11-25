@@ -47,6 +47,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         isLoading = false;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في تحميل الجداول: $e')),
       );
@@ -84,6 +85,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         isLoading = false;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في تحميل بيانات الجدول: $e')),
       );
@@ -150,6 +152,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         whereArgs: [primaryKeyValue],
       );
 
+      if (!mounted) return;
       if (result > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('تم حذف الصف بنجاح')),
@@ -163,6 +166,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
       }
     } catch (e) {
       debugPrint('خطأ في حذف الصف: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في حذف الصف: $e')),
       );
@@ -200,6 +204,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
       final db = await sqlDb.database;
       final result = await db.delete(selectedTable!);
 
+      if (!mounted) return;
       if (result >= 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('تم حذف جميع بيانات الجدول بنجاح')),
@@ -213,6 +218,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
       }
     } catch (e) {
       debugPrint('خطأ في حذف بيانات الجدول: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في حذف بيانات الجدول: $e')),
       );
@@ -319,7 +325,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withValues(alpha: 0.1),
                         spreadRadius: 1,
                         blurRadius: 3,
                         offset: const Offset(0, 2),
@@ -337,7 +343,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
+                              Theme.of(context).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(Icons.table_chart,
@@ -422,7 +428,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -438,7 +444,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.05),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
@@ -475,7 +481,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   headingRowColor: WidgetStateProperty.all(
-                    Theme.of(context).primaryColor.withOpacity(0.1),
+                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   ),
                   dataRowMinHeight: 60,
                   dataRowMaxHeight: 80,
@@ -517,7 +523,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(

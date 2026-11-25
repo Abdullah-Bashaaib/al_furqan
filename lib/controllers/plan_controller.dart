@@ -522,7 +522,7 @@ class PlanController {
       for (var c in cp) {
         bool exists = await sqlDb.checkIfItemExists2(
             'ConservationPlans', c.conservationPlanId!, 'ConservationPlanID');
-        print(exists);
+        debugPrint('$exists');
         exists
             ? await db.update(
                 'ConservationPlans', c.toMap()..remove('ConservationPlanID'),
@@ -534,7 +534,7 @@ class PlanController {
       for (var e in ep) {
         bool exists = await sqlDb.checkIfItemExists2(
             'EltlawahPlans', e.eltlawahPlanId!, 'EltlawahPlanID');
-        print(exists);
+        debugPrint('$exists');
         exists
             ? await db.update(
                 'EltlawahPlans', e.toMap()..remove('EltlawahPlanID'),
@@ -545,7 +545,7 @@ class PlanController {
       for (var i in ip) {
         bool exists = await sqlDb.checkIfItemExists2(
             'IslamicStudies', i.islamicStudiesID!, 'IslamicStudiesID');
-        print(exists);
+        debugPrint('$exists');
         exists
             ? await db.update(
                 'IslamicStudies', i.toMap()..remove('IslamicStudiesID'),

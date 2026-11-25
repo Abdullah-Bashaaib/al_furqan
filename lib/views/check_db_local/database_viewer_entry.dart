@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:al_furqan/views/check_db_local/database_viewer.dart';
 
 class DatabaseViewerEntry extends StatelessWidget {
-  const DatabaseViewerEntry({Key? key}) : super(key: key);
+  const DatabaseViewerEntry({super.key});
 
   @override
   Widget build(BuildContext context) {

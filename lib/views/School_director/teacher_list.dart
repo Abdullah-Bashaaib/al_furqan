@@ -23,8 +23,7 @@ class _TeacherListState extends State<TeacherList>
   UserModel? user = CurrentUser.user;
   // List<UserModel> _filteredTeachers = [];
   bool _isSearching = false;
-  bool _isRefreshing = false; // Local loading state for refresh operations
-  bool _hasInitialized = false;
+  final bool _isRefreshing = false; // Local loading state for refresh operations
   bool _forceShowContent = false; // إضافة متغير جديد للتحكم في عرض المحتوى
   int _pendingActivationsCount = 0; // عدد طلبات التفعيل المعلقة
 
@@ -52,7 +51,6 @@ class _TeacherListState extends State<TeacherList>
     // التحقق من وجود طلبات تفعيل معلقة
     await _checkPendingActivations();
 
-    _hasInitialized = true;
     _forceShowContent = true; // إضافة تعيين قيمة true للمتغير الجديد
     setState(() {});
     debugPrint("TeacherList: _initializeTeachers completed");
@@ -279,7 +277,6 @@ class _TeacherListState extends State<TeacherList>
                                   const EdgeInsets.symmetric(horizontal: 16.0),
                               itemCount: prov.teachers.length,
                               itemBuilder: (context, index) {
-                                final UserModel? teacher = prov.teachers[index];
                                 return _buildTeacherCard(prov.teachers[index]!);
                               },
                             ),
@@ -495,9 +492,9 @@ class _TeacherListState extends State<TeacherList>
                         builder: (context) => EditTeacher(teacher: teacher),
                       ),
                     ).then((value) {
-                      if (value == true) {
+                      if (value == true && mounted) {
                         // Refresh the teacher list if edit was successful
-                        (context).read<UserProvider>().loadTeachers();
+                        context.read<UserProvider>().loadTeachers();
                       }
                     });
                   },
@@ -624,7 +621,8 @@ class _TeacherListState extends State<TeacherList>
         await userController.deleteUser(teacher.user_id!);
 
         // تحديث القائمة بعد الحذف
-        await (context).read<UserProvider>().loadTeachers();
+        if (!mounted) return;
+        await context.read<UserProvider>().loadTeachers();
 
         // إغلاق مؤشر التحميل
         if (!mounted) return;
@@ -635,7 +633,7 @@ class _TeacherListState extends State<TeacherList>
       }
     } catch (e) {
       // إغلاق مؤشر التحميل في حالة حدوث خطأ
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
       // عرض رسالة الخطأ
       Utils.showToast('حدث خطأ أثناء حذف المعلم: $e',
           backgroundColor: Colors.red);

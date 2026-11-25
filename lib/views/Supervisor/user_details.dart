@@ -16,7 +16,7 @@ class UserDetails extends StatefulWidget {
   const UserDetails({super.key, required this.user});
 
   @override
-  _UserDetailsState createState() => _UserDetailsState();
+  State<UserDetails> createState() => _UserDetailsState();
 }
 
 class _UserDetailsState extends State<UserDetails> {
@@ -342,7 +342,7 @@ class _UserDetailsState extends State<UserDetails> {
       children: [
         Expanded(
           child: DropdownButtonFormField<int>(
-            value: _selectedSchoolId,
+            initialValue: _selectedSchoolId,
             decoration: InputDecoration(
               labelText: 'اختر المدرسة',
               border: OutlineInputBorder(),
@@ -371,72 +371,6 @@ class _UserDetailsState extends State<UserDetails> {
           },
         ),
       ],
-    );
-  }
-
-  // Build user profile header with avatar and name
-  Widget _buildUserProfileHeader() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7)
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.white,
-            child: Text(
-              widget.user.first_name?[0] ?? '',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            '${widget.user.first_name ?? ''} ${widget.user.middle_name ?? ''} ${widget.user.last_name ?? ''}',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 8),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              _selectedRole ?? '',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -498,7 +432,7 @@ class _UserDetailsState extends State<UserDetails> {
               });
             }
           : null,
-      activeColor: Theme.of(context).primaryColor,
+      activeThumbColor: Theme.of(context).primaryColor,
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );
   }

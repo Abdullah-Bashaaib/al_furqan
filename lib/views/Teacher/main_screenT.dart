@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/main.dart';
@@ -15,7 +16,7 @@ class MainScreenT extends StatefulWidget {
   const MainScreenT({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreenT> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreenT> {
@@ -46,9 +47,11 @@ class _MainScreenState extends State<MainScreenT> {
       await loadStudent();
       await loadPlans();
 
+      if (!mounted) return;
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => TeacherDashboard()));
     } else {
+      if (!mounted) return;
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => TeacherDashboard()));
       Utils.showToast('لا يوجد اتصال بالانترنت لتحديث البيانات',
@@ -101,17 +104,17 @@ class _MainScreenState extends State<MainScreenT> {
       await studentController.addToLocalStudentH(halagaID!);
       await studentController.getStudents(halagaID);
     } catch (e) {
-      print(e);
+      debugPrint('$e');
     }
   }
 
   Future<void> loadPlans() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      String? Id = prefs.getString('halagaID');
-      debugPrint('===== halagaID ($Id) =====');
+      String? id = prefs.getString('halagaID');
+      debugPrint('===== halagaID ($id) =====');
       // تحميل الرسائل من فايربيس
-      await planController.getPlansFirebaseToLocal(Id!);
+      await planController.getPlansFirebaseToLocal(id!);
     } catch (e) {
       debugPrint('خطأ في تحميل البيانات: $e');
       Utils.showToast('خطأ في تحميل البيانات: $e', backgroundColor: Colors.red);

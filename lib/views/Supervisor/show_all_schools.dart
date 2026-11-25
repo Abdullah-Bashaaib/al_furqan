@@ -19,7 +19,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
   List<SchoolModel> _filterSchools() {
     if (_searchQuery.isEmpty) return schoolController.schools;
     return schoolController.schools.where((school) {
-      final fullName = '${school.school_name ?? ''}'.toLowerCase();
+      final fullName = (school.school_name ?? '').toLowerCase();
       return fullName.contains(_searchQuery.toLowerCase());
     }).toList();
   }
@@ -149,7 +149,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                                       horizontal: 16, vertical: 8),
                                   leading: CircleAvatar(
                                     backgroundColor:
-                                        primaryColor.withOpacity(0.2),
+                                        primaryColor.withValues(alpha: 0.2),
                                     child:
                                         Icon(Icons.school, color: primaryColor),
                                   ),
@@ -261,10 +261,11 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
 
   // Show school details in a dialog
   void _showSchoolDetails(BuildContext context, SchoolModel school) async {
-    List _numberStudentOfSchool =
+    List numberStudentOfSchool =
         await studentController.getSchoolStudents(school.schoolID!);
     await teacherController.getTeachersBySchoolID(school.schoolID!);
-    List _teacher = await teacherController.teachers;
+    List teacher = teacherController.teachers;
+    if (!context.mounted) return;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -279,7 +280,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
               ),
             ],
           ),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -292,11 +293,11 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                     Icons.location_on),
                 if (school.schoolID != null) ...[
                   const Divider(),
-                  _buildDetailItem('عدد المعلمين', _teacher.length.toString(),
+                  _buildDetailItem('عدد المعلمين', teacher.length.toString(),
                       Icons.numbers_rounded),
                   const Divider(),
                   _buildDetailItem('عدد الطلاب',
-                      _numberStudentOfSchool.length.toString(), Icons.numbers),
+                      numberStudentOfSchool.length.toString(), Icons.numbers),
                 ],
               ],
             ),
@@ -486,6 +487,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                     }
 
                     // إغلاق مؤشر التحميل
+                    if (!context.mounted) return;
                     Navigator.of(context).pop();
 
                     // إغلاق مربع الحوار
@@ -503,7 +505,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                             isEditing ? Colors.amber : Colors.green);
                   } catch (e) {
                     // إغلاق مؤشر التحميل إذا كان مفتوحًا
-                    Navigator.of(context).pop();
+                    if (context.mounted) Navigator.of(context).pop();
 
                     // عرض رسالة خطأ
                     Utils.showToast('حدث خطأ: $e',

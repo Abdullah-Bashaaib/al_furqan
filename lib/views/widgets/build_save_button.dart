@@ -91,6 +91,7 @@ Future<bool> _handleFormSubmission({
     setEditable(false);
     Utils.showToast("تم حفظ التعديلات بنجاح", backgroundColor: Colors.green);
 
+    if (!context.mounted) return false;
     Navigator.of(context).pop(true); // Return true to indicate success
     return true;
   } catch (e) {

@@ -146,9 +146,9 @@ class FirebaseHelper {
       for (var doc in messages.docs) {
         await doc.reference.delete();
       }
-      print('📌 تم حذف الرسائل من Firestore بين $senderId و $receiverId');
+      debugPrint('📌 تم حذف الرسائل من Firestore بين $senderId و $receiverId');
     } catch (e) {
-      print('❌ خطأ أثناء حذف المحادثة: $e');
+      debugPrint('❌ خطأ أثناء حذف المحادثة: $e');
     }
   }
 }

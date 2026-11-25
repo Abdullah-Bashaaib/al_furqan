@@ -11,11 +11,10 @@ import 'EditHalagaPlanScreen.dart';
 class IslamicStudiesPlansListScreen extends StatefulWidget {
   final HalagaModel halaga;
 
-  const IslamicStudiesPlansListScreen({Key? key, required this.halaga})
-      : super(key: key);
+  const IslamicStudiesPlansListScreen({super.key, required this.halaga});
 
   @override
-  _IslamicStudiesPlansListScreenState createState() =>
+  State<IslamicStudiesPlansListScreen> createState() =>
       _IslamicStudiesPlansListScreenState();
 }
 
@@ -23,7 +22,6 @@ class _IslamicStudiesPlansListScreenState
     extends State<IslamicStudiesPlansListScreen> {
   bool _isLoading = true;
   List<IslamicStudiesModel> _islamicPlans = [];
-  List<StudentModel> _students = [];
   String? _filterSubject;
   String? _filterMonth;
 
@@ -68,7 +66,6 @@ class _IslamicStudiesPlansListScreenState
 
       setState(() {
         _islamicPlans = planController.islamicStudyPlans;
-        _students = studentController.students;
       });
     } catch (e) {
       _showErrorSnackBar('حدث خطأ في تحميل الخطط: $e');
@@ -161,7 +158,7 @@ class _IslamicStudiesPlansListScreenState
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, 2),
@@ -296,7 +293,7 @@ class _IslamicStudiesPlansListScreenState
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.9),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.9),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
@@ -423,9 +420,9 @@ class _IslamicStudiesPlansListScreenState
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
+            color: color.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: color.withOpacity(0.5)),
+            border: Border.all(color: color.withValues(alpha: 0.5)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -449,7 +446,7 @@ class _IslamicStudiesPlansListScreenState
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: Divider(color: color.withOpacity(0.3), thickness: 1),
+          child: Divider(color: color.withValues(alpha: 0.3), thickness: 1),
         ),
       ],
     );
@@ -643,10 +640,10 @@ class _IslamicStudiesPlansListScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('إلغاء'),
             style: TextButton.styleFrom(
               foregroundColor: Colors.grey.shade800,
             ),
+            child: const Text('إلغاء'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -656,17 +653,17 @@ class _IslamicStudiesPlansListScreenState
                   "IslamicStudies",
                   "IslamicStudiesID",
                 );
-                Navigator.of(context).pop(true);
+                if (context.mounted) Navigator.of(context).pop(true);
               } catch (e) {
                 _showErrorSnackBar('حدث خطأ أثناء الحذف: $e');
-                Navigator.of(context).pop(false);
+                if (context.mounted) Navigator.of(context).pop(false);
               }
             },
-            child: const Text('حذف'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
+            child: const Text('حذف'),
           ),
         ],
       ),

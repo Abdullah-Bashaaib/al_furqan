@@ -1,4 +1,4 @@
-import 'package:al_furqan/controllers/message_controller.dart';
+﻿import 'package:al_furqan/controllers/message_controller.dart';
 import 'package:al_furqan/models/messages_model.dart';
 import 'package:al_furqan/models/provider/message_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
@@ -347,7 +347,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       boxShadow: [
                                         BoxShadow(
                                           // ignore: deprecated_member_use
-                                          color: Colors.black.withOpacity(0.05),
+                                          color: Colors.black.withValues(alpha: 0.05),
                                           blurRadius: 2,
                                           offset: Offset(0, 1),
                                         ),
@@ -399,7 +399,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   boxShadow: [
                     BoxShadow(
                       // ignore: deprecated_member_use
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 3,
                       offset: Offset(0, -1),
                     ),

@@ -1,4 +1,4 @@
-// ignore: file_names
+// ignore_for_file: file_names
 // ignore_for_file: library_private_types_in_public_api
 import 'dart:developer';
 
@@ -88,8 +88,7 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
   }
 
   Future<void> _refreshData() async {
-    List<StudentModel>? loadedStudent =
-        await studentController.getSchoolStudents(widget.student.schoolId!);
+    await studentController.getSchoolStudents(widget.student.schoolId!);
     debugPrint("Hi this's refreshing data");
   }
 

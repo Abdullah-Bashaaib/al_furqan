@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:math';
 
 import 'package:al_furqan/controllers/School_directore_controller.dart';
@@ -12,7 +13,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AttendanceQRScreen extends StatefulWidget {
-  const AttendanceQRScreen({Key? key}) : super(key: key);
+  const AttendanceQRScreen({super.key});
 
   @override
   State<AttendanceQRScreen> createState() => _AttendanceQRScreenState();
@@ -37,17 +38,11 @@ class _AttendanceQRScreenState extends State<AttendanceQRScreen> {
   Future<void> _loadSchoolInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? id = prefs.getInt('schoolId');
-    schoolName = await schoolDirectorController.getSchoolName(id!);
 
     if (id != null) {
+      schoolName = await schoolDirectorController.getSchoolName(id);
       setState(() {
         schoolId = id.toString();
-      });
-      _loadAttendanceCode();
-    } else {
-      // إذا لم يتم العثور على معرف المدرسة، نستخدم معرف افتراضي
-      setState(() {
-        schoolId = "default_school";
       });
       _loadAttendanceCode();
     }
@@ -320,7 +315,7 @@ class _AttendanceQRScreenState extends State<AttendanceQRScreen> {
                               BoxShadow(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.2),
+                                    .withValues(alpha: 0.2),
                                 blurRadius: 15,
                                 spreadRadius: 3,
                                 offset: const Offset(0, 5),
@@ -329,7 +324,7 @@ class _AttendanceQRScreenState extends State<AttendanceQRScreen> {
                             border: Border.all(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                                 width: 1.5),
                           ),
                           child: Column(

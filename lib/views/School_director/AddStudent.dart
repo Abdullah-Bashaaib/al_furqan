@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/fathers_controller.dart';
 import 'package:al_furqan/models/provider/student_provider.dart';
@@ -16,7 +17,7 @@ class AddStudentScreen extends StatefulWidget {
   const AddStudentScreen({super.key, required this.user});
 
   @override
-  _AddStudentScreenState createState() => _AddStudentScreenState();
+  State<AddStudentScreen> createState() => _AddStudentScreenState();
 }
 
 class _AddStudentScreenState extends State<AddStudentScreen> {
@@ -50,15 +51,15 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
       _isLoading = true; // بدء التحميل
     });
 
-    int? SchoolID = widget.user!.schoolID;
-    debugPrint("معرف المدرسة للطالب الجديد: $SchoolID");
+    int? schoolID = widget.user!.schoolID;
+    debugPrint("معرف المدرسة للطالب الجديد: $schoolID");
 
     // بيانات الطالب
     studentModel.firstName = firstNameController.text;
     studentModel.middleName = middleNameController.text;
     studentModel.grandfatherName = grandfatherNameController.text;
     studentModel.lastName = lastNameController.text;
-    studentModel.schoolId = SchoolID; // تأكد من تعيين معرف المدرسة للطالب
+    studentModel.schoolId = schoolID; // تأكد من تعيين معرف المدرسة للطالب
 
     // بيانات ولي الامر
     fatherModel.schoolID = widget.user!.schoolID;
@@ -78,6 +79,8 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     // fatherModel.isSync = 1;
 
     try {
+      final studentProvider =
+          Provider.of<StudentProvider>(context, listen: false);
       // أولاً: إضافة ولي الأمر
       // fatherModel.isSync = 0;
       fatherModel.user_id = await fathersController.addFather(fatherModel, 1);
@@ -88,9 +91,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
       //  ثالثًا: إضافة الطالب إلى قاعدة البيانات المحلية والسحابية
       // int studentID =getMaxValue();
       // (context).read<StudentProvider>().students.add(value);
-      Provider.of<StudentProvider>(context, listen: false)
-          .students
-          .add(studentModel);
+      studentProvider.students.add(studentModel);
       String? studentID = await studentController.addStudent(studentModel, 1);
       debugPrint("تم إضافة الطالب محليًا بمعرف: $studentID");
 
@@ -413,9 +414,11 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                                                   schoolID:
                                                       widget.user?.schoolID)
                                               .readExcelFile(context)
-                                              .then((_) =>
-                                                  Navigator.of(dialogContext)
-                                                      .pop());
+                                              .then((_) {
+                                            if (dialogContext.mounted) {
+                                              Navigator.of(dialogContext).pop();
+                                            }
+                                          });
                                         } catch (e) {
                                           // 4. إعلام بالخطأ
                                           Utils.showToast(
@@ -423,7 +426,9 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                                               backgroundColor: Colors.red);
                                         } finally {
                                           // 5. أغلق الديالوج باستخدام نفس الـ dialogContext
-                                          Navigator.of(dialogContext).pop();
+                                          if (dialogContext.mounted) {
+                                            Navigator.of(dialogContext).pop();
+                                          }
                                         }
                                       },
                                 icon: Icon(Icons.file_upload,

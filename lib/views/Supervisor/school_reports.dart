@@ -29,6 +29,7 @@ class _SchoolReports extends State<SchoolReports> {
         await studentController.getSchoolStudents(schoolID);
     await teacherController.getTeachersBySchoolID(schoolID);
     List teacher = teacherController.teachers;
+    if (!mounted) return;
     setState(() {
       numberStudent = numberStudentOfSchool.length;
       numberTeacher = teacher.length;
@@ -72,6 +73,7 @@ class _SchoolReports extends State<SchoolReports> {
     Future<void> schoolReport(int schoolId) async {
       Utils.showDialogLoading(context: context);
       schoolReportList = await reportController.loadReportHalaga(schoolId);
+      if (!context.mounted) return;
       Navigator.of(context, rootNavigator: true).pop();
     }
 
@@ -174,6 +176,7 @@ class _SchoolReports extends State<SchoolReports> {
                                     onTap: () async {
                                       await schoolData(school.schoolID!);
                                       await schoolReport(school.schoolID!);
+                                      if (!context.mounted) return;
                                       await Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -189,7 +192,7 @@ class _SchoolReports extends State<SchoolReports> {
                                         horizontal: 16, vertical: 8),
                                     leading: CircleAvatar(
                                       backgroundColor:
-                                          primaryColor.withOpacity(0.2),
+                                          primaryColor.withValues(alpha: 0.2),
                                       child: Icon(Icons.school,
                                           color: primaryColor),
                                     ),
@@ -229,6 +232,7 @@ class _SchoolReports extends State<SchoolReports> {
                                         onPressed: () async {
                                           await schoolData(school.schoolID!);
                                           await schoolReport(school.schoolID!);
+                                          if (!context.mounted) return;
                                           await Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -316,37 +320,4 @@ class _SchoolReports extends State<SchoolReports> {
     );
   }
 
-  // Helper method to build detail items in the dialog
-  Widget _buildDetailItem(String label, String value, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 20, color: Theme.of(context).primaryColor),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

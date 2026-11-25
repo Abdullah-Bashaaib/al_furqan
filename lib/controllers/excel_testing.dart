@@ -23,7 +23,7 @@ class ExcelTesting {
       allowedExtensions: ['xlsx', 'xls', 'csv'],
     );
 
-    if (pickedFiles == null || pickedFiles.isEmpty) {
+    if ( pickedFiles.isEmpty) {
       Utils.showToast('لم يتم اختيار ملف');
 
       return;

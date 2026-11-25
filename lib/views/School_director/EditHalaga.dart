@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/teacher_controller.dart';
@@ -18,7 +19,7 @@ class EditHalagaScreen extends StatefulWidget {
       {super.key, required this.halga, required this.teacher});
 
   @override
-  _EditHalagaScreenState createState() => _EditHalagaScreenState();
+  State<EditHalagaScreen> createState() => _EditHalagaScreenState();
 }
 
 class _EditHalagaScreenState extends State<EditHalagaScreen> {
@@ -244,7 +245,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
                     Container(
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20),
@@ -478,7 +479,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
                                                         backgroundColor:
                                                             Theme.of(context)
                                                                 .primaryColor
-                                                                .withOpacity(
+                                                                .withValues(alpha: 
                                                                     0.2),
                                                         child: Text(
                                                           student.firstName
@@ -643,7 +644,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DropdownButtonFormField<String?>(
-          value: selectedTeacherId,
+          initialValue: selectedTeacherId,
           decoration: InputDecoration(
             labelText: 'اختر المعلم',
             hintText: 'اختر معلم للحلقة',
@@ -701,7 +702,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
                     CircleAvatar(
                       backgroundColor: isCurrentTeacher
                           ? Theme.of(context).primaryColor
-                          : Theme.of(context).primaryColor.withOpacity(0.2),
+                          : Theme.of(context).primaryColor.withValues(alpha: 0.2),
                       radius: 14,
                       child: Text(
                         teacher.first_name?.substring(0, 1).toUpperCase() ??
@@ -733,7 +734,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
                             horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
+                              Theme.of(context).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(

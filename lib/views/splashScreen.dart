@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/helper/current_user.dart';
@@ -71,6 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
       _loginPref();
     } else {
       // الانتقال إلى شاشة تسجيل الدخول إذا لم يكن هناك مستخدم مسجل
+      if (!mounted) return;
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginScreen()));
     }
@@ -80,13 +82,15 @@ class _SplashScreenState extends State<SplashScreen> {
   void _loginPref() async {
     try {
       int? roleId = await getUserRoleId();
-      int? isActivate = await getIsActivate();
+      await getIsActivate();
+      if (!mounted) return;
       if (roleId != null) {
         await chooseScreen(context);
       } else {
         _showErrorDialog(context, "خطأ", "حسابك غير مفعل أو بيانات غير صحيحة.");
       }
     } catch (e) {
+      if (!mounted) return;
       _showErrorDialog(context, "خطأ", "حدث خطأ: $e");
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -96,6 +100,7 @@ class _SplashScreenState extends State<SplashScreen> {
   /// اختيار الشاشة المناسبة للمستخدم بناءً على دوره
   Future<void> chooseScreen(BuildContext context) async {
     int? roleId = await getUserRoleId();
+    if (!context.mounted) return;
     if (roleId == null) {
       _showErrorDialog(context, "خطأ", "فشل في تحديد دور المستخدم.");
       return;

@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:al_furqan/views/Supervisor/user_management_page.dart';
 
 class DrawerList extends StatelessWidget {
-  UserModel? user;
-  DrawerList({super.key, required this.user});
+  final UserModel? user;
+  const DrawerList({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class DrawerList extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
                   blurRadius: 4,
                   offset: Offset(0, 2),
                 ),
@@ -38,7 +38,7 @@ class DrawerList extends StatelessWidget {
                 CircleAvatar(
                   maxRadius: 40,
                   backgroundColor:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   child: Center(
                     child: Text(
                       user!.first_name!.substring(0, 1),
@@ -165,9 +165,9 @@ class DrawerList extends StatelessWidget {
         ),
       ),
       onTap: onTap,
-      selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+      selectedTileColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
       selected: false,
-      hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+      hoverColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
       visualDensity: VisualDensity.compact,
     );
   }

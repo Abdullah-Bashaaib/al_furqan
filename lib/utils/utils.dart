@@ -37,7 +37,7 @@ class Utils {
   }
 
   static Color getBackgroundColor(BuildContext context) {
-    return Theme.of(context).colorScheme.background;
+    return Theme.of(context).colorScheme.surface;
   }
 
   static Color getTextColor(BuildContext context) {

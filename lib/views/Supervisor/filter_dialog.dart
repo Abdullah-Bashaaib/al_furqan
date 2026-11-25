@@ -14,7 +14,7 @@ class FilterDialog extends StatefulWidget {
   });
 
   @override
-  _FilterDialogState createState() => _FilterDialogState();
+  State<FilterDialog> createState() => _FilterDialogState();
 }
 
 class _FilterDialogState extends State<FilterDialog> {
@@ -136,7 +136,7 @@ class _FilterDialogState extends State<FilterDialog> {
         color: Colors.grey.shade50,
       ),
       child: DropdownButtonFormField<String>(
-        value: tempSelectedRole,
+        initialValue: tempSelectedRole,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.person, color: primaryColor),
           border: InputBorder.none,
@@ -169,7 +169,7 @@ class _FilterDialogState extends State<FilterDialog> {
         color: Colors.grey.shade50,
       ),
       child: DropdownButtonFormField<int>(
-        value: tempSelectedSchoolId,
+        initialValue: tempSelectedSchoolId,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.school, color: primaryColor),
           border: InputBorder.none,

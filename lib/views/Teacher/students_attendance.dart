@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class StudentsAttendance extends StatefulWidget {
-  const StudentsAttendance({Key? key}) : super(key: key);
+  const StudentsAttendance({super.key});
 
   @override
   State<StudentsAttendance> createState() => _StudentsAttendanceState();
@@ -27,10 +27,10 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
 
   // خريطة لتتبع حالة الحضور لكل طالب
   // المفتاح: معرف الطالب، القيمة: true (حاضر) أو false (غائب)
-  Map<String?, bool> _attendanceStatus = {};
+  final Map<String?, bool> _attendanceStatus = {};
 
   // خريطة لتخزين أسباب الغياب
-  Map<String?, String> _absenceReasons = {};
+  final Map<String?, String> _absenceReasons = {};
 
   @override
   void initState() {
@@ -139,6 +139,7 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
       }
 
       // إغلاق مؤشر التقدم
+      if (!mounted) return;
       Navigator.of(context).pop();
 
       // عرض رسالة نجاح
@@ -146,7 +147,7 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
           backgroundColor: Colors.green);
     } catch (e) {
       // إغلاق مؤشر التقدم
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
 
       // عرض رسالة خطأ
       Utils.showToast('حدث خطأ أثناء حفظ بيانات الحضور: $e',
@@ -324,7 +325,7 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
                                           // مفتاح تبديل الحضور
                                           Switch(
                                             value: isPresent,
-                                            activeColor: Colors.green,
+                                            activeThumbColor: Colors.green,
                                             inactiveTrackColor:
                                                 Colors.red.shade200,
                                             inactiveThumbColor: Colors.red,
@@ -357,9 +358,9 @@ class _StudentsAttendanceState extends State<StudentsAttendance>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [

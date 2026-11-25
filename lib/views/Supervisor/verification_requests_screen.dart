@@ -9,7 +9,7 @@ class VerificationRequestsScreen extends StatefulWidget {
   const VerificationRequestsScreen({super.key});
 
   @override
-  _VerificationRequestsScreenState createState() =>
+  State<VerificationRequestsScreen> createState() =>
       _VerificationRequestsScreenState();
 }
 
@@ -57,12 +57,12 @@ class _VerificationRequestsScreenState
 
       // Prepare WhatsApp message
       final message = 'رمز التحقق لتغيير كلمة المرور هو: $verificationCode';
-      final whatsappUrl =
-          "https://wa.me/$cleanUserPhone?text=${Uri.encodeComponent(message)}";
+      final whatsappUri = Uri.parse(
+          "https://wa.me/$cleanUserPhone?text=${Uri.encodeComponent(message)}");
 
       // Open WhatsApp
-      if (await canLaunch(whatsappUrl)) {
-        await launch(whatsappUrl);
+      if (await canLaunchUrl(whatsappUri)) {
+        await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
         Utils.showToast('تم إنشاء الرمز وإرساله عبر واتساب');
       } else {
         throw 'لا يمكن فتح واتساب';

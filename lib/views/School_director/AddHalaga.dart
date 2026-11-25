@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
@@ -14,7 +15,7 @@ import '../../controllers/teacher_controller.dart';
 
 class AddHalaqaScreen extends StatefulWidget {
   @override
-  _AddHalaqaScreenState createState() => _AddHalaqaScreenState();
+  State<AddHalaqaScreen> createState() => _AddHalaqaScreenState();
   const AddHalaqaScreen({
     super.key,
   });
@@ -204,7 +205,7 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             DropdownButtonFormField<UserModel>(
-                              value: selectedTeacher,
+                              initialValue: selectedTeacher,
                               items: teachers
                                   .where((teacher) =>
                                       teacher.elhalagatID == null ||
@@ -481,18 +482,26 @@ class _AddHalaqaScreenState extends State<AddHalaqaScreen> {
                                             selectedTeacher!, 1);
                                         log("تم تحديث المعلم ${selectedTeacher!.first_name} ${selectedTeacher!.last_name} بحلقة رقم ${_halaqaModel.halagaID}");
                                       }
-                                      Navigator.of(dialogContext).pop();
+                                      if (dialogContext.mounted) {
+                                        Navigator.of(dialogContext).pop();
+                                      }
                                       Utils.showToast('تم إضافة الحلقة بنجاح',
                                           backgroundColor: Colors.green);
 
-                                      Navigator.pop(context);
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                      }
                                     }
                                   } catch (e) {
-                                    Navigator.of(dialogContext).pop();
-                                    setState(() {
-                                      _errorMessage =
-                                          "حدث خطأ أثناء إضافة الحلقة: $e";
-                                    });
+                                    if (dialogContext.mounted) {
+                                      Navigator.of(dialogContext).pop();
+                                    }
+                                    if (mounted) {
+                                      setState(() {
+                                        _errorMessage =
+                                            "حدث خطأ أثناء إضافة الحلقة: $e";
+                                      });
+                                    }
                                   }
                                 },
                           style: ElevatedButton.styleFrom(

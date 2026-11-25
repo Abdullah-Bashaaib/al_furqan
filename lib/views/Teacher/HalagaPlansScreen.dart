@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
 import 'package:al_furqan/models/eltlawah_plan_model.dart';
@@ -9,18 +10,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/utils.dart';
 
 class AddHalagaPlansScreen extends StatefulWidget {
-  HalagaModel halaga;
-  AddHalagaPlansScreen({super.key, required this.halaga});
+  final HalagaModel halaga;
+  const AddHalagaPlansScreen({super.key, required this.halaga});
 
   @override
-  _HalagaPlansScreenState createState() =>
-      _HalagaPlansScreenState(halaga: halaga);
+  State<AddHalagaPlansScreen> createState() => _HalagaPlansScreenState();
 }
 
 class _HalagaPlansScreenState extends State<AddHalagaPlansScreen> {
   final _formKey = GlobalKey<FormState>();
-  HalagaModel halaga;
-  _HalagaPlansScreenState({required this.halaga});
+  HalagaModel get halaga => widget.halaga;
 
   final List<String> islamicSubjects = [
     'التفسير',
@@ -161,6 +160,7 @@ class _HalagaPlansScreenState extends State<AddHalagaPlansScreen> {
         return;
       }
 
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -168,10 +168,12 @@ class _HalagaPlansScreenState extends State<AddHalagaPlansScreen> {
       Utils.showSnackBarSuccess(context, "تم حفظ الخطط بنجاح");
       Navigator.pop(context, true);
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'حدث خطأ أثناء حفظ الخطط: $e';
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'حدث خطأ أثناء حفظ الخطط: $e';
+        });
+      }
     }
   }
 

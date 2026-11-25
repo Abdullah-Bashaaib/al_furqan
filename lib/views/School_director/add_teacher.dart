@@ -341,7 +341,7 @@ class _AddTeacherState extends State<AddTeacher> with UserDataMixin {
         ),
       ),
       value: _isActivate,
-      activeColor: const Color.fromARGB(255, 1, 117, 70),
+      activeThumbColor: const Color.fromARGB(255, 1, 117, 70),
       contentPadding: EdgeInsets.symmetric(horizontal: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -423,6 +423,7 @@ class _AddTeacherState extends State<AddTeacher> with UserDataMixin {
 
       // إظهار حوار نجاح بدلاً من Snackbar
       debugPrint("تمت العملية بنجاح");
+      if (!mounted) return;
       showDialog(
         context: context,
         barrierDismissible: false,
