@@ -356,7 +356,7 @@ class _EditTeacherState extends State<EditTeacher> with UserDataMixin {
     return SwitchListTile(
       title: Text('تفعيل المعلم'),
       value: _isActivate,
-      activeColor: const Color.fromARGB(255, 1, 117, 70),
+      activeThumbColor: const Color.fromARGB(255, 1, 117, 70),
       contentPadding: EdgeInsets.symmetric(horizontal: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),

@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 // import 'package:al_furqan/controllers/HalagaController.dart';
 // import 'package:al_furqan/models/halaga_model.dart';
 // import 'package:flutter/material.dart';

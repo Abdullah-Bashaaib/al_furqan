@@ -440,6 +440,7 @@ class MonthlyReportPDFScreen extends StatelessWidget {
 
       // عرض رسالة نجاح مع زر لفتح الملف
 
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,

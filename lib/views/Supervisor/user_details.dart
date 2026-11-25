@@ -16,7 +16,7 @@ class UserDetails extends StatefulWidget {
   const UserDetails({super.key, required this.user});
 
   @override
-  _UserDetailsState createState() => _UserDetailsState();
+  State<UserDetails> createState() => _UserDetailsState();
 }
 
 class _UserDetailsState extends State<UserDetails> {
@@ -342,7 +342,7 @@ class _UserDetailsState extends State<UserDetails> {
       children: [
         Expanded(
           child: DropdownButtonFormField<int>(
-            value: _selectedSchoolId,
+            initialValue: _selectedSchoolId,
             decoration: InputDecoration(
               labelText: 'اختر المدرسة',
               border: OutlineInputBorder(),
@@ -432,7 +432,7 @@ class _UserDetailsState extends State<UserDetails> {
               });
             }
           : null,
-      activeColor: Theme.of(context).primaryColor,
+      activeThumbColor: Theme.of(context).primaryColor,
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );
   }

@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:math';
 
 import 'package:al_furqan/controllers/School_directore_controller.dart';
@@ -12,7 +13,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AttendanceQRScreen extends StatefulWidget {
-  const AttendanceQRScreen({Key? key}) : super(key: key);
+  const AttendanceQRScreen({super.key});
 
   @override
   State<AttendanceQRScreen> createState() => _AttendanceQRScreenState();

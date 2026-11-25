@@ -9,7 +9,7 @@ class UserManagementPage extends StatefulWidget {
   const UserManagementPage({super.key});
 
   @override
-  _UserManagementPageState createState() => _UserManagementPageState();
+  State<UserManagementPage> createState() => _UserManagementPageState();
 }
 
 class _UserManagementPageState extends State<UserManagementPage>
@@ -124,7 +124,7 @@ class _UserManagementPageState extends State<UserManagementPage>
     return SafeArea(
       top: false,
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: _buildAppBar(),
         body: TabBarView(
           controller: _tabController,

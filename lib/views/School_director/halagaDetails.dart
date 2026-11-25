@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
@@ -20,7 +21,7 @@ class HalqaDetailsPage extends StatefulWidget {
       {super.key, required this.halqa, required this.teacher});
 
   @override
-  _HalqaDetailsPageState createState() => _HalqaDetailsPageState();
+  State<HalqaDetailsPage> createState() => _HalqaDetailsPageState();
 }
 
 class _HalqaDetailsPageState extends State<HalqaDetailsPage> {

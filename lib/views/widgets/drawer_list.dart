@@ -1,4 +1,4 @@
-﻿// ignore: file_names
+// ignore: file_names
 
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/Supervisor/school_reports.dart';

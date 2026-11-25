@@ -1,4 +1,5 @@
-﻿import 'package:al_furqan/controllers/school_controller.dart';
+// ignore_for_file: file_names
+import 'package:al_furqan/controllers/school_controller.dart';
 import 'package:al_furqan/models/provider/user_provider.dart';
 import 'package:al_furqan/models/users_model.dart';
 import 'package:al_furqan/views/School_director/ElhalagatList.dart';
@@ -18,7 +19,7 @@ class DrawerSchoolDirector extends StatefulWidget {
   const DrawerSchoolDirector({super.key, required this.user});
 
   @override
-  _DrawerSchoolDirectorState createState() => _DrawerSchoolDirectorState();
+  State<DrawerSchoolDirector> createState() => _DrawerSchoolDirectorState();
 }
 
 class _DrawerSchoolDirectorState extends State<DrawerSchoolDirector> {

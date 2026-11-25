@@ -154,15 +154,18 @@ class _LoginScreenState extends State<LoginScreen> {
       Future<bool> conn =
           InternetConnectionChecker.createInstance().hasConnection;
       if (await conn) {
+        if (!context.mounted) return;
         _showErrorDialog(context, "خطأ", "بيانات تسجيل الدخول غير صحيحة.");
         return;
       } else {
+        if (!context.mounted) return;
         _showErrorDialog(context, "خطأ", "لا يوجد اتصال بالانترنت");
         return;
       }
     }
 
     /// التحقق من أن الحساب مفعل
+    if (!context.mounted) return;
     await chiceRole(user, context, phone);
   }
 
@@ -199,12 +202,15 @@ class _LoginScreenState extends State<LoginScreen> {
         if (mounted) {
           setState(() => _isLoading = false);
         }
+        if (!context.mounted) return;
         _showErrorDialog(context, "خطأ", "لا يوجد لديك حلقة تواصل مع الادارة");
         perf.clear();
       } else {
+        if (!context.mounted) return;
         await chooseScreen(context);
       }
     } else {
+      if (!context.mounted) return;
       await chooseScreen(context);
     }
   }

@@ -1,4 +1,4 @@
-﻿import 'package:al_furqan/models/helper/sql_db.dart';
+import 'package:al_furqan/models/helper/sql_db.dart';
 import 'package:flutter/material.dart';
 
 class DatabaseViewerScreen extends StatefulWidget {
@@ -47,6 +47,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         isLoading = false;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في تحميل الجداول: $e')),
       );
@@ -84,6 +85,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         isLoading = false;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في تحميل بيانات الجدول: $e')),
       );
@@ -150,6 +152,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
         whereArgs: [primaryKeyValue],
       );
 
+      if (!mounted) return;
       if (result > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('تم حذف الصف بنجاح')),
@@ -163,6 +166,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
       }
     } catch (e) {
       debugPrint('خطأ في حذف الصف: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في حذف الصف: $e')),
       );
@@ -200,6 +204,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
       final db = await sqlDb.database;
       final result = await db.delete(selectedTable!);
 
+      if (!mounted) return;
       if (result >= 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('تم حذف جميع بيانات الجدول بنجاح')),
@@ -213,6 +218,7 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
       }
     } catch (e) {
       debugPrint('خطأ في حذف بيانات الجدول: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل في حذف بيانات الجدول: $e')),
       );

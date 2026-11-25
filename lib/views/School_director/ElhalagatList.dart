@@ -1,4 +1,5 @@
-﻿import 'dart:developer';
+// ignore_for_file: file_names
+import 'dart:developer';
 
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/main.dart';
@@ -32,7 +33,8 @@ class _HalqatListPageState extends State<HalqatListPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      (context).read<HalaqaProvider>().loadHalaqatFromFirebase();
+      if (!mounted) return;
+      context.read<HalaqaProvider>().loadHalaqatFromFirebase();
     });
     // استدعاء جلب الحلقات من Firebase وتحميل البيانات
     _loadHalaqat();
@@ -372,7 +374,7 @@ class _HalqatListPageState extends State<HalqatListPage> {
           backgroundColor: Colors.green);
     } catch (e) {
       // إغلاق مؤشر التحميل في حالة حدوث خطأ
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
       log('حدث خطأ أثناء حذف الحلقة: $e');
       // إظهار رسالة الخطأ
       Utils.showToast('حدث خطأ أثناء حذف الحلقة: $e',

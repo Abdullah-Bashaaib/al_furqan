@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/models/conservation_plan_model.dart';
@@ -496,12 +497,13 @@ class _HalagaPlansListScreenState extends State<HalagaPlansListScreen> {
                 } else if (table == "IslamicStudies") {
                   await firebasehelper.deleteIslamicStudyplan(planID);
                 }
+                if (!context.mounted) return;
                 Navigator.of(context).pop(true);
               } catch (e) {
                 Utils.showToast('حدث خطأ أثناء الحذف: $e',
                     backgroundColor: Colors.redAccent);
 
-                Navigator.of(context).pop(false);
+                if (context.mounted) Navigator.of(context).pop(false);
               }
             },
             style: ElevatedButton.styleFrom(

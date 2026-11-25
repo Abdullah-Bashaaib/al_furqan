@@ -208,7 +208,7 @@ class _AddSchoolState extends State<AddSchool> {
                   ),
 
                   // Schools list
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height *
                         0.4, // 40% of screen height
                     child: Card(

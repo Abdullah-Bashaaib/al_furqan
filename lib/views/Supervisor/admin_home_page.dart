@@ -27,11 +27,11 @@ class _DashboardScreenState extends State<DashboardScreen>
 {
   final _schools = schoolController.schools;
   final _teachers = teacherController.teachers;
-  int _totalStudents = 0;
+  final int _totalStudents = 0;
   // int _unreadMessages = 0; // سيتم استخدامه مستقبلاً للرسائل
-  int _presentTeachers = 0;
-  int _lateTeachers = 0;
-  double _attendanceRate = 0.0;
+  final int _presentTeachers = 0;
+  final int _lateTeachers = 0;
+  final double _attendanceRate = 0.0;
   String _currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   UserModel? user = CurrentUser.user;
 
@@ -201,6 +201,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 if (confirm) {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
+                  if (!context.mounted) return;
                   Navigator.pushReplacement(context,
                       CupertinoPageRoute(builder: (context) => LoginScreen()));
                 }

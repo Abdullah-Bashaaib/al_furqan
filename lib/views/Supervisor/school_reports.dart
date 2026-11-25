@@ -29,6 +29,7 @@ class _SchoolReports extends State<SchoolReports> {
         await studentController.getSchoolStudents(schoolID);
     await teacherController.getTeachersBySchoolID(schoolID);
     List teacher = teacherController.teachers;
+    if (!mounted) return;
     setState(() {
       numberStudent = numberStudentOfSchool.length;
       numberTeacher = teacher.length;
@@ -72,6 +73,7 @@ class _SchoolReports extends State<SchoolReports> {
     Future<void> schoolReport(int schoolId) async {
       Utils.showDialogLoading(context: context);
       schoolReportList = await reportController.loadReportHalaga(schoolId);
+      if (!context.mounted) return;
       Navigator.of(context, rootNavigator: true).pop();
     }
 
@@ -174,6 +176,7 @@ class _SchoolReports extends State<SchoolReports> {
                                     onTap: () async {
                                       await schoolData(school.schoolID!);
                                       await schoolReport(school.schoolID!);
+                                      if (!context.mounted) return;
                                       await Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -229,6 +232,7 @@ class _SchoolReports extends State<SchoolReports> {
                                         onPressed: () async {
                                           await schoolData(school.schoolID!);
                                           await schoolReport(school.schoolID!);
+                                          if (!context.mounted) return;
                                           await Navigator.push(
                                             context,
                                             MaterialPageRoute(

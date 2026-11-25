@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class SchoolModel {
   int? schoolID, user_id;
   String? school_name;

@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'dart:developer';
 
 import 'package:al_furqan/models/helper/current_user.dart';
@@ -68,7 +69,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
         planController.islamicStudyPlans.isNotEmpty
             ? planController.islamicStudyPlans.where(
                 (element) {
-                  if (element == null || element.planMonth == null) {
+                  if (element.planMonth == null) {
                     return false;
                   }
                   return element.planMonth == month;
@@ -323,9 +324,11 @@ class _TeacherDashboardState extends State<TeacherDashboard>
       );
 
       try {
+        final halaqaProvider = context.read<HalaqaProvider>();
+        final messageProvider = context.read<MessageProvider>();
         await _loadPlans();
-        await context.read<HalaqaProvider>().loadHalagaFromFirebase();
-        await context.read<MessageProvider>().loadMessageFromFirebase();
+        await halaqaProvider.loadHalagaFromFirebase();
+        await messageProvider.loadMessageFromFirebase();
 
         if (mounted) Navigator.pop(context); // إغلاق الدايلوج بعد الانتهاء
       } catch (e) {
@@ -383,6 +386,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                   // عرض دايلوج التحميل
                   log("message:InternetConnectionChecker.instance.hasConnection ${await InternetConnectionChecker.createInstance().hasConnection}");
 
+                  if (!context.mounted) return;
                   showDialog(
                     context: context,
                     barrierDismissible: false, // يمنع الإغلاق أثناء التحميل
@@ -417,16 +421,15 @@ class _TeacherDashboardState extends State<TeacherDashboard>
 
                   try {
                     // العمليات (المزامنة)
+                    final halaqaProvider = context.read<HalaqaProvider>();
+                    final messageProvider = context.read<MessageProvider>();
                     await _loadPlans();
-                    await (context)
-                        .read<HalaqaProvider>()
-                        .loadHalagaFromFirebase();
-                    await (context)
-                        .read<MessageProvider>()
-                        .loadMessageFromFirebase();
+                    await halaqaProvider.loadHalagaFromFirebase();
+                    await messageProvider.loadMessageFromFirebase();
                     await _loadPlans();
 
                     // إغلاق دايلوج التحميل
+                    if (!context.mounted) return;
                     Navigator.pop(context);
 
                     // عرض رسالة النجاح
@@ -436,7 +439,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                     );
                   } catch (e) {
                     // إغلاق الدايالوج إذا حدث خطأ
-                    Navigator.pop(context);
+                    if (context.mounted) Navigator.pop(context);
                     Utils.showToast(
                       'حدث خطأ أثناء المزامنة: $e',
                       backgroundColor: Colors.red,
@@ -470,7 +473,8 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.clear();
                             perf.clear();
-                            (context).read<MessageProvider>().clear();
+                            if (!context.mounted) return;
+                            context.read<MessageProvider>().clear();
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
@@ -968,7 +972,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
                                           border: InputBorder.none,
                                           hintText: 'اختر المقرر',
                                         ),
-                                        value: 'التفسير',
+                                        initialValue: 'التفسير',
                                         onChanged: (String? newValue) async {
                                           if (newValue != null) {
                                             await selectedIslamicSubject(

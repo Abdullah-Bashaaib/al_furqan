@@ -1,4 +1,5 @@
-﻿import 'package:al_furqan/controllers/Halaga_controller.dart';
+// ignore_for_file: file_names
+import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/models/halaga_model.dart';
@@ -18,7 +19,7 @@ class EditHalagaScreen extends StatefulWidget {
       {super.key, required this.halga, required this.teacher});
 
   @override
-  _EditHalagaScreenState createState() => _EditHalagaScreenState();
+  State<EditHalagaScreen> createState() => _EditHalagaScreenState();
 }
 
 class _EditHalagaScreenState extends State<EditHalagaScreen> {
@@ -643,7 +644,7 @@ class _EditHalagaScreenState extends State<EditHalagaScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DropdownButtonFormField<String?>(
-          value: selectedTeacherId,
+          initialValue: selectedTeacherId,
           decoration: InputDecoration(
             labelText: 'اختر المعلم',
             hintText: 'اختر معلم للحلقة',

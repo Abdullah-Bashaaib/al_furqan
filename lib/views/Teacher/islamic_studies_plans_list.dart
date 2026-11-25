@@ -11,11 +11,10 @@ import 'EditHalagaPlanScreen.dart';
 class IslamicStudiesPlansListScreen extends StatefulWidget {
   final HalagaModel halaga;
 
-  const IslamicStudiesPlansListScreen({Key? key, required this.halaga})
-      : super(key: key);
+  const IslamicStudiesPlansListScreen({super.key, required this.halaga});
 
   @override
-  _IslamicStudiesPlansListScreenState createState() =>
+  State<IslamicStudiesPlansListScreen> createState() =>
       _IslamicStudiesPlansListScreenState();
 }
 
@@ -641,10 +640,10 @@ class _IslamicStudiesPlansListScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('إلغاء'),
             style: TextButton.styleFrom(
               foregroundColor: Colors.grey.shade800,
             ),
+            child: const Text('إلغاء'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -654,17 +653,17 @@ class _IslamicStudiesPlansListScreenState
                   "IslamicStudies",
                   "IslamicStudiesID",
                 );
-                Navigator.of(context).pop(true);
+                if (context.mounted) Navigator.of(context).pop(true);
               } catch (e) {
                 _showErrorSnackBar('حدث خطأ أثناء الحذف: $e');
-                Navigator.of(context).pop(false);
+                if (context.mounted) Navigator.of(context).pop(false);
               }
             },
-            child: const Text('حذف'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
+            child: const Text('حذف'),
           ),
         ],
       ),

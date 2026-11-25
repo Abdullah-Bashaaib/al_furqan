@@ -1,4 +1,5 @@
-﻿import 'dart:developer';
+// ignore_for_file: file_names
+import 'dart:developer';
 
 import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/models/helper/current_user.dart';
@@ -55,7 +56,10 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
 
       _loadData();
     });
-    Future.microtask(() => (context).read<UserProvider>().loadUserFromLocal());
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<UserProvider>().loadUserFromLocal();
+    });
     // loadMessages();
   }
 
@@ -196,7 +200,8 @@ class _SchoolManagerScreenState extends State<SchoolManagerScreen> {
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.clear();
                           await perf.clear();
-                          (context).read<MessageProvider>().clear();
+                          if (!context.mounted) return;
+                          context.read<MessageProvider>().clear();
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

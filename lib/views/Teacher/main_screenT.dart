@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/student_controller.dart';
 import 'package:al_furqan/controllers/plan_controller.dart';
 import 'package:al_furqan/main.dart';
@@ -15,7 +16,7 @@ class MainScreenT extends StatefulWidget {
   const MainScreenT({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreenT> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreenT> {
@@ -46,9 +47,11 @@ class _MainScreenState extends State<MainScreenT> {
       await loadStudent();
       await loadPlans();
 
+      if (!mounted) return;
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => TeacherDashboard()));
     } else {
+      if (!mounted) return;
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => TeacherDashboard()));
       Utils.showToast('لا يوجد اتصال بالانترنت لتحديث البيانات',

@@ -6,7 +6,7 @@ Widget buildDropdownField({
   required Function(String?) onChanged,
 }) {
   return DropdownButtonFormField<String>(
-    value: selectedRole,
+    initialValue: selectedRole,
     decoration: InputDecoration(
       labelText: 'اختر الدور',
       border: OutlineInputBorder(),

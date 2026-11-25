@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,7 @@ class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
 
   @override
-  _AttendanceScreenState createState() => _AttendanceScreenState();
+  State<AttendanceScreen> createState() => _AttendanceScreenState();
 }
 
 class _AttendanceScreenState extends State<AttendanceScreen> {

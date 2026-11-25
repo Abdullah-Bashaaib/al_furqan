@@ -458,7 +458,7 @@ class _AddUserState extends State<AddUser> {
       children: [
         Expanded(
           child: DropdownButtonFormField<int>(
-            value: _selectedSchoolId,
+            initialValue: _selectedSchoolId,
             style: TextStyle(fontSize: 16, color: Colors.black87),
             decoration: InputDecoration(
               labelText: 'اختر المدرسة',
@@ -527,7 +527,7 @@ class _AddUserState extends State<AddUser> {
     final primaryColor = Theme.of(context).primaryColor;
 
     return DropdownButtonFormField<String>(
-      value: _selectedRole,
+      initialValue: _selectedRole,
       style: TextStyle(fontSize: 16, color: Colors.black87),
       decoration: InputDecoration(
         labelText: 'اختر الدور',
@@ -576,7 +576,7 @@ class _AddUserState extends State<AddUser> {
       subtitle: Text(_isActivate ? 'المستخدم مفعل' : 'المستخدم غير مفعل',
           style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
       value: _isActivate,
-      activeColor: primaryColor,
+      activeThumbColor: primaryColor,
       secondary: Icon(
         _isActivate ? Icons.check_circle : Icons.cancel_outlined,
         color: _isActivate ? primaryColor : Colors.grey,

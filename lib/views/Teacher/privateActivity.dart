@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/views/Teacher/addActivity.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,7 @@ class ActivityListScreen extends StatefulWidget {
   const ActivityListScreen({super.key});
 
   @override
-  _ActivityListScreenState createState() => _ActivityListScreenState();
+  State<ActivityListScreen> createState() => _ActivityListScreenState();
 }
 
 class _ActivityListScreenState extends State<ActivityListScreen> {

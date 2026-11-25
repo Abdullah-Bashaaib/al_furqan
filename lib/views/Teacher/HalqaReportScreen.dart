@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:al_furqan/controllers/Halaga_controller.dart';
 import 'package:al_furqan/models/halaga_model.dart';
 import 'package:al_furqan/utils/utils.dart';
@@ -8,10 +9,10 @@ import 'package:printing/printing.dart';
 class HalqaReportScreen extends StatefulWidget {
   final HalagaModel halqa;
 
-  const HalqaReportScreen({Key? key, required this.halqa}) : super(key: key);
+  const HalqaReportScreen({super.key, required this.halqa});
 
   @override
-  _HalqaReportScreenState createState() => _HalqaReportScreenState();
+  State<HalqaReportScreen> createState() => _HalqaReportScreenState();
 }
 
 class _HalqaReportScreenState extends State<HalqaReportScreen> {
@@ -141,11 +142,11 @@ class _HalqaReportScreenState extends State<HalqaReportScreen> {
                           SizedBox(height: 24),
                           ElevatedButton(
                             onPressed: _refreshReport,
-                            child: Text('إعادة المحاولة'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).primaryColor,
                               foregroundColor: Colors.white,
                             ),
+                            child: Text('إعادة المحاولة'),
                           ),
                         ],
                       ),

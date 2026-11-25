@@ -1,4 +1,4 @@
-﻿import 'package:al_furqan/controllers/teacher_controller.dart';
+import 'package:al_furqan/controllers/teacher_controller.dart';
 import 'package:al_furqan/controllers/users_controller.dart';
 import 'package:al_furqan/models/helper/user_helper.dart';
 import 'package:al_furqan/models/users_model.dart';

@@ -306,7 +306,7 @@ class _SignupScreenState extends State<SignupScreen> {
     String? validatorText,
   }) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: labelText,
         border: OutlineInputBorder(),

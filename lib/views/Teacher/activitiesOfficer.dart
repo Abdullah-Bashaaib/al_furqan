@@ -1,4 +1,5 @@
-﻿import 'package:fl_chart/fl_chart.dart';
+// ignore_for_file: file_names
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class StatisticsScreen extends StatelessWidget {

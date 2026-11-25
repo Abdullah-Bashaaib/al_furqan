@@ -9,7 +9,7 @@ class RequestsList extends StatefulWidget {
   const RequestsList({super.key});
 
   @override
-  _RequestsListState createState() => _RequestsListState();
+  State<RequestsList> createState() => _RequestsListState();
 }
 
 class _RequestsListState extends State<RequestsList> {
@@ -182,7 +182,11 @@ class _RequestsListState extends State<RequestsList> {
                                         ),
                                         onTap: () => Future.delayed(
                                           Duration.zero,
-                                          () => acceptRequest(index, context),
+                                          () {
+                                            if (context.mounted) {
+                                              acceptRequest(index, context);
+                                            }
+                                          },
                                         ),
                                       ),
                                       PopupMenuItem(
@@ -196,8 +200,12 @@ class _RequestsListState extends State<RequestsList> {
                                         ),
                                         onTap: () => Future.delayed(
                                           Duration.zero,
-                                          () => showDialogDetailsRequest(
-                                              context, index),
+                                          () {
+                                            if (context.mounted) {
+                                              showDialogDetailsRequest(
+                                                  context, index);
+                                            }
+                                          },
                                         ),
                                       ),
                                       PopupMenuItem(
@@ -211,8 +219,12 @@ class _RequestsListState extends State<RequestsList> {
                                         ),
                                         onTap: () => Future.delayed(
                                           Duration.zero,
-                                          () => showDialogDeleteRequest(
-                                              context, index),
+                                          () {
+                                            if (context.mounted) {
+                                              showDialogDeleteRequest(
+                                                  context, index);
+                                            }
+                                          },
                                         ),
                                       ),
                                     ],
@@ -385,7 +397,7 @@ class _RequestsListState extends State<RequestsList> {
                   style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -469,7 +481,7 @@ class _RequestsListState extends State<RequestsList> {
                   style: TextStyle(fontWeight: FontWeight.bold)),
             ],
           ),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,

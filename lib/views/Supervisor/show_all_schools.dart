@@ -265,6 +265,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
         await studentController.getSchoolStudents(school.schoolID!);
     await teacherController.getTeachersBySchoolID(school.schoolID!);
     List teacher = teacherController.teachers;
+    if (!context.mounted) return;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -279,7 +280,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
               ),
             ],
           ),
-          content: Container(
+          content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -486,6 +487,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                     }
 
                     // إغلاق مؤشر التحميل
+                    if (!context.mounted) return;
                     Navigator.of(context).pop();
 
                     // إغلاق مربع الحوار
@@ -503,7 +505,7 @@ class _ShowAllSchoolsState extends State<ShowAllSchools> {
                             isEditing ? Colors.amber : Colors.green);
                   } catch (e) {
                     // إغلاق مؤشر التحميل إذا كان مفتوحًا
-                    Navigator.of(context).pop();
+                    if (context.mounted) Navigator.of(context).pop();
 
                     // عرض رسالة خطأ
                     Utils.showToast('حدث خطأ: $e',
